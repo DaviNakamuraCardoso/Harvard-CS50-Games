@@ -66,13 +66,8 @@
 
 - Adding the movement behavior and the movement animation
 
-- More free gifs collected from [ArtStation](https://www.artstation.com/), from the following artists/studios:
-
-  - [Sven Thole](https://www.artstation.com/sventhole)
-  - [Quenvy Malavé](https://www.artstation.com/qama)
-  - [Blues Concepts](https://www.artstation.com/thebluesstudio)
-
   
+
 
 ### Fifty Fighters 6
 
@@ -86,7 +81,25 @@
 
 *The Jump Update*
 
-**Date: September 3rd, 2020**
+**Date: September 3<sup>rd</sup>, 2020**
 
 - Implementation of the jump behavior and animation
 
+### Fifty Fighters 8
+
+*The Death Update*
+
+**Date: September 4<sup>th</sup>, 2020**
+
+- Implementation of the dying behavior and animation
+- Implementation of the waiting behavior and animation
+
+### Fifty Fighters 9
+
+*The Characters Update*
+
+**Date: September 4<sup>th</sup>, 2020**
+
+- Downloading some open source sprites from [The Spriter Resource](https://www.spriters-resource.com/)
+- Creating, for each character, a directory for the sprite sheets
+- 
