@@ -132,6 +132,21 @@
 
 **Date: September 5<sup>th</sup>, 2020**
 
+- Creating the *characters.lua* file, that contains a table with the characters stats and abilities
+
 - Creating, for each character, a passive ability
-- 
+
+### Fifty Fighters 13
+
+*The Background Table Update*
+
+**Date: September 5<sup>th</sup>, 2020**
+
+- Creating a table with the backgrounds stats 
+
+- Controlling the camera movement based on the players' position
+
+   
+
+
 
