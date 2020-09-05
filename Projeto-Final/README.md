@@ -102,4 +102,36 @@
 
 - Downloading some open source sprites from [The Spriter Resource](https://www.spriters-resource.com/)
 - Creating, for each character, a directory for the sprite sheets
+
+### Fifty Fighters 10
+
+*The Damage Update*
+
+**Date September 5<sup>th</sup>, 2020**
+
+- Implementing x and y offsets for flipping
+- Creating a hurt animation and behavior
+
+- Creating a *Player:enemyAt(x, y)* function, that verifies if there is an enemy in the (x, y) coordinates
+- Creating a *Player:detectDamage()* function that detects the presence of enemies in a circle around the character and hurts it
+
+### Fifty Fighters 11
+
+*The Victory Update*
+
+**Date: September 5<sup>th</sup>, 2020**
+
+- Adding the health and damage stats
+
+- Implementing a winning animation and behavior
+- When a player health drops to 0, his state is set to dying and his enemy's state is set to winning
+
+### Fifty Fighters 12
+
+*The Passive Update*
+
+**Date: September 5<sup>th</sup>, 2020**
+
+- Creating, for each character, a passive ability
 - 
+
