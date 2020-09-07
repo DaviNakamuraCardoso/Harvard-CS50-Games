@@ -14,7 +14,7 @@ local push = require "push"
 Class = require 'class'
 
 
-
+math.randomseed(os.clock())
 
 require "Util"
 --//________________________________ Classes _______________________________\\--
@@ -29,7 +29,8 @@ function love.load()
     --//__________________________ Screen ______________________________\\--
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
-    map = Map('Castle')
+    randomMap = math.random(2) == 1 and 'Castle' or 'Gym'
+    map = Map(randomMap)
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT,
     {
