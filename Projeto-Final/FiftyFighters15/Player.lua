@@ -16,6 +16,7 @@ function Player:init(map, name, side, range)
 
     -- Passive and Special Ability
     self.passive = Characters[self.name]['passive']
+    self.special = Characters[self.name]['special']
 
 
 
@@ -79,6 +80,11 @@ function Player:init(map, name, side, range)
             love.graphics.newImage('graphics/' .. self.name .. '/winning.png'),
             generateQuads('graphics/' .. self.name .. '/winning.png', self.width, self.height),
             0.2
+        ),
+        ['special'] = Animation(
+            love.graphics.newImage('graphics/' .. self.name .. '/special.png'),
+            generateQuads('graphics/' .. self.name .. '/special.png', self.width + 50, self.height),
+            0.1
         )
 
     }
@@ -95,7 +101,8 @@ function Player:init(map, name, side, range)
             ['forward'] = 'd',
             ['backward'] = 'a',
             ['jump'] = 'space',
-            ['attack'] = 'f'
+            ['attack'] = 'f',
+            ['special'] = 'g'
 
         },
         [1] = {
@@ -124,12 +131,12 @@ function Player:init(map, name, side, range)
                 self.dy = self.jumpSpeed
                 self.state = 'jumping'
 
-            elseif love.keyboard.wasPressed['t'] then
-                self.state = 'dying'
 
-            elseif love.keyboard.wasPressed['z'] then
-                self.state = 'hurt'
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['special']] then
+                self.state = 'special'
+
             end
+
 
         end,
         ['walking'] = function(dt)
@@ -137,7 +144,7 @@ function Player:init(map, name, side, range)
                 self.x = math.max(0, math.floor(self.x - self.speed * dt))
                 self.direction = 1
             elseif love.keyboard.isDown(keyRelations[self.side]['forward']) then
-                self.x = math.min(self.map.mapWidth, math.floor(self.x + self.speed * dt))
+                self.x = math.min(self.map.mapWidth - self.width, math.floor(self.x + self.speed * dt))
                 self.direction = -1
 
             elseif love.keyboard.wasPressed['r'] then
@@ -154,12 +161,12 @@ function Player:init(map, name, side, range)
 
             end
             if love.keyboard.isDown(keyRelations[self.side]['backward']) then
-                self.x = math.max(70, math.floor(self.x - self.speed * dt))
+                self.x = math.max(0, math.floor(self.x - self.speed * dt))
                 self.state = 'walking'
                 self.direction = 1
 
             elseif love.keyboard.isDown(keyRelations[self.side]['forward']) then
-                self.x = math.min(540, math.floor(self.x + self.speed * dt))
+                self.x = math.min(self.map.mapWidth - self.width, math.floor(self.x + self.speed * dt))
                 self.state = 'walking'
                 self.direction = -1
             end
@@ -202,7 +209,11 @@ function Player:init(map, name, side, range)
         end,
         ['winning'] = function(dt)
 
+        end,
+        ['special'] = function(dt)
+            self.special(dt, self)
         end
+
 
     }
     self.state = 'idle'
