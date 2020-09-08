@@ -146,7 +146,22 @@
 
 - Controlling the camera movement based on the players' position
 
-   
+
+### Fifty Fighters 14
+
+*The Random Background Update*
+
+**Date: September 6<sup>th</sup>, 2020**
+
+- Implementing a random background selection
+
+### Fifty Fighters 15
+
+*The Special Attack Update*
+
+**Date: September 7<sup>th</sup>, 2020**
+
+- Implementing, for each character, a special attack
 
 
 
