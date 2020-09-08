@@ -13,6 +13,14 @@ Characters = {
             elseif self.state == 'winning' then
                 self.y = self.map.floor
             end
+        end,
+        ['special'] = function(dt, self)
+            self.x = math.floor(self.x - 2 * self.speed * self.direction * dt)
+            self:detectDamage()
+            if self.animation.currentFrame == #self.animation.frames and self.animation.timer >= self.animation.interval then
+                self.state = 'idle'
+
+            end
         end
 
     },
