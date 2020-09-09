@@ -92,10 +92,19 @@ function Player:init(map, name, side, range)
     self.animation = self.animations['idle']
     self.currentFrame = self.animation:getCurrentFrame()
 
+
     --//_________________________ Behaviors ____________________________\\--
+
+    -- Walk and Jump
     self.speed = 200
     self.jumpSpeed = -600
     self.direction = self.side
+
+    -- Projectiles
+    self.projectiles = {}
+    self.numberOfProjectiles = 0
+
+    -- Controls
     local keyRelations = {
         [-1] = {
             ['forward'] = 'd',
@@ -109,7 +118,8 @@ function Player:init(map, name, side, range)
             ['forward'] = 'right',
             ['backward'] = 'left',
             ['jump'] = 'up',
-            ['attack'] = '/'
+            ['attack'] = '/',
+            ['special'] = ';'
         }
     }
     self.behaviors = {
@@ -154,7 +164,7 @@ function Player:init(map, name, side, range)
             end
         end,
         ['attacking'] = function(dt)
-            self:detectDamage()
+            self:detectDamage('front')
             if self.animation.currentFrame == #self.animation.frames and self.animation.timer >= self.animation.interval then
                 self.animation.currentFrame = 0
                 self.state = 'idle'
@@ -229,18 +239,22 @@ function Player:update(dt)
     self.behaviors[self.state](dt)
     self.passive(dt, self)
     self.x = math.max(self.map.camX - 10, math.min(self.map.camX + VIRTUAL_WIDTH - 90, self.x))
+    self:updateAllProjectiles(dt)
+
+
 end
 
 
 
 function Player:render()
     love.graphics.draw(self.animation.texture, self.currentFrame, math.floor(self.x + self.xOffset), math.floor(self.y + self.yOffset), 0, self.direction, 1, self.xOffset, self.yOffset)
+    self:renderAllProjectiles()
 
 end
 
 
 function Player:enemyAt(x, y)
-    if self.enemy.y <= y and y <= self.enemy.y + self.enemy.height then
+    if self.enemy.y + 60 <= y and y <= self.enemy.y + 60 + self.enemy.height then
         if self.enemy.x <= x and x <= self.enemy.x + self.enemy.width then
             return true
         elseif self.enemy.x >= x and x >= self.enemy.x + self.enemy.width then
@@ -255,19 +269,74 @@ end
 
 
 --//__________________________ Damage detection ____________________________\\--
-function Player:detectDamage()
+function Player:detectDamage(position, range)
+
+    local range = range or self.range
+    local positions = {
+        ['front'] = {
+            ['start'] = -90,
+            ['end'] = 90,
+            ['direction'] = 1
+        },
+        ['back'] = {
+            ['start'] = -90,
+            ['end'] = 90,
+            ['direction'] = -1
+        },
+        ['up'] = {
+            ['start'] = 0,
+            ['end'] = 180,
+            ['direction'] = 1
+        },
+        ['down'] = {
+            ['start'] = 0,
+            ['end'] = 180,
+            ['direction'] = -1
+        },
+        ['around'] = {
+            ['start'] = 0,
+            ['end'] = 360,
+            ['direction'] = 1
+        }
+    }
     if self.animation.timer >= self.animation.interval then
 
         -- checks for enemies in a circle arround the character
-        for i=0, 360 do
-            local x = self.x + self.width / 2 + (math.cos(math.rad(i)) * self.range)
-            local y = self.y + self.height / 2 + (math.sin(math.rad(i)) * self.range)
-            if self:enemyAt(x, y) and self.enemy.state ~= 'hurt' then
-                self.enemy.state = 'hurt'
-                self.enemy.health = self.enemy.health - (self.damage - self.enemy.armor / 10)
-                self.enemy.x = math.min(512, math.max(0, math.floor(self.enemy.x - self.direction *   self.range / 2)))
-            end
+        for i=positions[position]['start'], positions[position]['end'] do
+            local x = self.x + self.width / 2 + (math.cos(math.rad(i)) * range * positions[position]['direction'])
+            local y = self.y + self.height / 2 + (math.sin(math.rad(i)) * range * positions[position]['direction'])
+            self:hit(x, y)
+        end
+    end
+end
 
+function Player:hit(x, y)
+
+    if self:enemyAt(x, y) and self.enemy.state ~= 'hurt' then
+        self.enemy.state = 'hurt'
+        self.enemy.health = self.enemy.health - (self.damage - self.enemy.armor / 10)
+        self.enemy.x = math.min(self.map.mapWidth - self.width - 10, math.max(0, math.floor(self.enemy.x - self.direction * self.range / 2)))
+        return true
+
+    end
+end
+
+
+function Player:updateAllProjectiles(dt)
+    -- Projectiles
+    if self.numberOfProjectiles > 0 then
+        for i=1, self.numberOfProjectiles do
+            self.projectiles[i]:update(dt)
+        end
+    end
+end
+
+
+function Player:renderAllProjectiles(dt)
+    -- Projectiles
+    if self.numberOfProjectiles > 0 then
+        for i=1, self.numberOfProjectiles do
+            self.projectiles[i]:render()
         end
     end
 end
