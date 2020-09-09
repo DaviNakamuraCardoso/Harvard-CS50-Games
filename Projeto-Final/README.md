@@ -163,5 +163,15 @@
 
 - Implementing, for each character, a special attack
 
+### Fifty Fighters 16
+
+*The Projectile Update*
+
+**Date: September 8<sup>th</sup>, 2020**
+
+- Implementing projectiles 
+
+
+
 
 
