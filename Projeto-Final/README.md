@@ -171,6 +171,55 @@
 
 - Implementing projectiles 
 
+### Fifty Fighters 17
+
+*The Duck Update*
+
+**Date: September 9<sup>th</sup>, 2020**
+
+- Creating the duck behavior and animation
+
+### Fifty Fighters 18
+
+*The Cooldown Update*
+
+**Date: September 9<sup>th</sup>, 2020**
+
+- Implementing a cooldown for each special ability 
+
+### Fifty Fighters 19
+
+*The Button Update*
+
+**Date: September 9<sup>th</sup>, 2020**
+
+- In this update, I've created the Button Class, that renders a button, with a label and a function
+- I've also created a mouseUpdate() function to track the actions of the mouse
+
+### Fifty Fighters 20
+
+*The Message Update*
+
+**Date: September 9<sup>th</sup>, 2020**
+
+- I've implemented a Message Class to take care of font, size and color implementations all at once
+
+### Fifty Fighters 21
+
+*The Life Bar Update*
+
+**Date: September 9<sup>th</sup>, 2020**
+
+- For this update, I've developed a life bar for the two players, based on their health percentage
+
+### Fifty Fighters 22
+
+*The Sound Update*
+
+**Date: September 10<sup>th</sup>, 2020**
+
+- Implementing sound effects for the characters
+
 
 
 

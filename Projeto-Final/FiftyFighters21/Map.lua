@@ -5,7 +5,7 @@ Map = Class{}
 
 require 'backgrounds'
 
-
+SCROOL_SPEED = 0
 function Map:init(name)
     --//______________________ Background Setup ________________________\\--
     self.name = name
@@ -54,8 +54,6 @@ end
 
 function Map:update(dt)
     self.animation:update(dt)
-    self.player1:update(dt)
-    self.player2:update(dt)
 
 
     if  math.max(self.player1.x - self.player2.x, self.player2.x - self.player1.x) <= VIRTUAL_WIDTH - 100  then
@@ -69,6 +67,9 @@ function Map:update(dt)
     end
 
     self.camY = self.mapHeight - VIRTUAL_HEIGHT
+
+    self.player1:update(dt)
+    self.player2:update(dt)
 
 
 end
