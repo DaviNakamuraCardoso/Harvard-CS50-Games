@@ -214,11 +214,13 @@
 
 ### Fifty Fighters 22
 
-*The Sound Update*
+*The Musical Update*
 
 **Date: September 10<sup>th</sup>, 2020**
 
-- Implementing sound effects for the characters
+- Implementing a different background music for each map
+
+- All musics from [Freesounds.org](https://freesound.org/)
 
 
 
