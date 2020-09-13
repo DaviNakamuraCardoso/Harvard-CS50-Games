@@ -222,7 +222,28 @@
 
 - All musics from [Freesounds.org](https://freesound.org/)
 
+### Fifty Fighters 23
 
+*The Sound Update 1*
 
+**Date: September 11<sup>th</sup>, 2020**
 
+- Implementing sound effects for idle, jumping, hurt and attacking states
+
+### Fifty Fighters 24
+
+*The Sound Update 2*
+
+**Date: September 12<sup>th</sup>, 2020**
+
+- Implementing sound effects for special, dying, winning, duck and waiting states
+
+### Fifty Fighters 25
+
+*The Menu Update*
+
+**Date: September 12<sup>th</sup>, 2020**
+
+- In this update I've created a Main Menu with a play button
+- 
 
