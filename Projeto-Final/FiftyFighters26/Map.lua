@@ -28,9 +28,9 @@ function Map:init(name)
 
     --//____________________________ Animation ____________________________\\--
 
-    self.backgroundImage = love.graphics.newImage('graphics/Backgrounds/' .. self.name .. '.png')
-    self.backgroundQuads = generateQuads('graphics/Backgrounds/' .. self.name .. '.png', self.mapWidth, self.mapHeight)
-    self.animation = Animation(self.backgroundImage, self.backgroundQuads, 0.2)
+    --self.backgroundImage = love.graphics.newImage('graphics/Backgrounds/' .. self.name .. '.png')
+    --self.backgroundQuads = generateQuads('graphics/Backgrounds/' .. self.name .. --'.png', self.mapWidth, self.mapHeight)
+    --self.animation = Animation(self.backgroundImage, self.backgroundQuads, 0.2)
 
     --\\____________________________________________________________________//--
 
@@ -38,7 +38,7 @@ function Map:init(name)
 
     -- Creates the players
     self.player1 = Player(self, 'Athena', -1, 50)
-    self.player2 = Player(self, 'Benimaru', 1, 40)
+    self.player2 = Player(self, 'Bonne', 1, 40)
 
     -- Sets each one as other's enemy
     self.player1.enemy = self.player2
@@ -75,12 +75,12 @@ function Map:init(name)
     --//_____________________ States and Behaviors _________________________\\--
     self.behaviors = {
         ['menu'] = function(dt)
-            self.animation:update(dt)
+            --self.animation:update(dt)
             self:updateCam()
             self.buttonPlay:update()
         end,
         ['play'] = function(dt)
-            self.animation:update(dt)
+        --    self.animation:update(dt)
             self:updateCam()
             self.player1:update(dt)
             self.player2:update(dt)
@@ -89,7 +89,6 @@ function Map:init(name)
             end
         end,
         ['pause'] = function(dt)
-            self:cover()
             if love.keyboard.wasPressed['space'] then
                 self.state = 'play'
             end
@@ -103,12 +102,10 @@ function Map:init(name)
             self.buttonPlay:render()
         end,
         ['play'] = function()
-            love.graphics.draw(self.backgroundImage, self.animation:getCurrentFrame(), 0, 0)
             self.player1:render()
             self.player2:render()
         end,
         ['pause'] = function()
-            love.graphics.draw(self.backgroundImage, self.animation:getCurrentFrame(), 0, 0)
             self.player1:render()
             self.player2:render()
             self:cover()

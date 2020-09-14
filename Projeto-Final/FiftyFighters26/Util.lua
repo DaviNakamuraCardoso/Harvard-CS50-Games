@@ -1,5 +1,6 @@
 --========================== Generating the Quads ============================--
 
+require 'characters'
 function generateQuads(sheet, width, height)
     -- Load the sheet into a image
     spritesheet = love.graphics.newImage(sheet)
@@ -22,3 +23,34 @@ function generateQuads(sheet, width, height)
 
     return quads
 end
+
+
+function generateAnimation(character, state)
+
+    frames = {}
+    quads = {}
+    index = 0
+    for i=Characters[character.name]['animations'][state][1], Characters[character.name]['animations'][state][2] do
+        local image = 'graphics/' .. character.name .. '/' .. tostring(i) .. '.png'
+        frames[index] = love.graphics.newImage(image)
+        quads[index] = love.graphics.newQuad(0, 0, frames[index]:getWidth(), frames[index]:getHeight(), frames[index]:getWidth(), frames[index]:getHeight())
+        index = index + 1
+    end
+
+    return {
+        frames = frames,
+        quads = quads
+    }
+end
+
+
+
+
+
+
+
+
+
+
+
+--============================================================================--

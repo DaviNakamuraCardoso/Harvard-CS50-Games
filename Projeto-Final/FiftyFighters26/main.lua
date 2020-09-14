@@ -52,10 +52,12 @@ function love.load()
         ['updated'] = false
     }
 
+
 end
 
 function love.update(dt)
 
+    updateMouse()
     map:update(dt)
     love.keyboard.wasPressed =  {}
 
@@ -69,6 +71,7 @@ function love.draw()
 
     push:apply('start')
     -- body...
+    love.graphics.clear(1.2 / 255, 12.9 / 255, 65.5 / 255, 1)
     love.graphics.translate(math.floor(-map.camX), math.floor(-map.camY))
     map:render()
 
@@ -82,7 +85,8 @@ function love.keypressed(key)
     -- body...
     if key == 'escape' then
         love.event.quit()
-    end
+
+    end 
     love.keyboard.wasPressed[key] = true
 end
 
@@ -100,7 +104,6 @@ function updateMouse()
         mouse['clicked'] = false
     end
 end
-
 
 
 

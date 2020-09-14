@@ -2,6 +2,7 @@
 
 Player = Class{}
 
+require 'Util'
 require 'characters'
 require 'Lifebar'
 
@@ -17,7 +18,7 @@ function Player:init(map, name, side, range)
 
     -- Passive and Special Ability
     self.passive = Characters[self.name]['passive']
-    self.special = Characters[self.name]['special']
+--    self.special = Characters[self.name]['special']
     self.cooldown = Characters[self.name]['cooldown']
     self.timer = self.cooldown
 
@@ -47,65 +48,6 @@ function Player:init(map, name, side, range)
 
     -- Sound effects
     self.soundDir = 'sounds/' .. self.name .. '/'
-
-    --//_________________________ Animations ___________________________\\--
-    self.animations = {
-
-        ['idle'] = Animation(
-            love.graphics.newImage('graphics/' .. self.name ..  '/idle.png'),
-            generateQuads('graphics/' .. self.name .. '/idle.png', self.width, self.height),
-            0.3
-        ),
-        ['walking'] = Animation(
-            love.graphics.newImage('graphics/' .. self.name .. '/walking.png'),
-            generateQuads('graphics/' .. self.name .. '/walking.png', self.width, self.height),
-            0.1
-        ),
-        ['attacking'] = Animation(
-            love.graphics.newImage('graphics/' .. self.name .. '/attacking.png'),
-            generateQuads('graphics/' .. self.name .. '/attacking.png', self.width, self.height),
-            0.05
-        ),
-        ['jumping'] = Animation(
-            love.graphics.newImage('graphics/' .. self.name .. '/jumping.png'),
-            generateQuads('graphics/' .. self.name .. '/jumping.png', self.width, self.height),
-            0.4
-        ),
-        ['dying'] = Animation(
-            love.graphics.newImage('graphics/' .. self.name .. '/dying.png'),
-            generateQuads('graphics/' .. self.name .. '/dying.png', self.width + 50, self.height),
-            0.4
-        ),
-        ['waiting'] = Animation(
-            love.graphics.newImage('graphics/' .. self.name .. '/waiting.png'),
-            generateQuads('graphics/' .. self.name .. '/waiting.png', self.width, self.height),
-            0.2
-        ),
-        ['hurt'] = Animation(
-            love.graphics.newImage('graphics/' .. self.name .. '/hurt.png'),
-            generateQuads('graphics/' .. self.name .. '/hurt.png', self.width, self.height),
-            0.1
-        ),
-        ['winning']  = Animation(
-            love.graphics.newImage('graphics/' .. self.name .. '/winning.png'),
-            generateQuads('graphics/' .. self.name .. '/winning.png', self.width, self.height),
-            0.2
-        ),
-        ['special'] = Animation(
-            love.graphics.newImage('graphics/' .. self.name .. '/special.png'),
-            generateQuads('graphics/' .. self.name .. '/special.png', self.width + 50, self.height),
-            0.1
-        ),
-        ['duck'] = Animation(
-            love.graphics.newImage('graphics/' .. self.name .. '/duck.png'),
-            generateQuads('graphics/' .. self.name .. '/duck.png', self.width, self.height),
-            0.3
-        )
-
-    }
-
-    self.animation = self.animations['idle']
-    self.currentFrame = self.animation:getCurrentFrame()
 
 
     --//_________________________ Behaviors ____________________________\\--
@@ -139,6 +81,9 @@ function Player:init(map, name, side, range)
             ['special'] = ';'
         }
     }
+
+    self.animation = Animation(generateAnimation(self, 'idle'), 0.2)
+
     self.behaviors = {
         ['idle'] = function(dt)
             if love.keyboard.isDown(keyRelations[self.side]['backward']) then
@@ -246,14 +191,24 @@ function Player:init(map, name, side, range)
         ['winning'] = function(dt)
             self.y = self.map.floor
 
-        end,
-        ['special'] = function(dt)
-            self.special(dt, self)
         end
-
-
+        --['special'] = function(dt)
+        --    self.special(dt, self)
+        --end
     }
+    --//_________________________ Animations ___________________________\\--
+    self.animations = {}
+    for k, v in pairs(self.behaviors) do
+        self.animations[k] = Animation(generateAnimation(self, k), 0.05)
+    end
+
+
+
     self.state = 'idle'
+    self.animation = self.animations['idle']
+
+    self.currentFrame = self.animation:getCurrentFrame()
+    self.currentQuad = self.animation:getCurrentQuad()
 
     --//______________________ Sound Effects ______________________________\\--
 
@@ -276,6 +231,7 @@ function Player:update(dt)
     -- Animation
     self.animation = self.animations[self.state]
     self.currentFrame = self.animation:getCurrentFrame()
+    self.currentQuad = self.animation:getCurrentQuad()
     self.animation:update(dt)
 
     -- Behavior and abilities
@@ -284,8 +240,11 @@ function Player:update(dt)
     self.timer = self.timer + dt
     self:updateAllProjectiles(dt)
 
-    -- Position
+    -- Position and dimensions
+    self.width = self.currentFrame:getWidth()
+    self.height = self.currentFrame:getHeight()
     self.x = math.floor(math.max(self.map.camX - 10, math.min(self.map.camX + VIRTUAL_WIDTH - 90, self.x)))
+    self.y = VIRTUAL_HEIGHT - self.height
 
     -- Lifebar
     self.lifebar:update(dt)
@@ -297,7 +256,7 @@ end
 
 function Player:render()
     self.lifebar:render()
-    love.graphics.draw(self.animation.texture, self.currentFrame, math.floor(self.x + self.xOffset), math.floor(self.y + self.yOffset), 0, self.direction, 1, self.xOffset, self.yOffset)
+    love.graphics.draw(self.currentFrame, self.currentQuad, math.floor(self.x + self.xOffset), math.floor(self.y + self.yOffset), 0, self.direction, 1, self.xOffset, self.yOffset)
     self:renderAllProjectiles()
 
 end

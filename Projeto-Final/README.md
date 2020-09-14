@@ -240,10 +240,71 @@
 
 ### Fifty Fighters 25
 
-*The Menu Update*
+*The Sprites Update 1 - Redefining the Animations*
 
 **Date: September 12<sup>th</sup>, 2020**
 
-- In this update I've created a Main Menu with a play button
+- In this update I've redefined the animation and sprite system
+- I've also imported 60 new sprite sheets from [The Spriters Resource](https://www.spriters-resource.com/),  for characters that **will soon be added**:
+  - Adelheid Bernstein
+  - Ash Crimson
+  - Athena
+  - Benimaru
+  - Bonne
+  - Brian Battler
+  - Chang Koehan
+  - Clark Still
+  - Duck King
+  - Duo Lon
+  - Effects
+  - Eiji Shiro
+  - Elizabeth Blanctorche
+  - Ex Kyo
+  - Gai Tendo
+  - Gato Futaba
+  - Geese Howard
+  - Goddess Athena
+  - Goro Daimon
+  - Heidern
+  - Hotaru Futaba
+  - Iori Yagami
+  - Jyazu
+  - K
+  - Kasumi Todoh
+  - Kim
+  - Kula Diamond
+  - Kyo Kusanagi
+  - Magaki
+  - Malin
+  - Maxima
+  - Momoko
+  - Mr. Big
+  - Oswald
+  - P-Chan
+  - Ralf Jones
+  - Ramon
+  - Robert Garcia
+  - Rugal Bernstein
+  - Ryo Sakazaki
+  - Shen Woo
+  - Shingo
+  - Shion
+  - Sho Hayate
+  - Sie Kensou
+  - Silver
+  - Tizoc
+  - Tung Fu Rue
+  - Vanessa
+  - Whip
+  - Yuri Sakazaki
+
+- I've written some **Python** scripts to help me unzip, rename and organize the new files
+
+### Fifty Fighters 27
+
+*The Sprites Update 2 - Redefining the Jump Method*
+
+**Date: September 14<sup>th</sup>, 2020**
+
 - 
 

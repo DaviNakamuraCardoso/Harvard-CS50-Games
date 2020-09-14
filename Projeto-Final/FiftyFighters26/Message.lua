@@ -6,6 +6,7 @@ Message = Class{}
 function Message:init(params)
     self.text = params.text
     self.map = params.map
+
     -- Position
     self.relativeX = params.relativeX or 0
     self.relativeY = params.relativeY or VIRTUAL_HEIGHT / 3

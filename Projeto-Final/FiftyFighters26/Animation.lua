@@ -3,9 +3,9 @@
 Animation = Class{}
 
 
-function Animation:init(texture, frames, interval)
-    self.texture = texture
-    self.frames = frames
+function Animation:init(animationsTable, interval)
+    self.frames = animationsTable.frames
+    self.quads = animationsTable.quads
     self.interval = interval or 0.15
 
     self.timer = 0
@@ -14,7 +14,7 @@ function Animation:init(texture, frames, interval)
 end
 
 function Animation:update(dt)
-    if self.timer > self.interval then
+    if self.timer >= self.interval then
         self.timer = 0
         self.currentFrame = (self.currentFrame + 1) % (#self.frames + 1)
     else
@@ -25,6 +25,10 @@ end
 function Animation:getCurrentFrame()
     return self.frames[self.currentFrame]
 end
+
+function Animation:getCurrentQuad()
+    return self.quads[self.currentFrame]
+end 
 
 
 

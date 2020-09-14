@@ -19,11 +19,11 @@ function Button:init(params)
     self.label = params.label or nil
     self.action = params.action or nil
 
-    self.noHover = params.color or {1, 0.1, 0.1, 1}
+    self.noHover = params.color or {1, 1, 0.1, 1}
     self.hover = {self.noHover[1] / 3, self.noHover[2] / 3, self.noHover[3] / 3, 1}
     self.color = self.noHover
 
-    self.message = Message{text = self.label, map = self.map, parameter = self.width}
+    self.message = Message{text = self.label, map = self.map, parameter = VIRTUAL_WIDTH, relativeY = self.relativeY - self.height / 3}
 
 end
 
