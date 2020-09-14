@@ -1,6 +1,7 @@
 --========================== Generating the Quads ============================--
 
 require 'characters'
+
 function generateQuads(sheet, width, height)
     -- Load the sheet into a image
     spritesheet = love.graphics.newImage(sheet)

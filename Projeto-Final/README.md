@@ -306,5 +306,16 @@
 
 **Date: September 14<sup>th</sup>, 2020**
 
-- 
+- In this update the jumping state, have been redefined, allowing characters to jump according to the animation
+- The map animation have also been recreated to support the new Animation Class
+
+### Fifty Fighters 28
+
+*The Sprites Update 3 - Projectiles*
+
+**Date: September 14<sup>th</sup>, 2020**
+
+- Implementing changes in the projectile Class to allow instantaneous projectiles 
+
+
 

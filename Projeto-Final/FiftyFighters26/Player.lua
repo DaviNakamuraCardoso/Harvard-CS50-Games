@@ -82,7 +82,7 @@ function Player:init(map, name, side, range)
         }
     }
 
-    self.animation = Animation(generateAnimation(self, 'idle'), 0.2)
+    self.animation = Animation(self, 'idle')
 
     self.behaviors = {
         ['idle'] = function(dt)
@@ -148,8 +148,8 @@ function Player:init(map, name, side, range)
         end,
         ['jumping'] = function(dt)
             self.y = math.floor(self.y + self.dy * dt)
-            if self.y >= self.map.floor then
-                self.y = self.map.floor
+            if self.y >= self.map.floor - self.height then
+                self.y = self.map.floor - self.height 
                 self.dy = 0
                 self.state = 'idle'
             else
@@ -161,13 +161,13 @@ function Player:init(map, name, side, range)
             self.y = self.map.mapHeight - 100
             if not love.keyboard.isDown(keyRelations[self.side]['duck']) then
                 self.state = 'idle'
-                self.y = self.map.floor
+                self.y = self.map.floor - self.height
             end
         end,
         ['dying'] = function(dt)
             if self.animation.currentFrame == (#self.animation.frames) and self.animation.timer >= self.animation.interval then
                 self.state = 'waiting'
-                self.y = self.map.floor
+                self.y = self.map.floor - self.height
             else
                 self.direction = - self.enemy.direction
                 self.x = math.min(self.map.mapWidth - self.width, math.max(self.map.camX, math.floor(self.x + self.speed * dt / 2 * self.direction)))
@@ -189,7 +189,7 @@ function Player:init(map, name, side, range)
             end
         end,
         ['winning'] = function(dt)
-            self.y = self.map.floor
+            self.y = self.map.floor - self.height
 
         end
         --['special'] = function(dt)
@@ -199,7 +199,7 @@ function Player:init(map, name, side, range)
     --//_________________________ Animations ___________________________\\--
     self.animations = {}
     for k, v in pairs(self.behaviors) do
-        self.animations[k] = Animation(generateAnimation(self, k), 0.05)
+        self.animations[k] = Animation(self, k)
     end
 
 
@@ -241,10 +241,7 @@ function Player:update(dt)
     self:updateAllProjectiles(dt)
 
     -- Position and dimensions
-    self.width = self.currentFrame:getWidth()
-    self.height = self.currentFrame:getHeight()
-    self.x = math.floor(math.max(self.map.camX - 10, math.min(self.map.camX + VIRTUAL_WIDTH - 90, self.x)))
-    self.y = VIRTUAL_HEIGHT - self.height
+    self:position()
 
     -- Lifebar
     self.lifebar:update(dt)
@@ -329,11 +326,21 @@ function Player:hit(x, y)
 end
 
 
+function Player:position()
+    self.width = self.currentFrame:getWidth()
+    self.height = self.currentFrame:getHeight()
+    self.x = math.floor(math.max(self.map.camX - 10, math.min(self.map.camX + VIRTUAL_WIDTH - 90, self.x)))
+    if self.state ~= 'jumping' then
+        self.y = self.map.floor - self.height
+    end
+end
+
+
 function Player:land()
-    if self.y < self.map.floor then
+    if self.y < self.map.floor - self.height then
         self.state = 'jumping'
     else
-        self.y = self.map.floor
+        self.y = self.map.floor - self.height
         self.state = 'idle'
     end
 end

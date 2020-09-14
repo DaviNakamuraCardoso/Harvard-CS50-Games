@@ -13,8 +13,8 @@ Characters = {
             ['attacking'] = {125, 134},
             ['duck'] = {250, 252},
             ['dying'] = {614, 619},
-            ['waiting'] = {92, 95},
-            ['hurt'] = {660, 663},
+            ['waiting'] = {93, 95},
+            ['hurt'] = {660, 661},
             ['winning'] = {484, 498}
         },
         ['passive'] = function(dt, self)
@@ -43,9 +43,9 @@ Characters = {
             ['jumping'] = {42, 50},
             ['attacking'] = {115, 119},
             ['duck'] = {51, 59},
-            ['dying'] = {462, 479},
-            ['waiting'] = {525, 532},
-            ['hurt'] = {594, 597},
+            ['dying'] = {602, 607},
+            ['waiting'] = {625, 628},
+            ['hurt'] = {646, 647},
             ['winning'] = {518, 522}
         },
         ['passive'] = function(dt, self)

@@ -3,10 +3,11 @@
 Animation = Class{}
 
 
-function Animation:init(animationsTable, interval)
+function Animation:init(player, state)
+    animationsTable = generateAnimation(player, state)
     self.frames = animationsTable.frames
     self.quads = animationsTable.quads
-    self.interval = interval or 0.15
+    self.interval = 0.05
 
     self.timer = 0
     self.currentFrame = 1
@@ -28,7 +29,7 @@ end
 
 function Animation:getCurrentQuad()
     return self.quads[self.currentFrame]
-end 
+end
 
 
 

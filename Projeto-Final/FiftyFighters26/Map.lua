@@ -21,16 +21,19 @@ function Map:init(name)
     self.camY = self.mapHeight - VIRTUAL_HEIGHT
 
     -- Floor and gravity
-    self.floor = self.mapHeight - 180
+    self.floor = self.mapHeight
     self.gravity = 40
 
     --\\____________________________________________________________________//--
 
     --//____________________________ Animation ____________________________\\--
 
-    --self.backgroundImage = love.graphics.newImage('graphics/Backgrounds/' .. self.name .. '.png')
-    --self.backgroundQuads = generateQuads('graphics/Backgrounds/' .. self.name .. --'.png', self.mapWidth, self.mapHeight)
-    --self.animation = Animation(self.backgroundImage, self.backgroundQuads, 0.2)
+    self.backgroundImage = love.graphics.newImage('graphics/Backgrounds/' .. self.name .. '.png')
+    self.backgroundQuads = generateQuads('graphics/Backgrounds/' .. self.name .. '.png', self.mapWidth, self.mapHeight)
+    self.currentFrame = 1
+    self.timer = 0
+    self.interval = 0.2
+
 
     --\\____________________________________________________________________//--
 
@@ -102,6 +105,7 @@ function Map:init(name)
             self.buttonPlay:render()
         end,
         ['play'] = function()
+            love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
             self.player1:render()
             self.player2:render()
         end,
@@ -126,6 +130,7 @@ end
 
 function Map:update(dt)
     self.behaviors[self.state](dt)
+    self:updateAnimation(dt)
 end
 
 
@@ -144,6 +149,16 @@ function Map:updateCam()
     self.camY = self.mapHeight - VIRTUAL_HEIGHT
 end
 
+
+function Map:updateAnimation(dt)
+    if self.timer >= self.interval then
+        self.timer = 0
+        self.currentFrame = (self.currentFrame + 1) % (#self.backgroundQuads)
+    else
+        self.timer = self.timer + dt
+    end
+
+end
 
 function Map:cover()
     -- Draws a black cover in the screen
