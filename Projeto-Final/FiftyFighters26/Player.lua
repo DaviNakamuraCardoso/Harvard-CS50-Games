@@ -59,6 +59,7 @@ function Player:init(map, name, side, range)
     self.speed = 200
     self.jumpSpeed = -750
     self.direction = self.side
+    self.inAir = false
 
     -- Projectiles
     self.projectiles = {}
@@ -71,7 +72,7 @@ function Player:init(map, name, side, range)
             ['backward'] = 'a',
             ['jump'] = 'w',
             ['duck'] = 's',
-            ['attack'] = 'f',
+            ['punch'] = 'f',
             ['special'] = 'r'
 
         },
@@ -80,7 +81,7 @@ function Player:init(map, name, side, range)
             ['backward'] = 'left',
             ['jump'] = 'up',
             ['duck'] = 'down',
-            ['attack'] = '/',
+            ['punch'] = '/',
             ['special'] = ';'
         }
     }
@@ -99,12 +100,13 @@ function Player:init(map, name, side, range)
                 self.state = 'walking'
                 self.direction = -1
 
-            elseif love.keyboard.wasPressed[keyRelations[self.side]['attack']] then
-                self.state = 'attacking'
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['punch']] then
+                self.state = 'punch'
 
             elseif love.keyboard.wasPressed[keyRelations[self.side]['jump']] then
                 self.dy = self.jumpSpeed
                 self.state = 'jumping'
+                self.inAir = true 
 
             elseif love.keyboard.wasPressed[keyRelations[self.side]['duck']] then
                 self.state = 'duck'
@@ -129,7 +131,7 @@ function Player:init(map, name, side, range)
                 self.state = 'idle'
             end
         end,
-        ['attacking'] = function(dt)
+        ['punch'] = function(dt)
             self:detectDamage('front')
             if self.animation.currentFrame == #self.animation.frames and self.animation.timer >= self.animation.interval then
                 self.animation.currentFrame = 0
@@ -152,11 +154,15 @@ function Player:init(map, name, side, range)
         ['jumping'] = function(dt)
             self.y = math.floor(self.y + self.dy * dt)
             if self.y >= self.map.floor - self.height then
-                self.y = self.map.floor - self.height
-                self.dy = 0
+                self.inAir = false
                 self.state = 'idle'
             else
+                self.inAir = true
                 self.dy = self.dy + self.map.gravity
+            end
+
+            if love.keyboard.wasPressed[keyRelations[self.side]['punch']] then
+                self.state = 'air_punch'
             end
 
         end,
@@ -165,6 +171,23 @@ function Player:init(map, name, side, range)
             if not love.keyboard.isDown(keyRelations[self.side]['duck']) then
                 self.state = 'idle'
                 self.y = self.map.floor - self.height
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['punch']] then
+                self.state = 'duck_punch'
+
+            end
+        end,
+        ['duck_punch'] = function(dt)
+            self.y = self.map.mapHeight - 100
+            self:detectDamage('around')
+            if self.animations['duck_punch'].ending then
+                self.state = 'duck'
+            end
+        end,
+        ['air_punch'] = function(dt)
+            self:detectDamage('down')
+            self.inAir = true
+            if self.animations['air_punch'].ending then
+                self.state = 'jumping'
             end
         end,
         ['dying'] = function(dt)
@@ -339,7 +362,7 @@ function Player:position()
     self.width = self.currentFrame:getWidth()
     self.height = self.currentFrame:getHeight()
     self.x = math.floor(math.max(self.map.camX - 10, math.min(self.map.camX + VIRTUAL_WIDTH - 90, self.x)))
-    if self.state ~= 'jumping' then
+    if not self.inAir then
         self.y = self.map.floor - self.height
     end
     -- Offsets

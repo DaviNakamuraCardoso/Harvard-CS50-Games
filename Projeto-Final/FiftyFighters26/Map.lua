@@ -50,7 +50,7 @@ function Map:init(name)
     --\\____________________________________________________________________//--
 
     --//________________________ Sound and Music ___________________________\\--
-    love.audio.setVolume(0.25)
+    love.audio.setVolume(0)
 
     -- Effects
     self.sound = love.audio.newSource('music/' .. self.name .. '.wav', 'static')
