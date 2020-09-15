@@ -41,12 +41,16 @@ Characters = {
             ['waiting'] = {{93, 95}},
             ['winning'] = {{539, 551}},
 
+        --//_________________________ Specials _____________________________\\--
+
+            ['special_1'] = {{309, 322}},
+
         --//________________________ Projectiles ____________________________\\--
 
             ['shoot'] = {{207, 216}},
-            ['projectileFly'] = {{217, 222}},
-            ['projectileExploded'] = {{223, 234}},
-            ['projectileDestroyed'] = {{999, 1000}}
+            ['projectile_1_fly'] = {{217, 222}},
+            ['projectile_1_exploded'] = {{223, 234}},
+            ['projectile_1_destroyed'] = {{999, 1000}}
         },
         ['passive'] = function(dt, self)
             if self.health >= 50 then
@@ -56,17 +60,17 @@ Characters = {
             end
         end,
         ['shoot'] = function(player)
-            Projectile{player = player, type = 'fly', velocity = 400}
+            Projectile{player = player, type = 'fly', number = 1, velocity = 400}
         end,
 
---        ['special'] = function(dt, self)
---            self.x = math.floor(self.x - 2 * self.speed * self.direction * dt)
---            self:detectDamage('around')
---            if self.animation.currentFrame == #self.animation.frames and --self.animation.timer >= self.animation.interval then
---                self.state = 'idle'
---
---            end
---        end,
+        ['special_1'] = function(dt, self)
+            self.x = math.floor(self.x - 2 * self.speed * self.direction * dt)
+            self:detectDamage('around')
+            if self.animation.ending then
+                self.state = 'jumping'
+
+            end
+        end,
         ['cooldown'] = 5
 
     },
@@ -93,12 +97,12 @@ Characters = {
             -- Punch
             ['punch'] = {{115, 119}},
             ['duck_punch'] = {{232, 242}},
-            ['air_punch'] = {{532, 539}},
+            ['air_punch'] = {{315, 323}},
 
             -- Kick
             ['kick'] = {{123, 135}},
             ['duck_kick'] = {{219, 226}},
-            ['air_kick']  = {{315, 323}},
+            ['air_kick']  = {{532, 539}},
             ['hurt'] = {{646, 647}},
 
         --//________________________ End of Game ___________________________\\--
@@ -107,12 +111,21 @@ Characters = {
             ['waiting'] = {{625, 628}},
             ['winning'] = {{518, 522}},
 
+        --//_________________________ Specials _____________________________\\--
+
+            ['special_1'] = {{376, 390}},
+
         --//________________________ Projectiles ____________________________\\--
 
             ['shoot'] = {{412, 446}},
-            ['projectileExploded'] = {{341, 359}},
-            ['projectileDestroyed'] = {{999, 1000}},
-            ['projectileSpawn'] = {{391, 400}}
+            ['projectile_1_exploded'] = {{341, 359}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+            ['projectile_1_spawn'] = {{391, 400}},
+
+            ['projectile_2_exploded'] = {{448, 469}},
+            ['projectile_2_destroyed'] = {{999, 1000}},
+            ['projectile_2_fly'] = {{366, 372}}
+
         },
         ['passive'] = function(dt, self)
             if self.health < 20 then
@@ -120,15 +133,15 @@ Characters = {
             end
         end,
         ['shoot'] = function(self)
-            Projectile{player = self, type = 'spawn', relativeY = -self.height, range = 200, ending = 9, damage = 30}
+            Projectile{player = self, type = 'spawn', number = 1, relativeY = -self.height, range = 200, ending = 9, damage = 30}
         end,
 
---        ['special'] = function(dt, self)
---            if self.animation.currentFrame == #self.animation.frames and --self.animation.timer >= self.animation.interval then
---                Projectile(self, 200, 35, 0, -self.height / 4)
---                self.state = 'idle'
---            end
---        end,
+        ['special_1'] = function(dt, self)
+            if self.animation.currentFrame == #self.animation.frames and self.animation.timer >= self.animation.interval then
+                Projectile{player = self, type = 'fly', number = 2, velocity = 200, damage = 20, relativeX = - self.width}
+                self.state = 'idle'
+            end
+        end,
         ['cooldown'] = 2
 
     }

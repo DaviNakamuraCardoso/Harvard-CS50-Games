@@ -22,7 +22,7 @@ function Map:init(name)
 
     -- Floor and gravity
     self.floor = self.mapHeight
-    self.gravity = 80
+    self.gravity = 800
 
     --\\____________________________________________________________________//--
 

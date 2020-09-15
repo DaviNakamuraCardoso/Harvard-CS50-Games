@@ -8,6 +8,7 @@ function Projectile:init(parameters)
 
     self.player = parameters.player
     self.type = parameters.type
+    self.number = parameters.number
 
     self.range = parameters.range or 300
     self.playerPosition = self.player.x
@@ -30,14 +31,14 @@ function Projectile:init(parameters)
 
     -- Animation
     self.animations = {
-        ['exploded'] = Animation(self.player, 'projectileExploded'),
-        ['destroyed'] = Animation(self.player, 'projectileDestroyed')
+        ['exploded'] = Animation(self.player, 'projectile_' .. tostring(self.number) .. '_exploded'),
+        ['destroyed'] = Animation(self.player, 'projectile_'.. tostring(self.number) .. '_destroyed')
     }
 
     if self.type == 'fly' then
-        self.animations['fly'] = Animation(self.player, 'projectileFly')
+        self.animations['fly'] = Animation(self.player, 'projectile_' .. tostring(self.number) ..'_fly')
     else
-        self.animations['spawn'] = Animation(self.player, 'projectileSpawn')
+        self.animations['spawn'] = Animation(self.player, 'projectile_' .. tostring(self.number) .. '_spawn')
     end
 
     self.animation = self.animations['destroyed']

@@ -41,6 +41,7 @@ function Animation:getCurrentFrame()
     return self.frames[self.currentFrame]
 end
 
+
 function Animation:getCurrentQuad()
     return self.quads[self.currentFrame]
 end

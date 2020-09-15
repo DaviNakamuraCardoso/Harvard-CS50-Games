@@ -20,7 +20,7 @@ function Player:init(map, name, side, range)
 
     -- Passive and Special Ability
     self.passive = Characters[self.name]['passive']
---    self.special = Characters[self.name]['special']
+    self.special_1 = Characters[self.name]['special_1']
     self.cooldown = Characters[self.name]['cooldown']
     self.timer = self.cooldown
 
@@ -59,7 +59,7 @@ function Player:init(map, name, side, range)
 
     -- Walk and Jump
     self.speed = 200
-    self.jumpSpeed = -500
+    self.jumpSpeed = -400
     self.direction = self.side
     self.inAir = false
 
@@ -75,8 +75,9 @@ function Player:init(map, name, side, range)
             ['jump'] = 'w',
             ['duck'] = 's',
             ['punch'] = 'f',
-            ['kick'] = 'v',
-            ['shoot'] = 'r'
+            ['kick'] = 'c',
+            ['shoot'] = 'q',
+            ['special_1'] = 'e'
 
         },
         [1] = {
@@ -86,7 +87,8 @@ function Player:init(map, name, side, range)
             ['duck'] = 'down',
             ['punch'] = '/',
             ['kick'] = '.',
-            ['shoot'] = ';'
+            ['shoot'] = ';',
+            ['special_1'] = 'l'
         }
     }
 
@@ -112,6 +114,7 @@ function Player:init(map, name, side, range)
 
             elseif love.keyboard.wasPressed[keyRelations[self.side]['jump']] then
                 self.dy = self.jumpSpeed
+                self.y = self.y - 30
                 self.state = 'jumping'
                 self.inAir = true
 
@@ -122,6 +125,8 @@ function Player:init(map, name, side, range)
                 self.timer = 0
                 self.state = 'shoot'
 
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['special_1']] then
+                self.state = 'special_1'
 
 
             end
@@ -261,10 +266,10 @@ function Player:init(map, name, side, range)
                 self.state = 'idle'
             end
 
+        end,
+        ['special_1'] = function(dt)
+            self.special_1(dt, self)
         end
-        --['special'] = function(dt)
-        --    self.special(dt, self)
-        --end
     }
     --//_________________________ Animations ___________________________\\--
     self.animations = {}
@@ -423,6 +428,7 @@ function Player:land()
         self.state = 'jumping'
     else
         self.y = self.map.floor - self.height
+        self.dy = 0
         self.state = 'idle'
     end
 end
