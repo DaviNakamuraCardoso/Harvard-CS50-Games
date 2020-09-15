@@ -348,7 +348,21 @@
 - In this update, I've implemented a different type of attack - kick
 - When players kick while ducking or jumping, they trigger different animations and behaviors for the kick
 
+### Fifty Fighters 32
 
+*The Multiple Animations Update*
+
+**Date: September 15<sup>th</sup>, 2020**
+
+- Implementing multiple animations for the same state
+
+### Fifty Fighters 33
+
+*The Sprites Update 4 - Specials*
+
+**Date: September 15<sup>th</sup>, 2020**
+
+- Redefining the special behavior based on the last updates on Animations
 
 
 

@@ -3,55 +3,56 @@
 Characters = {
 
     ['Athena'] = {
-        ['armor'] = 90,
-        ['damage'] = 15,
-        ['range'] = 60,
+        ['armor'] = 40,
+        ['damage'] = 8,
+        ['punch_range'] = 50,
+        ['kick_range'] = 70,
         ['sex'] = 'female',
         ['shootTrigger'] = 9,
         ['animations'] = {
         --//_______________________ Idle and Dance _________________________\\--
 
-            ['idle'] = {0, 7},
+            ['idle'] = {{0, 7}},
 
 
         --//__________________________ Movement ____________________________\\--
 
-            ['walking'] = {8, 19},
-            ['jumping'] = {30, 35},
-            ['duck'] = {49, 52},
+            ['walking'] = {{8, 19}},
+            ['jumping'] = {{30, 35}},
+            ['duck'] = {{49, 52}},
 
         --//__________________________ Damage ______________________________\\--
 
             -- Punch
-            ['punch'] = {125, 134},
-            ['duck_punch'] = {145, 147},
-            ['air_punch'] = {135, 139},
+            ['punch'] = {{125, 134}},
+            ['duck_punch'] = {{145, 147}},
+            ['air_punch'] = {{135, 139}},
 
             -- Kick
-            ['kick'] = {179, 189},
-            ['duck_kick'] = {193, 204},
-            ['air_kick'] = {191, 193},
-            ['hurt'] = {660, 661},
+            ['kick'] = {{179, 189}},
+            ['duck_kick'] = {{193, 204}},
+            ['air_kick'] = {{191, 193}},
+            ['hurt'] = {{660, 661}},
 
         --//________________________ End of Game ___________________________\\--
 
 
-            ['dying'] = {614, 619},
-            ['waiting'] = {93, 95},
-            ['winning'] = {539, 551},
+            ['dying'] = {{614, 619}},
+            ['waiting'] = {{93, 95}},
+            ['winning'] = {{539, 551}},
 
         --//________________________ Projectiles ____________________________\\--
 
-            ['shoot'] = {207, 216},
-            ['projectileFly'] = {217, 222},
-            ['projectileExploded'] = {223, 234},
-            ['projectileDestroyed'] = {999, 1000}
+            ['shoot'] = {{207, 216}},
+            ['projectileFly'] = {{217, 222}},
+            ['projectileExploded'] = {{223, 234}},
+            ['projectileDestroyed'] = {{999, 1000}}
         },
         ['passive'] = function(dt, self)
             if self.health >= 50 then
-                self.damage = 30
+                self.damage = 12
             else
-                self.damage = 15
+                self.damage = 8
             end
         end,
         ['shoot'] = function(player)
@@ -71,54 +72,55 @@ Characters = {
     },
     ['Bonne'] = {
         ['armor'] = 30,
-        ['damage'] = 20,
-        ['range'] = 30,
+        ['damage'] = 5,
+        ['punch_range'] = 30,
+        ['kick_range'] = 90,
         ['sex'] = 'female',
         ['shootTrigger'] = 9,
         ['animations'] = {
 
         --//_______________________ Idle and Dance _________________________\\--
-            ['idle'] = {0, 15},
+            ['idle'] = {{0, 15}},
 
         --//__________________________ Movement ____________________________\\--
 
-            ['walking'] = {16, 31},
-            ['jumping'] = {42, 50},
-            ['duck'] = {51, 59},
+            ['walking'] = {{16, 31}},
+            ['jumping'] = {{42, 50}},
+            ['duck'] = {{51, 59}},
 
         --//__________________________ Damage ______________________________\\--
 
             -- Punch
-            ['punch'] = {115, 119},
-            ['duck_punch'] = {232, 242},
-            ['air_punch'] = {532, 539},
+            ['punch'] = {{115, 119}},
+            ['duck_punch'] = {{232, 242}},
+            ['air_punch'] = {{532, 539}},
 
             -- Kick
-            ['kick'] = {123, 135},
-            ['duck_kick'] = {219, 226},
-            ['air_kick']  = {315, 323},
-            ['hurt'] = {646, 647},
+            ['kick'] = {{123, 135}},
+            ['duck_kick'] = {{219, 226}},
+            ['air_kick']  = {{315, 323}},
+            ['hurt'] = {{646, 647}},
 
         --//________________________ End of Game ___________________________\\--
 
-            ['dying'] = {602, 607},
-            ['waiting'] = {625, 628},
-            ['winning'] = {518, 522},
+            ['dying'] = {{602, 607}},
+            ['waiting'] = {{625, 628}},
+            ['winning'] = {{518, 522}},
 
         --//________________________ Projectiles ____________________________\\--
 
-            ['shoot'] = {412, 446},
-            ['projectileExploded'] = {341, 359},
-            ['projectileDestroyed'] = {999, 1000},
-            ['projectileSpawn'] = {391, 400}
+            ['shoot'] = {{412, 446}},
+            ['projectileExploded'] = {{341, 359}},
+            ['projectileDestroyed'] = {{999, 1000}},
+            ['projectileSpawn'] = {{391, 400}}
         },
         ['passive'] = function(dt, self)
             if self.health < 20 then
-                self.damage = 40
+                self.damage = 15
             end
         end,
         ['shoot'] = function(self)
-            Projectile{player = self, type = 'spawn', relativeY = -self.height, range = 200, ending = 9}
+            Projectile{player = self, type = 'spawn', relativeY = -self.height, range = 200, ending = 9, damage = 30}
         end,
 
 --        ['special'] = function(dt, self)

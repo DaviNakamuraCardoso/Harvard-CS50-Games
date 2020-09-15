@@ -4,15 +4,19 @@ Animation = Class{}
 
 
 function Animation:init(player, state)
-    animationsTable = generateAnimation(player, state)
-    self.frames = animationsTable.frames
-    self.quads = animationsTable.quads
+    self.player = player
+    self.state = state
+    self.table = Characters[self.player.name]['animations'][state]
+    self.animationsTable = generateAnimation(player, self.table[1])
+    self.frames = self.animationsTable.frames
+    self.quads = self.animationsTable.quads
     self.interval = 0.05
 
     self.timer = 0
     self.currentFrame = 1
     self.ending = false
     self.changing = false
+    self.shuffled = true
 
 end
 
@@ -42,7 +46,16 @@ function Animation:getCurrentQuad()
 end
 
 
-
+function Animation:shuffle()
+    if not self.shuffled and self.player.state ~= self.state  and #self.table > 1 then
+        self.animationsTable = generateAnimation(self.player, self.table[math.random(#self.table)])
+        self.frames = self.animationsTable.frames
+        self.quads = self.animationsTable.quads
+        self.currentFrame = 0
+    elseif self.state == self.player.state then
+        self.shuffled = false
+    end
+end
 
 
 

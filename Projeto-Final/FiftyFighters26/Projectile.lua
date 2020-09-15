@@ -13,6 +13,7 @@ function Projectile:init(parameters)
     self.playerPosition = self.player.x
 
     self.velocity = parameters.velocity or 0
+    self.damage = parameters.damage or self.player.damage
 
 
     self.player.numberOfProjectiles = self.player.numberOfProjectiles + 1
@@ -96,11 +97,12 @@ function Projectile:update(dt)
     self.currentQuad = self.animation:getCurrentQuad()
 end
 
+
 function Projectile:checkCollisions()
     for i=0, 360 do
         local x = math.floor(self.x + self.size / 2 + self.size / 2 * math.cos(math.rad(i)))
         local y = math.floor(self.y + self.size / 2 + self.size / 2 * math.sin(math.rad(i)))
-        if self.player:hit(x, y, self.size) then
+        if self.player:hit(x, y, self.size, self.damage) then
             self.state = 'exploded'
             self.sound:play()
         end

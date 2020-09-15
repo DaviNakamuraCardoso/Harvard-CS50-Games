@@ -13,7 +13,8 @@ function Player:init(map, name, side, range)
     -- Combat status
     self.health = 100
     self.armor = Characters[self.name]['armor']
-    self.range = Characters[self.name]['range']
+    self.punch_range = Characters[self.name]['punch_range']
+    self.kick_range = Characters[self.name]['kick_range']
     self.damage = Characters[self.name]['damage']
     self.sex = Characters[self.name]['sex']
 
@@ -58,7 +59,7 @@ function Player:init(map, name, side, range)
 
     -- Walk and Jump
     self.speed = 200
-    self.jumpSpeed = -750
+    self.jumpSpeed = -500
     self.direction = self.side
     self.inAir = false
 
@@ -160,33 +161,33 @@ function Player:init(map, name, side, range)
             end
         end,
         ['kick'] = function(dt)
-            self:detectDamage('front', 1.2 * self.range)
+            self:detectDamage('front', self.kick_range)
             if self.animations['kick'].ending then
                 self.state = 'idle'
             end
 
         end,
         ['duck_kick'] = function(dt)
-            self:detectDamage('around', 1.5 * self.range)
+            self:detectDamage('around', self.kick_range)
             if self.animations['duck_kick'].ending then
                 self.state = 'duck'
             end
         end,
 
         ['air_kick'] = function(dt)
-            self:detectDamage('down', 2 * self.range)
+            self:detectDamage('down', self.kick_range)
             if self.animations['air_kick'].ending then
                 self.state = 'jumping'
             end
         end,
         ['jumping'] = function(dt)
             self.y = math.floor(self.y + self.dy * dt)
+            self.dy = self.dy + self.map.gravity * dt
             if self.y >= self.map.floor - self.height then
                 self.inAir = false
                 self.state = 'idle'
             else
                 self.inAir = true
-                self.dy = self.dy + self.map.gravity
             end
 
             if love.keyboard.wasPressed[keyRelations[self.side]['punch']] then
@@ -270,6 +271,7 @@ function Player:init(map, name, side, range)
     for k, v in pairs(self.behaviors) do
         self.animations[k] = Animation(self, k)
     end
+    self.animations['dying'].interval = 0.2
 
 
 
@@ -310,13 +312,15 @@ function Player:update(dt)
     self:updateAllProjectiles(dt)
 
     -- Position and dimensions
-    self:position()
+    self:position(dt)
 
     -- Lifebar
     self.lifebar:update(dt)
 
     -- Sounds
     self:playSounds()
+
+    self:shuffleAnimations()
 end
 
 
@@ -325,6 +329,12 @@ function Player:render()
 
 end
 
+
+function Player:shuffleAnimations()
+    for k, v in pairs(self.animations) do
+        self.animations[k]:shuffle()
+    end
+end
 
 function Player:enemyAt(x, y)
     if self.enemy.y <= y and y <= self.enemy.y + self.enemy.height then
@@ -342,7 +352,7 @@ end
 --//__________________________ Damage detection ____________________________\\--
 function Player:detectDamage(position, range)
 
-    local range = range or self.range
+    local range = range or self.punch_range
     local positions = {
         ['front'] = {
             ['start'] = 90,
@@ -357,12 +367,12 @@ function Player:detectDamage(position, range)
         ['up'] = {
             ['start'] = 0,
             ['end'] = 180,
-            ['direction'] = -1
+            ['direction'] = 1
         },
         ['down'] = {
             ['start'] = 0,
             ['end'] = 180,
-            ['direction'] = 1
+            ['direction'] = -1
         },
         ['around'] = {
             ['start'] = 0,
@@ -381,24 +391,26 @@ function Player:detectDamage(position, range)
     end
 end
 
-function Player:hit(x, y, range)
-
-    if self:enemyAt(x, y) and self.enemy.state ~= 'hurt' then
+function Player:hit(x, y, range, damage)
+    local distance = ((self.x - self.enemy.x)^2 + (self.y - self.enemy.y)^2)^(1/2)
+    local damage = damage or self.damage
+    if (self:enemyAt(x, y) or distance < range) and self.enemy.state ~= 'hurt' then
         self.enemy.state = 'hurt'
-        self.enemy.health = self.enemy.health - (self.damage - self.enemy.armor / 10)
-        self.enemy.x = math.min(self.map.mapWidth - self.width - 10, math.max(0, math.floor(self.enemy.x - self.direction * range / 2)))
+        self.enemy.health = self.enemy.health - (damage - damage * self.enemy.armor / 100)
+        self.enemy.x = math.min(self.map.mapWidth - self.width - 10, math.max(0, math.floor(self.enemy.x - self.direction * range / 4)))
         return true
 
     end
 end
 
 
-function Player:position()
+function Player:position(dt)
     self.width = self.currentFrame:getWidth()
     self.height = self.currentFrame:getHeight()
     self.x = math.floor(math.max(self.map.camX - 10, math.min(self.map.camX + VIRTUAL_WIDTH - 90, self.x)))
     if not self.inAir then
         self.y = self.map.floor - self.height
+
     end
     -- Offsets
     self.xOffset = self.width / 2

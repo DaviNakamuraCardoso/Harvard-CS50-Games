@@ -26,12 +26,12 @@ function generateQuads(sheet, width, height)
 end
 
 
-function generateAnimation(character, state)
+function generateAnimation(character, table)
 
     frames = {}
     quads = {}
     index = 0
-    for i=Characters[character.name]['animations'][state][1], Characters[character.name]['animations'][state][2] do
+    for i=table[1], table[2] do
         local image = 'graphics/' .. character.name .. '/' .. tostring(i) .. '.png'
         frames[index] = love.graphics.newImage(image)
         quads[index] = love.graphics.newQuad(0, 0, frames[index]:getWidth(), frames[index]:getHeight(), frames[index]:getWidth(), frames[index]:getHeight())
