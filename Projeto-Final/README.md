@@ -317,5 +317,18 @@
 
 - Implementing changes in the projectile Class to allow instantaneous projectiles 
 
+### Fifty Fighters 29 
+
+*The Sprites Update 3 - Bugfixes*
+
+**Date: September 14<sup>th</sup>, 2020**
+
+- Fixing bugs from the recent changes on Animation, Jumping and Projectiles as 
+  - x and y Offsets
+  - Cam control 
+  - Hit boxes 
+
+- Now, the characters' life bar changes it's color based on the health
+
 
 

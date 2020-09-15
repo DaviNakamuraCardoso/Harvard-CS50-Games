@@ -18,12 +18,7 @@ function Lifebar:init(player)
     self.x = self.player.map.camX + self.relativeX
     self.y = self.player.map.camY + self.relativeY
 
-
-    -- Hurt rectangle
-    self.rectangleWidth = self.width * (1 - self.player.health / 100)
-
-
-
+    self.color = {(100 - self.player.health) / 50, self.player.health / 100, 0, 1}
 
 
 end
@@ -34,6 +29,8 @@ function Lifebar:update(dt)
     self.y = self.player.map.camY + self.relativeY
     self.rectangleWidth = self.width * (1 - self.player.health / 100)
     self.rectangleWidth = math.max(0.1, self.rectangleWidth - dt * 100)
+    self.color = {(100 - self.player.health) / 50, self.player.health / 100, 0, 1}
+
 
 end
 
@@ -48,7 +45,7 @@ function Lifebar:render()
     love.graphics.rectangle('fill', self.x, self.y, self.width, self.height, 2, 2)
 
     -- The red bar
-    love.graphics.setColor(1, 0, 0, 1)
+    love.graphics.setColor(self.color[1], self.color[2], self.color[3], 1)
     love.graphics.rectangle('fill', self.x + self.player.sideParameter * (self.width - self.width * self.player.health / 100), self.y, math.max(0.1, self.width * self.player.health / 100), self.height, 2, 2)
 
     -- Reseting the color set

@@ -35,8 +35,8 @@ function Player:init(map, name, side, range)
     -- Position and dimensions
     self.x = self.map.camX + VIRTUAL_WIDTH / 2 + (VIRTUAL_WIDTH / 2 * self.side)
     self.y = self.map.floor
-    self.width = 100
-    self.height = 160
+    self.width = 0
+    self.height = 0
 
     self.dx = 0
     self.dy = 0
@@ -342,6 +342,9 @@ function Player:position()
     if self.state ~= 'jumping' then
         self.y = self.map.floor - self.height
     end
+    -- Offsets
+    self.xOffset = self.width / 2
+    self.yOffset = self.height / 2
 end
 
 
