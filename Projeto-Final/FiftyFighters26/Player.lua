@@ -22,6 +22,9 @@ function Player:init(map, name, side, range)
     self.cooldown = Characters[self.name]['cooldown']
     self.timer = self.cooldown
 
+    self.shoot = Characters[self.name]['shoot']
+    self.bullets = 10
+
 
 
     -- 1 or -1, 1 representing the right side and -1 the left side
@@ -54,7 +57,7 @@ function Player:init(map, name, side, range)
 
     -- Walk and Jump
     self.speed = 200
-    self.jumpSpeed = -600
+    self.jumpSpeed = -750
     self.direction = self.side
 
     -- Projectiles
@@ -106,9 +109,9 @@ function Player:init(map, name, side, range)
             elseif love.keyboard.wasPressed[keyRelations[self.side]['duck']] then
                 self.state = 'duck'
 
-            elseif love.keyboard.wasPressed[keyRelations[self.side]['special']] and self.timer >= self.cooldown then
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['special']] and self.bullets > 0 then
                 self.timer = 0
-                self.state = 'special'
+                self.state = 'shoot'
 
             end
 
@@ -149,7 +152,7 @@ function Player:init(map, name, side, range)
         ['jumping'] = function(dt)
             self.y = math.floor(self.y + self.dy * dt)
             if self.y >= self.map.floor - self.height then
-                self.y = self.map.floor - self.height 
+                self.y = self.map.floor - self.height
                 self.dy = 0
                 self.state = 'idle'
             else
@@ -190,6 +193,14 @@ function Player:init(map, name, side, range)
         end,
         ['winning'] = function(dt)
             self.y = self.map.floor - self.height
+
+        end,
+        ['shoot'] = function(dt)
+            if self.animation.currentFrame == Characters[self.name]['shootTrigger'] and self.animation.timer >= self.animation.interval then
+                self:shoot(self)
+            elseif self.animation.ending then
+                self.state = 'idle'
+            end
 
         end
         --['special'] = function(dt)
@@ -252,15 +263,13 @@ end
 
 
 function Player:render()
-    self.lifebar:render()
     love.graphics.draw(self.currentFrame, self.currentQuad, math.floor(self.x + self.xOffset), math.floor(self.y + self.yOffset), 0, self.direction, 1, self.xOffset, self.yOffset)
-    self:renderAllProjectiles()
 
 end
 
 
 function Player:enemyAt(x, y)
-    if self.enemy.y + 60 <= y and y <= self.enemy.y + 60 + self.enemy.height then
+    if self.enemy.y <= y and y <= self.enemy.y + self.enemy.height then
         if self.enemy.x <= x and x <= self.enemy.x + self.enemy.width then
             return true
         else

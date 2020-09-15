@@ -106,8 +106,12 @@ function Map:init(name)
         end,
         ['play'] = function()
             love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
+            self.player1.lifebar:render()
+            self.player2.lifebar:render()
             self.player1:render()
             self.player2:render()
+            self.player1:renderAllProjectiles()
+            self.player2:renderAllProjectiles()
         end,
         ['pause'] = function()
             self.player1:render()

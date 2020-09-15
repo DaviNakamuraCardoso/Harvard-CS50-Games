@@ -11,14 +11,21 @@ function Animation:init(player, state)
 
     self.timer = 0
     self.currentFrame = 1
+    self.ending = false
 
 end
 
 function Animation:update(dt)
     if self.timer >= self.interval then
+        if self.currentFrame == #self.frames then
+            self.ending = true
+        else
+            self.ending = false
+        end
         self.timer = 0
         self.currentFrame = (self.currentFrame + 1) % (#self.frames + 1)
     else
+        self.ending = false 
         self.timer = self.timer + dt
     end
 end

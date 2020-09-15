@@ -4,16 +4,23 @@
 Projectile = Class{}
 
 
-function Projectile:init(player, velocity, size, relativeX, relativeY)
+function Projectile:init(parameters)
 
-    self.player = player
-    self.velocity = velocity
-    self.size = size
+    self.player = parameters.player
+    self.type = parameters.type
+
+    self.range = parameters.range or 300
+    self.playerPosition = self.player.x
+
+    self.velocity = parameters.velocity or 0
 
 
     self.player.numberOfProjectiles = self.player.numberOfProjectiles + 1
     self.player.projectiles[self.player.numberOfProjectiles] = self
+    self.player.bullets = self.player.bullets - 1
 
+    local relativeX = parameters.relativeX or - self.player.height / 4
+    local relativeY = parameters.relativeY or - self.player.width / 2
 
     -- Initial Position
     self.direction = self.player.direction
@@ -22,23 +29,17 @@ function Projectile:init(player, velocity, size, relativeX, relativeY)
 
     -- Animation
     self.animations = {
-        ['fly'] = Animation(
-        love.graphics.newImage('graphics/' .. self.player.name .. '/projectile.png'),
-        generateQuads('graphics/' .. self.player.name .. '/projectile.png', self.size,  self.size),
-        0.2),
-        ['exploded'] = Animation(
-            love.graphics.newImage('graphics/' .. self.player.name .. '/projectileExploded.png'),
-            generateQuads('graphics/' .. self.player.name .. '/projectileExploded.png', self.size, self.size),
-            0.2
-        ),
-        ['destroyed'] = Animation(
-            love.graphics.newImage('graphics/' .. self.player.name .. '/projectileDestroyed.png'),
-            generateQuads('graphics/' .. self.player.name .. '/projectileDestroyed.png', self.size, self.size),
-            0.2
-        )
+        ['exploded'] = Animation(self.player, 'projectileExploded'),
+        ['destroyed'] = Animation(self.player, 'projectileDestroyed')
     }
-    self.animation = self.animations['fly']
 
+    if self.type == 'fly' then
+        self.animations['fly'] = Animation(self.player, 'projectileFly')
+    else
+        self.animations['spawn'] = Animation(self.player, 'projectileSpawn')
+    end
+
+    self.animation = self.animations['destroyed']
     self.behaviors = {
         ['fly'] = function(dt)
             self:checkCollisions()
@@ -47,10 +48,23 @@ function Projectile:init(player, velocity, size, relativeX, relativeY)
                 self.state = 'destroyed'
             end
         end,
+        ['spawn'] = function(dt)
+            self.x = self.player.x - self.direction * self.range
+            self:checkCollisions()
+            if self.animation.ending then
+                if self.player.enemy.state == 'hurt' then
+                    self.state = 'exploded'
+                else
+                    self.state = 'destroyed'
+                end 
+
+            end
+        end,
+
         ['exploded'] = function(dt)
             self.x = self.player.enemy.x + self.player.enemy.width / 4
-            self.y = self.player.enemy.y + self.player.enemy.height / 2
-            if self.animation.currentFrame == #self.animation.frames and self.animation.timer >= self.animation.interval then
+            self.y = self.player.enemy.y
+            if self.animation.ending then
                 self.state = 'destroyed'
             end
         end,
@@ -58,16 +72,18 @@ function Projectile:init(player, velocity, size, relativeX, relativeY)
         end
     }
 
-    self.state = 'fly'
+    self.state = self.type
     self.currentFrame = self.animation:getCurrentFrame()
+    self.currentQuad =  self.animation:getCurrentQuad()
 
+    self.size = parameters.size or 40
     -- Sounds
     self.sound = love.audio.newSource('sounds/' .. self.player.name .. '/projectile.wav', 'static')
 end
 
 
 function Projectile:render()
-    love.graphics.draw(self.animation.texture, self.currentFrame, self.x, self.y)
+    love.graphics.draw(self.currentFrame, self.currentQuad, self.x, self.y)
 
 end
 
@@ -77,6 +93,7 @@ function Projectile:update(dt)
     self.behaviors[self.state](dt)
     self.animation:update(dt)
     self.currentFrame = self.animation:getCurrentFrame()
+    self.currentQuad = self.animation:getCurrentQuad()
 end
 
 function Projectile:checkCollisions()
