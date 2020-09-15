@@ -6,6 +6,7 @@ Characters = {
         ['armor'] = 90,
         ['damage'] = 15,
         ['range'] = 60,
+        ['sex'] = 'female',
         ['shootTrigger'] = 9,
         ['animations'] = {
         --//_______________________ Idle and Dance _________________________\\--
@@ -21,9 +22,15 @@ Characters = {
 
         --//__________________________ Damage ______________________________\\--
 
+            -- Punch
             ['punch'] = {125, 134},
             ['duck_punch'] = {145, 147},
             ['air_punch'] = {135, 139},
+
+            -- Kick
+            ['kick'] = {179, 189},
+            ['duck_kick'] = {193, 204},
+            ['air_kick'] = {191, 193},
             ['hurt'] = {660, 661},
 
         --//________________________ End of Game ___________________________\\--
@@ -41,8 +48,10 @@ Characters = {
             ['projectileDestroyed'] = {999, 1000}
         },
         ['passive'] = function(dt, self)
-            if self.state == 'jumping' then
-                self:detectDamage('around', 70)
+            if self.health >= 50 then
+                self.damage = 30
+            else
+                self.damage = 15
             end
         end,
         ['shoot'] = function(player)
@@ -64,6 +73,7 @@ Characters = {
         ['armor'] = 30,
         ['damage'] = 20,
         ['range'] = 30,
+        ['sex'] = 'female',
         ['shootTrigger'] = 9,
         ['animations'] = {
 
@@ -78,12 +88,19 @@ Characters = {
 
         --//__________________________ Damage ______________________________\\--
 
+            -- Punch
             ['punch'] = {115, 119},
             ['duck_punch'] = {232, 242},
             ['air_punch'] = {532, 539},
+
+            -- Kick
+            ['kick'] = {123, 135},
+            ['duck_kick'] = {219, 226},
+            ['air_kick']  = {315, 323},
             ['hurt'] = {646, 647},
 
         --//________________________ End of Game ___________________________\\--
+
             ['dying'] = {602, 607},
             ['waiting'] = {625, 628},
             ['winning'] = {518, 522},
@@ -91,7 +108,7 @@ Characters = {
         --//________________________ Projectiles ____________________________\\--
 
             ['shoot'] = {412, 446},
-            ['projectileExploded'] = {405, 411},
+            ['projectileExploded'] = {341, 359},
             ['projectileDestroyed'] = {999, 1000},
             ['projectileSpawn'] = {391, 400}
         },

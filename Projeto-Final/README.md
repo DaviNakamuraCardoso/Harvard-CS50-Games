@@ -332,20 +332,23 @@
 
 ### Fifty Fighters 30
 
-*The Dynamic Attack Update 1 - Duck Punch and Air Punch*
+*The Dynamic Attack Update 1 - Ducking Punch and Air Punch*
 
 **Date: September 15<sup>th</sup>, 2020**
 
-- When characters attack while ducking they trigger a different attack - the duck attack, with a different behavior and animation
+- When characters punch while ducking they trigger a different attack - the ducking punch, with a different behavior and animation
 - Also, when they punch during jump, a air punch animation and behavior is activated 
 
 ### Fifty Fighters 31
 
-*The Dynamic Attack Update 2 - Kicks and Duck Kicks*
+*The Dynamic Attack Update 2 - Kicks, Ducking Kicks*
 
 **Date: September 15<sup>th</sup>, 2020**
 
 - In this update, I've implemented a different type of attack - kick
+- When players kick while ducking or jumping, they trigger different animations and behaviors for the kick
+
+
 
 
 

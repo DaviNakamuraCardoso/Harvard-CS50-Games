@@ -12,6 +12,7 @@ function Animation:init(player, state)
     self.timer = 0
     self.currentFrame = 1
     self.ending = false
+    self.changing = false
 
 end
 
@@ -22,10 +23,12 @@ function Animation:update(dt)
         else
             self.ending = false
         end
+        self.changing = true
         self.timer = 0
         self.currentFrame = (self.currentFrame + 1) % (#self.frames + 1)
     else
-        self.ending = false 
+        self.ending = false
+        self.changing = false
         self.timer = self.timer + dt
     end
 end

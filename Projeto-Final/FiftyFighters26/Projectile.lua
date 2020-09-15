@@ -56,7 +56,7 @@ function Projectile:init(parameters)
                     self.state = 'exploded'
                 else
                     self.state = 'destroyed'
-                end 
+                end
 
             end
         end,
@@ -100,7 +100,7 @@ function Projectile:checkCollisions()
     for i=0, 360 do
         local x = math.floor(self.x + self.size / 2 + self.size / 2 * math.cos(math.rad(i)))
         local y = math.floor(self.y + self.size / 2 + self.size / 2 * math.sin(math.rad(i)))
-        if self.player:hit(x, y) then
+        if self.player:hit(x, y, self.size) then
             self.state = 'exploded'
             self.sound:play()
         end

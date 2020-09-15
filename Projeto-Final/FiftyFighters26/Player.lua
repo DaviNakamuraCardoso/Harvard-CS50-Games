@@ -15,6 +15,7 @@ function Player:init(map, name, side, range)
     self.armor = Characters[self.name]['armor']
     self.range = Characters[self.name]['range']
     self.damage = Characters[self.name]['damage']
+    self.sex = Characters[self.name]['sex']
 
     -- Passive and Special Ability
     self.passive = Characters[self.name]['passive']
@@ -73,7 +74,8 @@ function Player:init(map, name, side, range)
             ['jump'] = 'w',
             ['duck'] = 's',
             ['punch'] = 'f',
-            ['special'] = 'r'
+            ['kick'] = 'v',
+            ['shoot'] = 'r'
 
         },
         [1] = {
@@ -82,7 +84,8 @@ function Player:init(map, name, side, range)
             ['jump'] = 'up',
             ['duck'] = 'down',
             ['punch'] = '/',
-            ['special'] = ';'
+            ['kick'] = '.',
+            ['shoot'] = ';'
         }
     }
 
@@ -103,17 +106,22 @@ function Player:init(map, name, side, range)
             elseif love.keyboard.wasPressed[keyRelations[self.side]['punch']] then
                 self.state = 'punch'
 
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['kick']] then
+                self.state = 'kick'
+
             elseif love.keyboard.wasPressed[keyRelations[self.side]['jump']] then
                 self.dy = self.jumpSpeed
                 self.state = 'jumping'
-                self.inAir = true 
+                self.inAir = true
 
             elseif love.keyboard.wasPressed[keyRelations[self.side]['duck']] then
                 self.state = 'duck'
 
-            elseif love.keyboard.wasPressed[keyRelations[self.side]['special']] and self.bullets > 0 then
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['shoot']] and self.bullets > 0 then
                 self.timer = 0
                 self.state = 'shoot'
+
+
 
             end
 
@@ -133,9 +141,9 @@ function Player:init(map, name, side, range)
         end,
         ['punch'] = function(dt)
             self:detectDamage('front')
-            if self.animation.currentFrame == #self.animation.frames and self.animation.timer >= self.animation.interval then
+            if self.animations['punch'].ending then
                 self.animation.currentFrame = 0
-                self:land()
+                self.state = 'idle'
 
             end
             if love.keyboard.isDown(keyRelations[self.side]['backward']) then
@@ -151,6 +159,26 @@ function Player:init(map, name, side, range)
                 self.state = 'duck'
             end
         end,
+        ['kick'] = function(dt)
+            self:detectDamage('front', 1.2 * self.range)
+            if self.animations['kick'].ending then
+                self.state = 'idle'
+            end
+
+        end,
+        ['duck_kick'] = function(dt)
+            self:detectDamage('around', 1.5 * self.range)
+            if self.animations['duck_kick'].ending then
+                self.state = 'duck'
+            end
+        end,
+
+        ['air_kick'] = function(dt)
+            self:detectDamage('down', 2 * self.range)
+            if self.animations['air_kick'].ending then
+                self.state = 'jumping'
+            end
+        end,
         ['jumping'] = function(dt)
             self.y = math.floor(self.y + self.dy * dt)
             if self.y >= self.map.floor - self.height then
@@ -163,6 +191,9 @@ function Player:init(map, name, side, range)
 
             if love.keyboard.wasPressed[keyRelations[self.side]['punch']] then
                 self.state = 'air_punch'
+
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['kick']] then
+                self.state = 'air_kick'
             end
 
         end,
@@ -173,6 +204,9 @@ function Player:init(map, name, side, range)
                 self.y = self.map.floor - self.height
             elseif love.keyboard.wasPressed[keyRelations[self.side]['punch']] then
                 self.state = 'duck_punch'
+
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['kick']] then
+                self.state = 'duck_kick'
 
             end
         end,
@@ -190,6 +224,7 @@ function Player:init(map, name, side, range)
                 self.state = 'jumping'
             end
         end,
+
         ['dying'] = function(dt)
             if self.animation.currentFrame == (#self.animation.frames) and self.animation.timer >= self.animation.interval then
                 self.state = 'waiting'
@@ -322,12 +357,12 @@ function Player:detectDamage(position, range)
         ['up'] = {
             ['start'] = 0,
             ['end'] = 180,
-            ['direction'] = 1
+            ['direction'] = -1
         },
         ['down'] = {
             ['start'] = 0,
             ['end'] = 180,
-            ['direction'] = -1
+            ['direction'] = 1
         },
         ['around'] = {
             ['start'] = 0,
@@ -341,17 +376,17 @@ function Player:detectDamage(position, range)
         for i=positions[position]['start'], positions[position]['end'] do
             local x = self.x + self.width / 2 + (math.cos(math.rad(i)) * range * positions[position]['direction'] * self.direction)
             local y = self.y + self.height / 2 + (math.sin(math.rad(i)) * range * positions[position]['direction'] * self.direction)
-            self:hit(x, y)
+            self:hit(x, y, range)
         end
     end
 end
 
-function Player:hit(x, y)
+function Player:hit(x, y, range)
 
     if self:enemyAt(x, y) and self.enemy.state ~= 'hurt' then
         self.enemy.state = 'hurt'
         self.enemy.health = self.enemy.health - (self.damage - self.enemy.armor / 10)
-        self.enemy.x = math.min(self.map.mapWidth - self.width - 10, math.max(0, math.floor(self.enemy.x - self.direction * self.range / 2)))
+        self.enemy.x = math.min(self.map.mapWidth - self.width - 10, math.max(0, math.floor(self.enemy.x - self.direction * range / 2)))
         return true
 
     end
@@ -406,7 +441,9 @@ end
 function Player:playSounds()
     if self.animation.currentFrame == 1 then
         if not self.soundPlayed[self.state] then
-            self.sounds[self.state]:play()
+            if self.sounds[self.state] then
+                self.sounds[self.state]:play()
+            end
             self.soundPlayed[self.state] = true
         end
     end
