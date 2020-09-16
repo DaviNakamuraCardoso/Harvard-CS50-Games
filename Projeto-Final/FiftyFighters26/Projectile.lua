@@ -16,6 +16,8 @@ function Projectile:init(parameters)
     self.velocity = parameters.velocity or 0
     self.damage = parameters.damage or self.player.damage
 
+    self.incline = parameters.incline or 0
+
 
     self.player.numberOfProjectiles = self.player.numberOfProjectiles + 1
     self.player.projectiles[self.player.numberOfProjectiles] = self
@@ -45,7 +47,8 @@ function Projectile:init(parameters)
     self.behaviors = {
         ['fly'] = function(dt)
             self:checkCollisions()
-            self.x = math.floor(self.x - self.velocity * self.direction * dt)
+            self.x = math.floor(self.x - self.velocity * self.direction * math.cos(math.rad(self.incline)) * dt)
+            self.y = math.floor(self.y + self.velocity * math.sin(math.rad(self.incline)) * dt)
             if self.x > self.player.map.mapWidth or self.x < 0 then
                 self.state = 'destroyed'
             end

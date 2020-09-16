@@ -44,13 +44,18 @@ Characters = {
         --//_________________________ Specials _____________________________\\--
 
             ['special_1'] = {{309, 322}},
+            ['special_2'] = {{405, 466}},
 
         --//________________________ Projectiles ____________________________\\--
 
             ['shoot'] = {{207, 216}},
             ['projectile_1_fly'] = {{217, 222}},
             ['projectile_1_exploded'] = {{223, 234}},
-            ['projectile_1_destroyed'] = {{999, 1000}}
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+            ['projectile_2_fly'] = {{501, 507}},
+            ['projectile_2_exploded'] = {{508, 525}},
+            ['projectile_2_destroyed'] = {{999, 1000}}
         },
         ['passive'] = function(dt, self)
             if self.health >= 50 then
@@ -71,6 +76,34 @@ Characters = {
 
             end
         end,
+        ['special_2']  = function(dt, self)
+            self.inAir = true
+            if self.animation.currentFrame <= 7 then
+                self.y = math.floor(self.y - 270 * dt)
+            elseif self.animation.currentFrame > 7 and self.animation.currentFrame <= 47 then
+                if self.animation.currentFrame == 22 and self.animation.changing then
+                    for i=0, 360, 12 do
+                        Projectile{
+                            player = self,
+                            type = 'fly',
+                            number = 2,
+                            velocity = 100,
+                            incline = i
+                        }
+                    end
+                end
+            elseif self.animation.currentFrame > 47 and self.animation.currentFrame < 60 then
+
+                self:detectDamage('front')
+                self.x = math.floor(self.x + 3 * self.speed * dt)
+                self.y = math.floor(self.y + 1 * self.speed * dt)
+            else
+                self.dy = 0
+                self.state = 'jumping'
+            end
+        end,
+
+
         ['cooldown'] = 5
 
     },
@@ -114,6 +147,7 @@ Characters = {
         --//_________________________ Specials _____________________________\\--
 
             ['special_1'] = {{376, 390}},
+            ['special_2'] = {{333, 334}},
 
         --//________________________ Projectiles ____________________________\\--
 
@@ -138,9 +172,19 @@ Characters = {
 
         ['special_1'] = function(dt, self)
             if self.animation.currentFrame == #self.animation.frames and self.animation.timer >= self.animation.interval then
-                Projectile{player = self, type = 'fly', number = 2, velocity = 200, damage = 20, relativeX = - self.width}
+                Projectile{
+                    player = self,
+                    type = 'fly',
+                    number = 2,
+                    velocity = 200,
+                    damage = 20,
+                    relativeX = -self.width
+                }
                 self.state = 'idle'
             end
+        end,
+        ['special_2'] = function(dt, self)
+
         end,
         ['cooldown'] = 2
 

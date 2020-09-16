@@ -21,6 +21,7 @@ function Player:init(map, name, side, range)
     -- Passive and Special Ability
     self.passive = Characters[self.name]['passive']
     self.special_1 = Characters[self.name]['special_1']
+    self.special_2 = Characters[self.name]['special_2']
     self.cooldown = Characters[self.name]['cooldown']
     self.timer = self.cooldown
 
@@ -77,7 +78,8 @@ function Player:init(map, name, side, range)
             ['punch'] = 'f',
             ['kick'] = 'c',
             ['shoot'] = 'q',
-            ['special_1'] = 'e'
+            ['special_1'] = 'e',
+            ['special_2'] = 'r'
 
         },
         [1] = {
@@ -128,7 +130,8 @@ function Player:init(map, name, side, range)
             elseif love.keyboard.wasPressed[keyRelations[self.side]['special_1']] then
                 self.state = 'special_1'
 
-
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['special_2']] then
+                self.state = 'special_2'
             end
 
 
@@ -269,6 +272,9 @@ function Player:init(map, name, side, range)
         end,
         ['special_1'] = function(dt)
             self.special_1(dt, self)
+        end,
+        ['special_2'] = function(dt)
+            self.special_2(dt, self)
         end
     }
     --//_________________________ Animations ___________________________\\--
