@@ -83,14 +83,15 @@ function Player:init(map, name, side, range)
 
         },
         [1] = {
-            ['forward'] = 'right',
-            ['backward'] = 'left',
-            ['jump'] = 'up',
-            ['duck'] = 'down',
-            ['punch'] = '/',
-            ['kick'] = '.',
-            ['shoot'] = ';',
-            ['special_1'] = 'l'
+            ['forward'] = 'l',
+            ['backward'] = 'j',
+            ['jump'] = 'i',
+            ['duck'] = 'k',
+            ['punch'] = 'h',
+            ['kick'] = 'm',
+            ['shoot'] = 'o',
+            ['special_1'] = 'u',
+            ['special_2'] = 'y'
         }
     }
 
@@ -207,7 +208,6 @@ function Player:init(map, name, side, range)
 
         end,
         ['duck'] = function(dt)
-            self.y = self.map.mapHeight - 100
             if not love.keyboard.isDown(keyRelations[self.side]['duck']) then
                 self.state = 'idle'
                 self.y = self.map.floor - self.height
@@ -235,9 +235,13 @@ function Player:init(map, name, side, range)
         end,
 
         ['dying'] = function(dt)
-            if self.animation.currentFrame == (#self.animation.frames) and self.animation.timer >= self.animation.interval then
-                self.state = 'waiting'
-                self.y = self.map.floor - self.height
+            if self.animation.ending then
+                if self.inAir then
+                    self.state = 'fall'
+
+                else
+                    self.state = 'waiting'
+                end
             else
                 self.direction = - self.enemy.direction
                 self.x = math.min(self.map.mapWidth - self.width, math.max(self.map.camX, math.floor(self.x + self.speed * dt / 2 * self.direction)))
@@ -245,11 +249,24 @@ function Player:init(map, name, side, range)
             end
         end,
         ['waiting'] = function(dt)
+            self.y = self.map.floor - self.height
 
+        end,
+        ['fall'] = function(dt)
+            if self.y < self.map.floor - self.height then
+                self.y = math.floor(self.y + self.map.gravity/4 * dt)
+                self.x = math.floor(self.x + self.enemy.direction * 100 * dt)
+            else
+                if self.health <= 0 then
+                    self.state = 'waiting'
+                else
+                    self.state = 'idle'
+                end
+            end
         end,
 
         ['hurt'] = function(dt)
-            if self.animation.currentFrame == #self.animation.frames and self.animation.timer >= self.animation.interval then
+            if self.animation.ending then
                 if self.health <= 0 then
                     self.state = 'dying'
                     self.enemy.state = 'winning'
@@ -316,14 +333,15 @@ function Player:update(dt)
     self.currentQuad = self.animation:getCurrentQuad()
     self.animation:update(dt)
 
+    -- Position and dimensions
+    self:position(dt)
+
     -- Behavior and abilities
     self.behaviors[self.state](dt)
     self.passive(dt, self)
     self.timer = self.timer + dt
     self:updateAllProjectiles(dt)
 
-    -- Position and dimensions
-    self:position(dt)
 
     -- Lifebar
     self.lifebar:update(dt)
@@ -405,7 +423,7 @@ end
 function Player:hit(x, y, range, damage)
     local distance = ((self.x - self.enemy.x)^2 + (self.y - self.enemy.y)^2)^(1/2)
     local damage = damage or self.damage
-    if (self:enemyAt(x, y) or distance < range) and self.enemy.state ~= 'hurt' then
+    if (self:enemyAt(x, y) or distance < range) and self.enemy.state ~= 'hurt' and self.enemy.state ~= 'dying' then
         self.enemy.state = 'hurt'
         self.enemy.health = self.enemy.health - (damage - damage * self.enemy.armor / 100)
         self.enemy.x = math.min(self.map.mapWidth - self.width - 10, math.max(0, math.floor(self.enemy.x - self.direction * range / 4)))
@@ -421,7 +439,6 @@ function Player:position(dt)
     self.x = math.floor(math.max(self.map.camX - 10, math.min(self.map.camX + VIRTUAL_WIDTH - 90, self.x)))
     if not self.inAir then
         self.y = self.map.floor - self.height
-
     end
     -- Offsets
     self.xOffset = self.width / 2
@@ -435,6 +452,7 @@ function Player:land()
     else
         self.y = self.map.floor - self.height
         self.dy = 0
+        self.inAir = false
         self.state = 'idle'
     end
 end

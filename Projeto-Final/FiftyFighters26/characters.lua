@@ -8,7 +8,7 @@ Characters = {
         ['punch_range'] = 50,
         ['kick_range'] = 70,
         ['sex'] = 'female',
-        ['shootTrigger'] = 9,
+        ['shootTrigger'] = 8,
         ['animations'] = {
         --//_______________________ Idle and Dance _________________________\\--
 
@@ -19,7 +19,7 @@ Characters = {
 
             ['walking'] = {{8, 19}},
             ['jumping'] = {{30, 35}},
-            ['duck'] = {{49, 52}},
+            ['duck'] = {{49, 52}, {554, 555}},
 
         --//__________________________ Damage ______________________________\\--
 
@@ -32,6 +32,9 @@ Characters = {
             ['kick'] = {{179, 189}},
             ['duck_kick'] = {{193, 204}},
             ['air_kick'] = {{191, 193}},
+
+            -- Hurt
+            ['fall'] = {{624, 630}},
             ['hurt'] = {{660, 661}},
 
         --//________________________ End of Game ___________________________\\--
@@ -69,12 +72,7 @@ Characters = {
         end,
 
         ['special_1'] = function(dt, self)
-            self.x = math.floor(self.x - 2 * self.speed * self.direction * dt)
-            self:detectDamage('around')
-            if self.animation.ending then
-                self.state = 'jumping'
-
-            end
+            dash(dt, self)
         end,
         ['special_2']  = function(dt, self)
             self.inAir = true
@@ -87,18 +85,21 @@ Characters = {
                             player = self,
                             type = 'fly',
                             number = 2,
-                            velocity = 100,
-                            incline = i
+                            velocity = 200,
+                            incline = i,
+                            size = 10
                         }
                     end
                 end
             elseif self.animation.currentFrame > 47 and self.animation.currentFrame < 60 then
-
                 self:detectDamage('front')
-                self.x = math.floor(self.x + 3 * self.speed * dt)
+                self.x = math.floor(self.x + 3 * self.speed * dt * -self.direction)
                 self.y = math.floor(self.y + 1 * self.speed * dt)
             else
+                self.numberOfProjectiles = 0
+                self.projectiles = {}
                 self.dy = 0
+                self.animation.currentFrame = 0
                 self.state = 'jumping'
             end
         end,
@@ -113,7 +114,7 @@ Characters = {
         ['punch_range'] = 30,
         ['kick_range'] = 90,
         ['sex'] = 'female',
-        ['shootTrigger'] = 9,
+        ['shootTrigger'] = 14,
         ['animations'] = {
 
         --//_______________________ Idle and Dance _________________________\\--
@@ -129,36 +130,39 @@ Characters = {
 
             -- Punch
             ['punch'] = {{115, 119}},
-            ['duck_punch'] = {{232, 242}},
+            ['duck_punch'] = {{232, 242}, {190, 197}},
             ['air_punch'] = {{315, 323}},
 
             -- Kick
             ['kick'] = {{123, 135}},
             ['duck_kick'] = {{219, 226}},
-            ['air_kick']  = {{532, 539}},
+            ['air_kick']  = {{532, 539}, {213, 217}},
+
+            -- Hurt
             ['hurt'] = {{646, 647}},
+            ['fall'] = {{602, 607}},
 
         --//________________________ End of Game ___________________________\\--
 
             ['dying'] = {{602, 607}},
             ['waiting'] = {{625, 628}},
-            ['winning'] = {{518, 522}},
+            ['winning'] = {{561, 563}, {518, 522}},
 
         --//_________________________ Specials _____________________________\\--
 
-            ['special_1'] = {{376, 390}},
-            ['special_2'] = {{333, 334}},
+            ['special_1'] = {{360, 376}},
+            ['special_2'] = {{412, 446}},
 
         --//________________________ Projectiles ____________________________\\--
 
-            ['shoot'] = {{412, 446}},
+            ['shoot'] = {{376, 391}},
             ['projectile_1_exploded'] = {{341, 359}},
             ['projectile_1_destroyed'] = {{999, 1000}},
-            ['projectile_1_spawn'] = {{391, 400}},
+            ['projectile_1_fly'] = {{244, 255}},
 
             ['projectile_2_exploded'] = {{448, 469}},
             ['projectile_2_destroyed'] = {{999, 1000}},
-            ['projectile_2_fly'] = {{366, 372}}
+            ['projectile_2_spawn'] = {{391, 398}}
 
         },
         ['passive'] = function(dt, self)
@@ -167,23 +171,26 @@ Characters = {
             end
         end,
         ['shoot'] = function(self)
-            Projectile{player = self, type = 'spawn', number = 1, relativeY = -self.height, range = 200, ending = 9, damage = 30}
+            Projectile{player = self, type = 'fly', number = 1, relativeX = -self.width-20, velocity = 200, damage = 30}
         end,
 
         ['special_1'] = function(dt, self)
-            if self.animation.currentFrame == #self.animation.frames and self.animation.timer >= self.animation.interval then
-                Projectile{
-                    player = self,
-                    type = 'fly',
-                    number = 2,
-                    velocity = 200,
-                    damage = 20,
-                    relativeX = -self.width
-                }
-                self.state = 'idle'
-            end
+            dash(dt, self, 200, 6, 12)
         end,
         ['special_2'] = function(dt, self)
+            if (self.animation.currentFrame >= 7 and self.animation.currentFrame <= 19) and self.animation.changing then
+                Projectile{
+                    player = self,
+                    type = 'spawn',
+                    number = 2,
+                    range = (self.animation.currentFrame - 7) * 30,
+                    damage = 10
+                }
+                self:detectDamage('front')
+            elseif self.animation.ending then
+                self.state = 'idle'
+            end
+
 
         end,
         ['cooldown'] = 2
@@ -195,3 +202,17 @@ Characters = {
 
 
 }
+
+
+function dash(dt, self, speed, startAnimation, finalAnimation)
+    local speed = speed or self.speed
+    local startAnimation = startAnimation or 0
+    local finalAnimation = finalAnimation or #self.animation.frames
+    if self.animation.currentFrame >= startAnimation and self.animation.currentFrame< finalAnimation then
+        self.x = math.floor(self.x - 2 * speed * self.direction * dt)
+    end
+    self:detectDamage('around')
+    if self.animation.ending then
+        self.state = 'jumping'
+    end
+end

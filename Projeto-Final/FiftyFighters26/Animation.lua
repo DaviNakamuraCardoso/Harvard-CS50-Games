@@ -22,14 +22,16 @@ end
 
 function Animation:update(dt)
     if self.timer >= self.interval then
-        if self.currentFrame == #self.frames then
-            self.ending = true
-        else
-            self.ending = false
-        end
+
         self.changing = true
         self.timer = 0
         self.currentFrame = (self.currentFrame + 1) % (#self.frames + 1)
+        if self.currentFrame == #self.frames then
+            self.ending = true
+            self.currentFrame = 0
+        else
+            self.ending = false
+        end
     else
         self.ending = false
         self.changing = false

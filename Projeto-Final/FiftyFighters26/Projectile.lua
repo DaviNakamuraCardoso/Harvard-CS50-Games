@@ -21,7 +21,7 @@ function Projectile:init(parameters)
 
     self.player.numberOfProjectiles = self.player.numberOfProjectiles + 1
     self.player.projectiles[self.player.numberOfProjectiles] = self
-    self.player.bullets = self.player.bullets - 1
+
 
     local relativeX = parameters.relativeX or - self.player.height / 4
     local relativeY = parameters.relativeY or - self.player.width / 2
