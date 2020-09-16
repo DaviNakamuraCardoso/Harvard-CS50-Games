@@ -364,5 +364,29 @@
 
 - Redefining the special behavior based on the last updates on Animations
 
+### Fifty Fighters 34
+
+*The Super Special Update*
+
+**Date: September 16<sup>th</sup>, 2020**
+
+- Defining a super special ability for each character
+
+### Fifty Fighters 35
+
+*The Fall Update*
+
+**Date: September 16<sup>th</sup>, 2020**
+
+- Implementation of a fall behavior and animation for player that die in the air 
+
+### Fifty Fighters  36
+
+*The Sprites Update 5 - Even More Sprites*
+
+**Date: September 16<sup>th</sup>, 2020**
+
+- Getting more sprite sheets from  [The Spriters Resource](https://www.spriters-resource.com/) for more characters
+
 
 
