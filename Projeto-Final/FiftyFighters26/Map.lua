@@ -40,8 +40,8 @@ function Map:init(name)
     --//____________________________ Players _______________________________\\--
 
     -- Creates the players
-    self.player1 = Player(self, 'Athena', -1, 50)
-    self.player2 = Player(self, 'Bonne', 1, 40)
+    self.player1 = Player(self, 'Athena', -1)
+    self.player2 = Player(self, 'Bonne', 1)
 
     -- Sets each one as other's enemy
     self.player1.enemy = self.player2
@@ -87,14 +87,8 @@ function Map:init(name)
             self:updateCam()
             self.player1:update(dt)
             self.player2:update(dt)
-            if love.keyboard.wasPressed['space'] then
-                self.state = 'pause'
-            end
         end,
         ['pause'] = function(dt)
-            if love.keyboard.wasPressed['space'] then
-                self.state = 'play'
-            end
         end
 
 

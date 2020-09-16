@@ -3,20 +3,20 @@ import os, zipfile, shutil, send2trash
 
 def main():
     os.chdir('./graphics')
-    #move_zip(current_cd)
-    delete_zip()
-    #extrac_zip()
+    path = os.getcwd()
+    #move_zip(os.getcwd())
+    delete_zip(path)
+    #extrac_zip(path)
 
     return
 
 
-
-
-def delete_zip():
-    for filename in os.listdir():
+def delete_zip(path):
+    for filename in os.listdir(path):
         if filename.endswith('.zip') and filename.startswith('Play'):
             send2trash.send2trash(filename)
     return
+
 
 def move_zip(path):
     os.chdir('/home/davi/Downloads')
@@ -29,13 +29,14 @@ def move_zip(path):
     return
 
 
-def extrac_zip():
-    for filename in os.listdir():
+def extrac_zip(path):
+    for filename in os.listdir(path):
         if filename.endswith('.zip'):
             zip_file = zipfile.ZipFile(filename)
             zip_file.extractall()
             zip_file.close()
     return
+
 
 if __name__ == '__main__':
     main()

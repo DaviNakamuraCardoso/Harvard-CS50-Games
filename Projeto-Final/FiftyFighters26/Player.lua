@@ -6,7 +6,7 @@ require 'Util'
 require 'characters'
 require 'Lifebar'
 
-function Player:init(map, name, side, range)
+function Player:init(map, name, side)
     self.map = map
     self.name = name
 
@@ -74,6 +74,7 @@ function Player:init(map, name, side, range)
             ['forward'] = 'd',
             ['backward'] = 'a',
             ['jump'] = 'w',
+            ['run'] = 'space',
             ['duck'] = 's',
             ['punch'] = 'f',
             ['kick'] = 'c',
@@ -86,6 +87,7 @@ function Player:init(map, name, side, range)
             ['forward'] = 'l',
             ['backward'] = 'j',
             ['jump'] = 'i',
+            ['run'] = 'p',
             ['duck'] = 'k',
             ['punch'] = 'h',
             ['kick'] = 'm',
@@ -139,15 +141,42 @@ function Player:init(map, name, side, range)
         end,
         ['walking'] = function(dt)
             if love.keyboard.isDown(keyRelations[self.side]['backward']) then
+                if love.keyboard.isDown(keyRelations[self.side]['run']) then
+                    self.state = 'running'
+                end
                 self.x = math.max(0, math.floor(self.x - self.speed * dt))
                 self.direction = 1
             elseif love.keyboard.isDown(keyRelations[self.side]['forward']) then
+                if love.keyboard.isDown(keyRelations[self.side]['run']) then
+                    self.state = 'running'
+                end
                 self.x = math.min(self.map.mapWidth - self.width, math.floor(self.x + self.speed * dt))
                 self.direction = -1
 
             else
                 self.state = 'idle'
             end
+        end,
+        ['running'] = function(dt)
+            if love.keyboard.isDown(keyRelations[self.side]['backward']) then
+                if love.keyboard.isDown(keyRelations[self.side]['run']) then
+                    self.x = math.max(0, math.floor(self.x - 2 * self.speed * dt))
+                else
+                    self.x = math.max(0, math.floor(self.x - self.speed * dt))
+                end
+                self.direction = 1
+            elseif love.keyboard.isDown(keyRelations[self.side]['forward']) then
+                if love.keyboard.isDown(keyRelations[self.side]['run']) then
+                    self.x = math.min(self.map.mapWidth - self.width, math.floor(self.x + 2 * self.speed * dt))
+                    self.direction = -1
+                else
+                    self.x = math.min(self.map.mapWidth - self.width, math.floor(self.x + self.speed * dt))
+                end
+            else
+                self.state = 'idle'
+            end
+
+
         end,
         ['punch'] = function(dt)
             self:detectDamage('front')

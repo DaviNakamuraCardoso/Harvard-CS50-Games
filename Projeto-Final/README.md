@@ -388,5 +388,19 @@
 
 - Getting more sprite sheets from  [The Spriters Resource](https://www.spriters-resource.com/) for more characters
 
+### Fifty Fighters 37
+
+*The Running Update*
+
+**Date: September 16<sup>th</sup>, 2020**
+
+- In this update I've implemented the running behavior and animation
+
+### Fifty Fighters 38
+
+*The Sprites Update 5 - Character Select Images*
+
+- Getting portraits for every character
+
 
 
