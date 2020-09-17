@@ -25,10 +25,20 @@ function Button:init(params)
 
     self.font = params.font or 'great_fighter.ttf'
 
+    self.imageSource = params.image or nil
+
+    if self.image ~= nil then
+        self.image = love.graphics.newImage(self.imageSource)
+        self.width = self.image:getWidth() + 6
+        self.height = self.image:getHeight() + 6
+        self.quad = love.graphics.newQuad(0, 0, self.image:getWidth(), self.image:getHeight(), self.image:getDimensions())
+    end
+
     self.message = Message{
         text = self.label,
         map = self.map,
         parameter = VIRTUAL_WIDTH,
+        relativeX = self.relativeX - VIRTUAL_WIDTH / 2,
         relativeY = self.relativeY - self.height / 2,
         font = self.font,
         size = 20
@@ -61,6 +71,9 @@ function Button:render()
     love.graphics.rectangle('fill', self.x, self.y, self.width, self.height, 6, 6, 6, 6)
     self.message:render()
     love.graphics.setColor(1, 1, 1, 1)
+    if self.image ~= nil then
+        love.graphics.draw(self.image, self.quad, self.x + 3, self.y + 3)
+    end
 end
 
 

@@ -400,13 +400,31 @@
 
 *The Sprites Update 5 - Character Select Images*
 
+**Date: September 16<sup>th</sup>, 2020**
+
 - Getting portraits for every character
 
 ### Fifty Fighters 39
 
 *The Dance Update*
 
+**Date: September 16<sup>th</sup>, 2020**
+
 - Implementing a funny dance for the characters
 
 
+
+### Fifty Fighters 40
+
+*The Portrait Update*
+
+**Date: September 17<sup>th</sup>, 2020**
+
+- Showing a character portrait next to the life bar
+
+### Fifty Fighters 41
+
+*The Character Select Update*
+
+- Implementing the possibility to select characters
 

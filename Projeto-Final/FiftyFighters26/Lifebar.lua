@@ -36,6 +36,7 @@ function Lifebar:init(player)
     self.image = love.graphics.newImage('graphics/CSEL/little_' .. self.player.name .. '_portrait.png')
 
     -- Dimensions
+    self.quad = love.graphics.newQuad(0, 0, self.image:getWidth(), self.image:getHeight(), self.image:getDimensions())
     self.imageWidth = self.image:getWidth()
     self.imageHeight = self.image:getHeight()
 
@@ -107,7 +108,7 @@ function Lifebar:render()
 
     -- Reseting the color set
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.draw(self.image, love.graphics.newQuad(0, 0, self.imageWidth, self.imageHeight, self.image:getDimensions()), self.imageX, self.y)
+    love.graphics.draw(self.image, self.quad, self.imageX, self.y)
     self.messageName:render()
 
     love.graphics.setColor(1, 1, 1, 1)

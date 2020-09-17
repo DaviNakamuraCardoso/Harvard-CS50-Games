@@ -69,9 +69,41 @@ function Map:init(name)
         map = self,
         label = 'Play',
         action = function()
-            self.state = 'play'
+            self.state = 'player1_select'
         end
     }
+
+    --\\____________________________________________________________________//--
+
+    --//__________________________ Messages ________________________________\\--
+    self.title = Message{
+        map = self,
+        text = 'Fifty Fighters',
+        size = 50,
+        font = 'fighter.ttf',
+        relativeY = 30
+    }
+    self.charactersButtons = {}
+    local counter = 1
+    for k, v in pairs(Characters) do
+        self.charactersButtons[k] = Button{
+            label = k,
+            image = 'graphics/CSEL/' .. 'little_' .. k .. '_portrait.png',
+            map = self,
+            action = function()
+                if self.state == 'player1_select' then
+                    self.player1 = Player(self, k, -1)
+                    self.state = 'player2_select'
+                elseif self.state == 'player2_select' then
+                    self.player2 = Player(self, k, 1)
+                    self.state = 'play'
+                end
+            end,
+            relativeX = (counter) * 150
+
+        }
+        counter = counter + 1
+    end
 
     --\\____________________________________________________________________//--
 
@@ -79,8 +111,17 @@ function Map:init(name)
     self.behaviors = {
         ['menu'] = function(dt)
             --self.animation:update(dt)
+            self.title:update()
             self:updateCam()
             self.buttonPlay:update()
+        end,
+        ['player1_select'] = function(dt)
+            self:updateCam()
+            self:updateAllButtons()
+        end,
+        ['player2_select'] = function(dt)
+            self:updateCam()
+            self:updateAllButtons()
         end,
         ['play'] = function(dt)
         --    self.animation:update(dt)
@@ -97,6 +138,7 @@ function Map:init(name)
     self.renders = {
         ['menu'] = function()
             self.buttonPlay:render()
+            self.title:render()
         end,
         ['play'] = function()
             love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
@@ -107,6 +149,15 @@ function Map:init(name)
             self.player1:renderAllProjectiles()
             self.player2:renderAllProjectiles()
         end,
+        ['player1_select'] = function()
+            self:renderAllButtons()
+        end,
+        ['player2_select'] = function()
+            self:renderAllButtons()
+        end,
+        ['map_select'] = function()
+            self.
+
         ['pause'] = function()
             self.player1:render()
             self.player2:render()
@@ -166,4 +217,15 @@ function Map:cover()
 end
 
 
+function Map:updateAllButtons()
+    for k, v in pairs(self.charactersButtons) do
+        v:update()
+    end
+end
+
+function Map:renderAllButtons()
+    for k, v in pairs(self.charactersButtons) do
+        v:render()
+    end
+end
 --============================================================================--

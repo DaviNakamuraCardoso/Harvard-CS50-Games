@@ -19,6 +19,7 @@ function Message:init(params)
     self.font = params.font or 'four.ttf'
     self.size = params.size or 14
     self.color = params.color or {1, 1, 1, 1}
+    self.borderColor = params.borderColor or {0, 0, 0, 0}
 
     --
 end
@@ -31,8 +32,12 @@ function Message:update()
 end
 
 function Message:render()
-    love.graphics.setFont(love.graphics.newFont('fonts/' .. self.font, self.size))
+    love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], self.borderColor[4])
+    love.graphics.setFont(love.graphics.newFont('fonts/' .. self.font, self.size + 2))
+    love.graphics.printf(self.text, self.x-1, self.y-1, self.parameter, self.align)
+
     love.graphics.setColor(self.color[1], self.color[2], self.color[3], self.color[4])
+    love.graphics.setFont(love.graphics.newFont('fonts/' .. self.font, self.size))
     love.graphics.printf(self.text, self.x, self.y, self.parameter, self.align)
     love.graphics.setColor(1, 1, 1, 1)
 
