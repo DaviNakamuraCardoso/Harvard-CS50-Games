@@ -3,17 +3,21 @@
 Characters = {
 
     ['Athena'] = {
+
+        --//________________________ Attributtes ___________________________\\--
+
         ['armor'] = 40,
         ['damage'] = 8,
         ['punch_range'] = 50,
         ['kick_range'] = 70,
         ['sex'] = 'female',
         ['shootTrigger'] = 8,
+
         ['animations'] = {
         --//_______________________ Idle and Dance _________________________\\--
 
             ['idle'] = {{0, 7}},
-
+            ['dancing'] = {{595, 601}, {578, 586}, {561, 572}, {586, 591}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -81,7 +85,8 @@ Characters = {
                 self.y = math.floor(self.y - 270 * dt)
             elseif self.animation.currentFrame > 7 and self.animation.currentFrame <= 47 then
                 if self.animation.currentFrame == 22 and self.animation.changing then
-                    for i=0, 360, 12 do
+                    self.y = self.map.floor - 150 - self.height
+                    for i=0, 360, 30 do
                         Projectile{
                             player = self,
                             type = 'fly',
@@ -94,7 +99,7 @@ Characters = {
                 end
             elseif self.animation.currentFrame > 47 and self.animation.currentFrame < 60 then
                 self:detectDamage('front')
-                self.x = math.floor(self.x + 3 * self.speed * dt * -self.direction)
+                self.x = math.floor(self.x + 2 * self.speed * dt * -self.direction)
                 self.y = math.floor(self.y + 1 * self.speed * dt)
             else
                 self.numberOfProjectiles = 0
@@ -120,11 +125,12 @@ Characters = {
 
         --//_______________________ Idle and Dance _________________________\\--
             ['idle'] = {{0, 15}},
+            ['dancing'] = {{574, 582}, {518, 522}, {564, 569}, {570, 573}, {583, 589}},
 
         --//__________________________ Movement ____________________________\\--
 
             ['walking'] = {{16, 31}},
-            ['running'] = {{69, 78}}, 
+            ['running'] = {{69, 78}},
             ['jumping'] = {{42, 50}},
             ['duck'] = {{51, 59}},
 
@@ -148,7 +154,7 @@ Characters = {
 
             ['dying'] = {{602, 607}},
             ['waiting'] = {{625, 628}},
-            ['winning'] = {{561, 563}, {518, 522}},
+            ['winning'] = {{561, 563}},
 
         --//_________________________ Specials _____________________________\\--
 
@@ -180,7 +186,7 @@ Characters = {
             dash(dt, self, 200, 6, 12)
         end,
         ['special_2'] = function(dt, self)
-            if (self.animation.currentFrame >= 7 and self.animation.currentFrame <= 19) and self.animation.changing then
+            if (self.animation.currentFrame >= 7 and self.animation.currentFrame <= 18) and self.animation.changing and self.animation.currentFrame % 2 == 0 then
                 Projectile{
                     player = self,
                     type = 'spawn',
@@ -190,6 +196,7 @@ Characters = {
                 }
                 self:detectDamage('front')
             elseif self.animation.ending then
+                self.animation.currentFrame = 0
                 self.state = 'idle'
             end
 

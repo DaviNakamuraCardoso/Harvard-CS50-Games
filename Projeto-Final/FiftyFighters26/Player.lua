@@ -10,7 +10,7 @@ function Player:init(map, name, side)
     self.map = map
     self.name = name
 
-    -- Combat status
+    -- Stats
     self.health = 100
     self.armor = Characters[self.name]['armor']
     self.punch_range = Characters[self.name]['punch_range']
@@ -18,22 +18,33 @@ function Player:init(map, name, side)
     self.damage = Characters[self.name]['damage']
     self.sex = Characters[self.name]['sex']
 
-    -- Passive and Special Ability
+    --//__________________________ Abilities _______________________________\\--
+
+    -- Passive
     self.passive = Characters[self.name]['passive']
+
+    -- Special 1
     self.special_1 = Characters[self.name]['special_1']
-    self.special_2 = Characters[self.name]['special_2']
     self.cooldown = Characters[self.name]['cooldown']
     self.timer = self.cooldown
 
+    -- Special 2
+    self.special_2 = Characters[self.name]['special_2']
+    self.specialPoints = 0.1
+
+    -- Shoots
     self.shoot = Characters[self.name]['shoot']
     self.bullets = 10
 
 
 
+    --//____________________ Position and Side _____________________________\\--
+
     -- 1 or -1, 1 representing the right side and -1 the left side
     self.side = side
     self.sideParameter = self.side == 1 and 1 or 0
     self.lifebar = Lifebar(self)
+    self.lifebar:updateDimensionsAndColors()
 
     -- Position and dimensions
     self.x = self.map.camX + VIRTUAL_WIDTH / 2 + (VIRTUAL_WIDTH / 2 * self.side)
@@ -41,6 +52,7 @@ function Player:init(map, name, side)
     self.width = 0
     self.height = 0
 
+    -- x and y var
     self.dx = 0
     self.dy = 0
 
@@ -48,12 +60,6 @@ function Player:init(map, name, side)
     self.xOffset = self.width / 2
     self.yOffset = self.height / 2
 
-
-    -- Enemy
-    self.enemy = nil
-
-    -- Sound effects
-    self.soundDir = 'sounds/' .. self.name .. '/'
 
 
     --//_________________________ Behaviors ____________________________\\--
@@ -68,6 +74,9 @@ function Player:init(map, name, side)
     self.projectiles = {}
     self.numberOfProjectiles = 0
 
+    -- Enemy
+    self.enemy = nil
+
     -- Controls
     local keyRelations = {
         [-1] = {
@@ -80,7 +89,8 @@ function Player:init(map, name, side)
             ['kick'] = 'c',
             ['shoot'] = 'q',
             ['special_1'] = 'e',
-            ['special_2'] = 'r'
+            ['special_2'] = 'r',
+            ['dancing'] = 'v'
 
         },
         [1] = {
@@ -93,7 +103,8 @@ function Player:init(map, name, side)
             ['kick'] = 'm',
             ['shoot'] = 'o',
             ['special_1'] = 'u',
-            ['special_2'] = 'y'
+            ['special_2'] = 'y',
+            ['dancing'] = 'n'
         }
     }
 
@@ -101,6 +112,7 @@ function Player:init(map, name, side)
 
     self.behaviors = {
         ['idle'] = function(dt)
+            self.tag = self.specialPoints == 100 and self.ctag or self.ptag
             if love.keyboard.isDown(keyRelations[self.side]['backward']) then
                 self.x = math.max(0, math.floor(self.x - self.speed * dt))
                 self.state = 'walking'
@@ -127,17 +139,29 @@ function Player:init(map, name, side)
                 self.state = 'duck'
 
             elseif love.keyboard.wasPressed[keyRelations[self.side]['shoot']] and self.bullets > 0 then
-                self.timer = 0
                 self.state = 'shoot'
+                self.bullets = self.bullets - 1
 
-            elseif love.keyboard.wasPressed[keyRelations[self.side]['special_1']] then
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['special_1']] and self.timer >= self.cooldown then
                 self.state = 'special_1'
 
-            elseif love.keyboard.wasPressed[keyRelations[self.side]['special_2']] then
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['special_2']] and self.specialPoints == 100 then
+                self.specialPoints = 0.1
                 self.state = 'special_2'
+
+            elseif love.keyboard.isDown(keyRelations[self.side]['dancing']) then
+                self.state = 'dancing'
+
             end
 
 
+        end,
+        ['dancing'] = function(dt)
+            if love.keyboard.isDown(keyRelations[self.side]['dancing']) then
+                self.state = 'dancing'
+            else
+                self.state = 'idle'
+            end
         end,
         ['walking'] = function(dt)
             if love.keyboard.isDown(keyRelations[self.side]['backward']) then
@@ -312,6 +336,7 @@ function Player:init(map, name, side)
             if self.animation.currentFrame == Characters[self.name]['shootTrigger'] and self.animation.timer >= self.animation.interval then
                 self:shoot(self)
             elseif self.animation.ending then
+                self.animation.currentFrame = 0
                 self.state = 'idle'
             end
 
@@ -323,7 +348,9 @@ function Player:init(map, name, side)
             self.special_2(dt, self)
         end
     }
+
     --//_________________________ Animations ___________________________\\--
+
     self.animations = {}
     for k, v in pairs(self.behaviors) do
         self.animations[k] = Animation(self, k)
@@ -338,7 +365,17 @@ function Player:init(map, name, side)
     self.currentFrame = self.animation:getCurrentFrame()
     self.currentQuad = self.animation:getCurrentQuad()
 
-    --//______________________ Sound Effects ______________________________\\--
+    self.p = self.side == -1 and 1 or 2
+    self.ptag = love.graphics.newImage('graphics/' .. self.name .. '/p' .. self.p .. '.png')
+    self.tag = self.ptag
+    self.ctag = love.graphics.newImage('graphics/' .. self.name .. '/com.png')
+    self.tagWidth = self.tag:getWidth()
+    self.tagHeight = self.tag:getHeight()
+
+    --//_______________________ Sound Effects ______________________________\\--
+
+    -- Sound Directory
+    self.soundDir = 'sounds/' .. self.name .. '/'
 
     -- Sounds
     self.sounds = {}
@@ -384,6 +421,7 @@ end
 
 function Player:render()
     love.graphics.draw(self.currentFrame, self.currentQuad, math.floor(self.x + self.xOffset), math.floor(self.y + self.yOffset), 0, self.direction, 1, self.xOffset, self.yOffset)
+    love.graphics.draw(self.tag, love.graphics.newQuad(0, 0, self.tagWidth, self.tagHeight, self.tag:getDimensions()), math.floor(self.x + self.width / 2 - self.tagWidth / 2), self.y - self.tagHeight)
 
 end
 
@@ -450,12 +488,18 @@ function Player:detectDamage(position, range)
 end
 
 function Player:hit(x, y, range, damage)
-    local distance = ((self.x - self.enemy.x)^2 + (self.y - self.enemy.y)^2)^(1/2)
+
     local damage = damage or self.damage
-    if (self:enemyAt(x, y) or distance < range) and self.enemy.state ~= 'hurt' and self.enemy.state ~= 'dying' then
+    if (self:enemyAt(x, y)) and self.enemy.state ~= 'hurt' and self.enemy.health > 0 then
         self.enemy.state = 'hurt'
         self.enemy.health = self.enemy.health - (damage - damage * self.enemy.armor / 100)
         self.enemy.x = math.min(self.map.mapWidth - self.width - 10, math.max(0, math.floor(self.enemy.x - self.direction * range / 4)))
+        self.specialPoints = math.min(self.specialPoints + 5, 100)
+        self.enemy.specialPoints = math.min(self.enemy.specialPoints + 10, 100)
+        self.enemy.lifebar:updateDimensionsAndColors()
+        self.lifebar:updateDimensionsAndColors()
+
+
         return true
 
     end
@@ -465,7 +509,7 @@ end
 function Player:position(dt)
     self.width = self.currentFrame:getWidth()
     self.height = self.currentFrame:getHeight()
-    self.x = math.floor(math.max(self.map.camX - 10, math.min(self.map.camX + VIRTUAL_WIDTH - 90, self.x)))
+    self.x = math.floor(math.max(self.map.camX - 10, math.min(self.map.camX + VIRTUAL_WIDTH - self.width, self.x)))
     if not self.inAir then
         self.y = self.map.floor - self.height
     end

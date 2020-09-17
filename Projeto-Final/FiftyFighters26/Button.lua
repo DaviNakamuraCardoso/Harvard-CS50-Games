@@ -23,7 +23,16 @@ function Button:init(params)
     self.hover = {self.noHover[1] / 3, self.noHover[2] / 3, self.noHover[3] / 3, 1}
     self.color = self.noHover
 
-    self.message = Message{text = self.label, map = self.map, parameter = VIRTUAL_WIDTH, relativeY = self.relativeY - self.height / 3}
+    self.font = params.font or 'great_fighter.ttf'
+
+    self.message = Message{
+        text = self.label,
+        map = self.map,
+        parameter = VIRTUAL_WIDTH,
+        relativeY = self.relativeY - self.height / 2,
+        font = self.font,
+        size = 20
+    }
 
 end
 

@@ -402,5 +402,11 @@
 
 - Getting portraits for every character
 
+### Fifty Fighters 39
+
+*The Dance Update*
+
+- Implementing a funny dance for the characters
+
 
 
