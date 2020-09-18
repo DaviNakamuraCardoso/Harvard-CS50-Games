@@ -6,9 +6,11 @@ Map = Class{}
 require 'backgrounds'
 
 SCROOL_SPEED = 0
-function Map:init(name)
 
-    self.name = name
+function Map:init()
+    self.maps = {'Castle', 'Mansion', 'Gym', 'Gas', 'Korea', 'Forest', 'Bay'}
+
+    self.name = self.maps[math.random(1, #self.maps)]
 
     --//______________________ Camera and Dimensions _______________________\\--
 
@@ -73,6 +75,19 @@ function Map:init(name)
         end
     }
 
+    self.mapButtons = {}
+    for i=1, #self.maps do
+        self.mapButtons[i] = Button{
+            map = self,
+            label = self.maps[i],
+            relativeY = (i - #self.maps/2) * 30,
+            action = function()
+                self.name = self.maps[i]
+                self.state = 'play'
+            end
+        }
+    end
+
     --\\____________________________________________________________________//--
 
     --//__________________________ Messages ________________________________\\--
@@ -96,7 +111,7 @@ function Map:init(name)
                     self.state = 'player2_select'
                 elseif self.state == 'player2_select' then
                     self.player2 = Player(self, k, 1)
-                    self.state = 'play'
+                    self.state = 'map_select'
                 end
             end,
             relativeX = (counter) * 150
@@ -117,11 +132,24 @@ function Map:init(name)
         end,
         ['player1_select'] = function(dt)
             self:updateCam()
-            self:updateAllButtons()
+            self:updateCharacterButtons()
         end,
         ['player2_select'] = function(dt)
             self:updateCam()
-            self:updateAllButtons()
+            self:updateCharacterButtons()
+        end,
+        ['map_select'] = function(dt)
+            self:updateMapButtons()
+            -- Dimensions
+            self.mapWidth = Backgrounds[self.name]['width']
+            self.mapHeight = Backgrounds[self.name]['height']
+            self.backgroundImage = love.graphics.newImage('graphics/Backgrounds/' .. self.name .. '.png')
+            self.backgroundQuads = generateQuads('graphics/Backgrounds/' .. self.name .. '.png',    self.mapWidth, self.mapHeight)
+            self.currentFrame = 1
+            self.timer = 0
+            self.interval = 0.2
+
+
         end,
         ['play'] = function(dt)
         --    self.animation:update(dt)
@@ -150,14 +178,17 @@ function Map:init(name)
             self.player2:renderAllProjectiles()
         end,
         ['player1_select'] = function()
-            self:renderAllButtons()
+            self:renderCharacterButtons()
         end,
         ['player2_select'] = function()
-            self:renderAllButtons()
+            self:renderCharacterButtons()
         end,
         ['map_select'] = function()
-            self.
+            self.player1.enemy = self.player2
+            self.player2.enemy = self.player1
+            self:renderMapButtons()
 
+        end,
         ['pause'] = function()
             self.player1:render()
             self.player2:render()
@@ -217,15 +248,29 @@ function Map:cover()
 end
 
 
-function Map:updateAllButtons()
+function Map:updateCharacterButtons()
     for k, v in pairs(self.charactersButtons) do
         v:update()
     end
 end
 
-function Map:renderAllButtons()
+
+function Map:updateMapButtons()
+    for i=1, #self.maps do
+        self.mapButtons[i]:update()
+    end
+end
+
+function Map:renderCharacterButtons()
     for k, v in pairs(self.charactersButtons) do
         v:render()
+    end
+end
+
+
+function Map:renderMapButtons()
+    for i=1, #self.maps do
+        self.mapButtons[i]:render()
     end
 end
 --============================================================================--

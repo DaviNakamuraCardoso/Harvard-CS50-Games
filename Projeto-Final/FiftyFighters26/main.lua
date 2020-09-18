@@ -34,10 +34,7 @@ function love.load()
     --//__________________________ Screen ______________________________\\--
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
-    local backgrounds = {
-        'Bay', 'Castle', 'Forest', 'Gas', 'Factory', 'Gym', 'Korea', 'Mansion'
-    }
-    map = Map(backgrounds[math.random(1, #backgrounds)])
+    map = Map()
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT,
     {
@@ -86,7 +83,7 @@ function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
 
-    end 
+    end
     love.keyboard.wasPressed[key] = true
 end
 
