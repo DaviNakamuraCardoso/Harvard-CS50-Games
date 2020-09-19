@@ -67,7 +67,7 @@ function Projectile:init(parameters)
         end,
 
         ['exploded'] = function(dt)
-            self.x = self.player.enemy.x + self.player.enemy.width / 4
+            self.x = self.player.enemy.x - self.currentFrame:getHeight() / 2
             self.y = self.player.enemy.y
             if self.animation.ending then
                 self.state = 'destroyed'
@@ -88,7 +88,7 @@ end
 
 
 function Projectile:render()
-    love.graphics.draw(self.currentFrame, self.currentQuad, self.x, self.y)
+    love.graphics.draw(self.currentFrame, self.currentQuad, (self.x + self.currentFrame:getWidth() / 2), self.y + self.currentFrame:getHeight() / 2, 0, self.direction, 1, self.currentFrame:getWidth() / 2, self.currentFrame:getHeight() / 2)
 
 end
 

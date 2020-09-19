@@ -34,7 +34,12 @@ function love.load()
     --//__________________________ Screen ______________________________\\--
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
-    map = Map()
+
+    maps = {'Castle', 'Mansion', 'Gym', 'Gas', 'Korea', 'Forest', 'Bay'}
+
+    name = maps[math.random(1, #maps)]
+
+    map = Map(name)
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT,
     {

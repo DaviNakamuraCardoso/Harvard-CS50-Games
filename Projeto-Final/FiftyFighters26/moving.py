@@ -5,8 +5,9 @@ def main():
     os.chdir('./graphics')
     path = os.getcwd()
     #move_zip(os.getcwd())
-    delete_zip(path)
+    #delete_zip(path)
     #extrac_zip(path)
+    standard_icons()
 
     return
 
@@ -35,6 +36,16 @@ def extrac_zip(path):
             zip_file = zipfile.ZipFile(filename)
             zip_file.extractall()
             zip_file.close()
+    return
+
+
+def standard_icons():
+    icons = ['com.png', 'p1.png', 'p2.png', '999.png', '1000.png']
+    for dir in os.listdir():
+        for icon in icons:
+            if icon not in os.listdir(dir):
+                shutil.copy('Athena/' + icon, dir)
+                print(f"{icon} copied to {dir}")
     return
 
 

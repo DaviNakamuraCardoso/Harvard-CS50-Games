@@ -5,14 +5,15 @@ import re, os, shutil
 
 def main():
     #rename()
-    #reorder()
+    reorder('./graphics/Ai')
     return
 
 
 def rename():
+    dirs = ['Ai']
     file_re = re.compile(r'^(.*)(_)(\d+.png)')
     os.chdir('./graphics')
-    for dir in os.listdir():
+    for dir in dirs:
         for filename in os.listdir(dir):
             if mo := file_re.search(filename): # WAAAAALRUS!!!
                 print(dir + '/' + filename)
@@ -26,8 +27,10 @@ def reorder(path):
     files = os.listdir()
 
     for i in range(len(files)):
-        new_name = files[i].strip('.png')
-        files[i] = int(new_name)
+
+            new_name = files[i].strip('.png')
+            files[i] = int(new_name)
+
 
     files.sort()
 

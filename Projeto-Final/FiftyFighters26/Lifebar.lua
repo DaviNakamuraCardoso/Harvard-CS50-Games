@@ -4,6 +4,9 @@ Lifebar = Class{}
 
 
 function Lifebar:init(player)
+
+    --//_________________________ Position and Side ________________________\\--
+
     self.player = player
     self.side = self.player.side
 
@@ -18,8 +21,9 @@ function Lifebar:init(player)
     self.x = self.player.map.camX + self.relativeX
     self.y = self.player.map.camY + self.relativeY
 
-    -- HP bar color and message
-    self.color = {((158 - self.player.health) / 100) / 255, (73 + self.player.health) / 255, 98 / 255, 1}
+    --//______________________________ HP __________________________________\\--
+
+    self.color = {1, 1, 0, 1}
     self.messageHP = Message{
         text = tostring(math.floor(self.player.health)) .. '/100',
         map = self.player.map,
@@ -28,11 +32,14 @@ function Lifebar:init(player)
         relativeY = 0,
 
     }
-    self.rectangleX = self.x + self.player.sideParameter * (self.width - self.width * self.player.health / 100)
     self.rectangleWidth = self.width * (self.player.health / 100)
+    self.rectangleX = self.x + self.player.sideParameter * self.rectangleWidth
     self.rectangleY = self.y
 
-    -- Player Image
+    self.borderColor = self.side == -1 and {1, 0, 0, 1} or {0, 0, 1, 1}
+
+    --//________________________ Player Image ______________________________\\--
+
     self.image = love.graphics.newImage('graphics/CSEL/little_' .. self.player.name .. '_portrait.png')
 
     -- Dimensions
@@ -58,7 +65,6 @@ function Lifebar:init(player)
 
 
 
-    -- Player special bar
 
 
 end
@@ -87,23 +93,23 @@ end
 function Lifebar:render()
 
     -- The outside contour
-    love.graphics.setColor(0.4, 0.4, 0.4, 1)
+    love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], 1)
     love.graphics.rectangle('fill', self.x-2, self.y-2, self.width+4, self.height+4, 2, 2)
 
     -- The inside dark bar
     love.graphics.setColor(0.1, 0.1, 0.1, 1)
     love.graphics.rectangle('fill', self.x, self.y, self.width, self.height, 2, 2)
 
-    -- The red bar
+    -- The yellow bar
     love.graphics.setColor(self.color[1], self.color[2], self.color[3], 1)
-    love.graphics.rectangle('fill', self.x, self.y, self.rectangleWidth, self.height, 2, 2)
+    love.graphics.rectangle('fill',self.x + self.rectangleX, self.y, self.rectangleWidth, self.height, 2, 2)
     self.messageHP:render()
 
 
     --//________________________ Character Portrait ________________________________\\--
 
     -- Contour
-    love.graphics.setColor(self.imageCountour[1], self.imageCountour[2], self.imageCountour[3], 1)
+    love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], 1)
     love.graphics.rectangle('line', self.imageX-1, self.y-1, self.imageWidth+2, self.imageHeight+2, 2, 2)
 
     -- Reseting the color set
@@ -117,12 +123,10 @@ end
 
 function Lifebar:updateDimensionsAndColors()
 
-    self.color = {((158 - self.player.health) / 100) / 255, (73 + self.player.health) /255, 98 / 255, 1}
-    self.messageHP.color = self.color
 
-    -- Width
     self.rectangleWidth = math.max(0.1, math.floor(self.width * (self.player.health / 100)))
 
+    self.rectangleX = self.player.sideParameter * (self.width - self.rectangleWidth)
 
     self.messageHP.text = tostring(math.floor(math.max(0, self.player.health))) .. '/100'
 end

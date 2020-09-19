@@ -145,7 +145,7 @@ function Player:init(map, name, side)
             elseif love.keyboard.wasPressed[keyRelations[self.side]['special_1']] and self.timer >= self.cooldown then
                 self.state = 'special_1'
 
-            elseif love.keyboard.wasPressed[keyRelations[self.side]['special_2']] and self.specialPoints == 100 then
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['special_2']] and self.specialPoints == 100 and self.enemy.state ~= 'special_1' then
                 self.specialPoints = 0.1
                 self.state = 'special_2'
 

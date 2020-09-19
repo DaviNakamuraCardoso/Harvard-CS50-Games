@@ -5,14 +5,15 @@ import re
 
 
 def main():
-    os.chdir('./graphics/CSEL')
-    delete_crops()
-    for filename in os.listdir():
-        crop(filename)
-
-    for image in os.listdir():
-        if image.startswith('little_'):
-            resize(image)
+    os.chdir('./graphics/CSEL/Characters')
+    #delete_crops()
+    #for filename in os.listdir():
+    #    crop(filename)
+    #resize('Character_little_Adelheid_portrait.png', 20, 15)
+#    for image in os.listdir():
+#        if image.startswith('Character_'):
+    resize('Character_Athena.png', 200, 170)
+#            print(f"Resizing {image} to {image.strip('Character_')}...")
 
     return
 
@@ -40,11 +41,11 @@ def delete_crops():
     return
 
 
-def resize(image):
+def resize(image, new_width, new_height):
     image_reader = Image.open(image)
     width, height = image_reader.size
-    new_image = image_reader.resize((int(width / 2), int(height / 2)))
-    new_image.save(image)
+    new_image = image_reader.resize((int(new_width), int(new_height)))
+    new_image.save(image.strip('Character_'))
     return
 
 
