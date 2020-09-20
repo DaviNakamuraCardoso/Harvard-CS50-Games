@@ -30,12 +30,21 @@ function generateAnimation(character, table)
 
     frames = {}
     quads = {}
-    index = 0
-    for i=table[1], table[2] do
-        local image = 'graphics/' .. character.name .. '/' .. tostring(i) .. '.png'
-        frames[index] = love.graphics.newImage(image)
-        quads[index] = love.graphics.newQuad(0, 0, frames[index]:getWidth(), frames[index]:getHeight(), frames[index]:getWidth(), frames[index]:getHeight())
-        index = index + 1
+    local index = 0
+    if #table == 2 then
+
+        for i=table[1], table[2] do
+            local image = 'graphics/' .. character.name .. '/' .. tostring(i) .. '.png'
+            frames[index] = love.graphics.newImage(image)
+            quads[index] = love.graphics.newQuad(0, 0, frames[index]:getWidth(),    frames[index]:getHeight(), frames[index]:getWidth(), frames[index]:getHeight())
+            index = index + 1
+        end
+    else
+        for i=1, #table do
+            local image = 'graphics/' .. character.name .. '/' .. tostring(table[i]) .. '.png'
+            frames[i] = love.graphics.newImage(image)
+            quads[i] = love.graphics.newQuad(0, 0, frames[i]:getWidth(), frames[i]:getHeight(), frames[i]:getDimensions())
+        end
     end
 
     return {
