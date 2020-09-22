@@ -498,7 +498,7 @@ Characters = {
         ['punch_range'] = 20,
         ['kick_range'] = 20,
         ['sex'] = 'female',
-        ['shootTrigger'] = 3,
+        ['shootTrigger'] = 7,
 
         ['animations'] = {
         --//_______________________ Idle and Dance _________________________\\--
@@ -544,7 +544,8 @@ Characters = {
     --    --//________________________ Projectiles ____________________________\\--
 
             ['shoot'] = {{145, 152}, {283, 295}},
-            ['projectile_1_fly'] = {{428, 432}},
+
+            ['projectile_1_fly'] = {{428, 428, 428}},
             ['projectile_1_exploded'] = {{433, 438}},
             ['projectile_1_destroyed'] = {{999, 1000}},
 
@@ -556,10 +557,17 @@ Characters = {
 
         },
         ['passive'] = function(dt, self)
-	   		if self.state == 'shoot' or self.state == 'special_1' or self.state == 'special_2' then
-                self.armor = 100
-            else
-                self.armor = 30
+            self.bullets = 1000
+	   		if self.state == 'punch' or self.state == 'duck_punch' then
+                if self.animation.ending then
+                    Projectile{
+                        player = self,
+                        type = 'fly',
+                        number = 1,
+                        velocity = 400
+
+                    }
+                end
             end
 		end,
         ['shoot'] = function(self)
@@ -572,7 +580,7 @@ Characters = {
         end,
 
         ['special_1'] = function(dt, self)
-            self:detectDamage('around')
+            dash(dt, self, -70, 3, 10)
             if self.animation.ending then
                 self.state = 'idle'
             end
@@ -583,8 +591,10 @@ Characters = {
                 [21] = true,
                 [37] = true,
                 [46] = true,
+                [64] = true,
                 [76] = true,
                 [95] = true,
+                [101] = true,
                 [139] = true
             }
             if self.animation.changing then
@@ -607,7 +617,123 @@ Characters = {
 
         ['cooldown'] = 3,
 
-    }
+    },
+    ['Ex-Kyo'] = {
+
+    --    --//________________________ Attributtes ___________________________\\--
+
+        ['armor'] = 25,
+        ['damage'] = 12,
+        ['punch_range'] = 25,
+        ['kick_range'] = 45,
+        ['sex'] = 'male',
+        ['shootTrigger'] = 3,
+
+        ['animations'] = {
+        --//_______________________ Idle and Dance _________________________\\--
+
+            ['idle'] = {{0, 9}},
+            ['dancing'] = {{601, 617}},
+
+        --//__________________________ Movement ____________________________\\--
+
+            ['walking'] = {{10, 13}},
+            ['running'] = {{54, 58}},
+            ['jumping'] = {{22, 31}},
+            ['duck'] = {{38, 40}},
+
+        --//__________________________ Damage ______________________________\\--
+
+            -- Punch
+            ['punch'] = {{80, 83}, {85, 89}, {113, 120}, {125, 127}, {229, 246}},
+            ['duck_punch'] = {{100, 101}},
+            ['air_punch'] = {{62, 63}, {121, 122}},
+
+            -- Kick
+            ['kick'] = {{102, 106}, {128, 137}, {163, 172}},
+            ['duck_kick'] = {{109, 111}, {150, 154}, {156, 162}},
+            ['air_kick'] = {{139, 142}},
+
+            -- Hurt
+            ['fall'] = {{706, 709}},
+            ['hurt'] = {{733, 735}},
+
+        --//________________________ End of Game ___________________________\\--
+
+
+            ['dying'] = {{692, 697}},
+            ['waiting'] = {{715, 717}},
+            ['winning'] = {{598, 600}},
+
+        --//_________________________ Specials _____________________________\\--
+
+            ['special_1'] = {{360, 361, 362, 363, 364, 365, 366, 372, 374, 378, 386, 387, 388, 389}},
+            ['special_2'] = {{463, 473}},
+        --//________________________ Projectiles ____________________________\\--
+
+            ['shoot'] = {{185, 192}, {272, 285}},
+            ['projectile_1_spawn'] = {{563, 569}},
+            ['projectile_1_exploded'] = {{199, 202}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+            ['projectile_2_spawn'] = {{367, 368, 369, 370, 371, 373, 375, 376, 377, 379, 380, 382, 383, 384, 385}},
+            ['projectile_2_exploded'] = {{390, 395}},
+            ['projectile_2_destroyed'] = {{999, 1000}},
+
+            ['projectile_3_spawn'] = {{445, 452}},
+            ['projectile_3_exploded'] = {{459, 462}},
+            ['projectile_3_destroyed'] = {{999, 1000}}
+
+        },
+        ['shoot'] = function(self)
+            Projectile{
+                player = self,
+                type = 'spawn',
+                range = 50,
+                number = 1
+            }
+        end,
+         ['passive'] = function(dt, self)
+            self.enemy.armor = Characters[self.enemy.name]['armor'] / 2
+            self.armor = 30 + Characters[self.enemy.name]['armor'] / 2
+        end,
+
+        ['special_1'] = function(dt, self)
+            if self.animation.currentFrame == 6 and self.animation.changing then
+                specialProjectile = Projectile{
+                    player = self,
+                    type = 'spawn',
+                    number = 2,
+                    range = 0
+                }
+            elseif self.animation.currentFrame == 14 and self.animation.changing then
+                specialProjectile.x = self.enemy.x
+            elseif self.animation.ending then
+                self.state = 'idle'
+            end
+        end,
+        ['special_2']  = function(dt, self)
+            if self.animation.ending then
+                self.state = 'idle'
+            elseif self.animation.currentFrame == 1 then
+                Projectile{
+                    player = self,
+                    type = 'spawn',
+                    number = 3,
+                    range = 0,
+                    relativeY = 10
+
+
+                }
+            elseif self.animation.currentFrame > 5 then
+                self:detectDamage('front')
+            end
+        end,
+
+
+        ['cooldown'] = 5
+
+    },
 
 
 

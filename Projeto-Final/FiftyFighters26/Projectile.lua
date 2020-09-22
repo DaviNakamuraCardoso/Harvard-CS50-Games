@@ -20,11 +20,12 @@ function Projectile:init(parameters)
 
 
     self.player.numberOfProjectiles = self.player.numberOfProjectiles + 1
+    self.index = self.player.numberOfProjectiles
     self.player.projectiles[self.player.numberOfProjectiles] = self
 
 
-    local relativeX = parameters.relativeX or - self.player.height / 4
-    local relativeY = parameters.relativeY or - self.player.width / 2
+    local relativeX = parameters.relativeX or - self.player.width / 4
+    local relativeY = parameters.relativeY or - self.player.height / 2
 
     -- Initial Position
     self.direction = self.player.direction
@@ -67,7 +68,7 @@ function Projectile:init(parameters)
         end,
 
         ['exploded'] = function(dt)
-            self.x = self.player.enemy.x - self.currentFrame:getHeight() / 2
+            self.x = self.player.enemy.x + self.direction * (self.currentFrame:getWidth() / 2 - self.player.enemy.width / 2)
             self.y = self.player.enemy.y
             if self.animation.ending then
                 self.state = 'destroyed'
@@ -103,10 +104,10 @@ end
 
 
 function Projectile:checkCollisions()
-    for i=0, 360 do
+    for i=0, 360, 10 do
         local x = math.floor(self.x + self.size / 2 + self.size / 2 * math.cos(math.rad(i)))
         local y = math.floor(self.y + self.size / 2 + self.size / 2 * math.sin(math.rad(i)))
-        if self.player:hit(x, y, self.size, self.damage) then
+        if self.player:hit(x, y, self.size, self.damage, self.index) then
             self.state = 'exploded'
             self.sound:play()
         end

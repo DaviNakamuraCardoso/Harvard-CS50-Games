@@ -401,8 +401,8 @@ function Player:update(dt)
     self:position(dt)
 
     -- Behavior and abilities
-    self.behaviors[self.state](dt)
     self.passive(dt, self)
+    self.behaviors[self.state](dt)
     self.timer = self.timer + dt
     self:updateAllProjectiles(dt)
 
@@ -485,10 +485,11 @@ function Player:detectDamage(position, range)
     end
 end
 
-function Player:hit(x, y, range, damage)
+function Player:hit(x, y, range, damage, isProjectile)
 
-    local dx = self.x - self.enemy.x
-    local dy = self.y - self.enemy.y
+    local projectile = isProjectile or false
+    local dx = not projectile and self.x - self.enemy.x or self.projectiles[projectile].x - self.enemy.x
+    local dy = not projectile and self.y - self.enemy.y or self.projectiles[projectile].y - self.enemy.y
     local damage = damage or self.damage
     if (self:enemyAt(x, y)) and self.enemy.state ~= 'hurt' and self.enemy.health > 0 or range^2 > dx^2 + dy^2 then
         self.enemy.state = 'hurt'
@@ -509,7 +510,7 @@ end
 function Player:position(dt)
     self.width = self.currentFrame:getWidth()
     self.height = self.currentFrame:getHeight()
-    self.x = math.floor(math.max(self.map.camX - 10, math.min(self.map.camX + VIRTUAL_WIDTH - self.width, self.x)))
+    self.x = math.floor(math.max(self.map.camX, math.min(self.map.camX + VIRTUAL_WIDTH - self.width, self.x)))
     if not self.inAir then
         self.y = self.map.floor - self.height
     end

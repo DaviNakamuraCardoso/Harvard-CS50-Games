@@ -456,7 +456,21 @@
 
 ### Fifty Fighters 45 
 
-*The Characters Update 3 - 
+*The Characters Update 3 - Elisabeth*
+
+**Date: September 21<sup>th</sup>, 2020**
+
+- Adding a new character: Elisabeth 
+
+### Fifty Fighters 46 
+
+*The Characters Update 4 - Ex Kyo*
+
+**Date: September 22<sup>th</sup>, 2020**
+
+- Adding a new character: Ex Kyo 
+
+
 
 
 

@@ -5,16 +5,8 @@ import re
 
 
 def main():
-    os.chdir('./graphics/CSEL')
-    #resize('Clark.png', 200, 170)
     #delete_crops()
-    #for filename in os.listdir():
-    #    crop(filename)
-    #resize('Character_little_Adelheid_portrait.png', 20, 15)
-    resize('little_Elizabeth_portrait.png', 20, 15)
-#    for image in os.listdir():
-#        if image.startswith('Character_'):
-#            print(f"Resizing {image} to {image.strip('Character_')}...")
+    big_resize('Kyo.png')
 
     return
 
@@ -48,6 +40,18 @@ def resize(image, new_width, new_height):
     new_image = image_reader.resize((int(new_width), int(new_height)))
     new_image.save(image)
     print(f'Cropping {image}...')
+    return
+
+
+def little_resize(image):
+    os.chdir('graphics/CSEL')
+    resize(image, 20, 15)
+    return
+
+
+def big_resize(image):
+    os.chdir('graphics/CSEL/Characters')
+    resize(image, 200, 170)
     return
 
 
