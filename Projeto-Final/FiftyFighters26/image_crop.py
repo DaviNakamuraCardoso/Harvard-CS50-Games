@@ -6,7 +6,8 @@ import re
 
 def main():
     #delete_crops()
-    big_resize('Kyo.png')
+    #big_resize('Fuuma.png')
+    little_resize('little_Fuuma_portrait.png')
 
     return
 
@@ -44,7 +45,7 @@ def resize(image, new_width, new_height):
 
 
 def little_resize(image):
-    os.chdir('graphics/CSEL')
+    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/Projeto-Final/FiftyFighters26/graphics/CSEL')
     resize(image, 20, 15)
     return
 

@@ -470,7 +470,13 @@
 
 - Adding a new character: Ex Kyo 
 
+### Fifty Fighters 47
 
+*The Characters Update 5 - Fuuma*
+
+**Date: September 23<sup>th</sup>, 2020**
+
+- Adding a new character: Fuuma 
 
 
 
