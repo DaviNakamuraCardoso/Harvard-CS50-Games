@@ -426,5 +426,37 @@
 
 *The Character Select Update*
 
+**Date: September 18<sup>th</sup>, 2020**
+
 - Implementing the possibility to select characters
+
+### Fifty Fighters 42 
+
+*The Map Select Update*
+
+**Date: September 19<sup>th</sup>, 2020**
+
+- Implementing the possibility to select maps 
+
+### Fifty Fighters 43 
+
+*The Characters Update 1 - Adam*
+
+**Date: September 19<sup>th</sup>, 2020**
+
+- Adding a new character: Adam 
+
+### Fifty Fighters 44 
+
+*The Characters Update 2 - Clark* 
+
+**Date: September 19<sup>th</sup>, 2020**
+
+- Adding a new character: Clark 
+
+### Fifty Fighters 45 
+
+*The Characters Update 3 - 
+
+
 
