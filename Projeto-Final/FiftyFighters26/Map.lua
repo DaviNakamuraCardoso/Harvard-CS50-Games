@@ -68,8 +68,8 @@ function Map:init(name)
                     self.state = 'map_select'
                 end
             end,
-            relativeX = (counter-1) * VIRTUAL_WIDTH / 2,
-            relativeY = 0,
+            relativeX = 50 * counter,
+            relativeY = 10,
             border = {2, 2},
             noLabel = true
 
@@ -97,6 +97,13 @@ function Map:init(name)
         relativeY = 30
     }
 
+    self.h2 = Message{
+        map = self,
+        text = 'Player 1 Select',
+        size = 40,
+        font = 'fighter.ttf',
+        relativeY = 30
+    }
 
     --\\____________________________________________________________________//--
 
@@ -111,10 +118,13 @@ function Map:init(name)
         ['player1_select'] = function(dt)
             self:updateCam()
             self:updateCharacterButtons()
+            self.h2:update()
         end,
         ['player2_select'] = function(dt)
             self:updateCam()
             self:updateCharacterButtons()
+            self.h2:update()
+            self.h2.text = 'Player 2 Select'
         end,
         ['map_select'] = function(dt)
             self:updateMapButtons()
@@ -153,9 +163,11 @@ function Map:init(name)
         end,
         ['player1_select'] = function()
             self:renderCharacterButtons()
+            self.h2:render()
         end,
         ['player2_select'] = function()
             self:renderCharacterButtons()
+            self.h2:render()
         end,
         ['map_select'] = function()
 

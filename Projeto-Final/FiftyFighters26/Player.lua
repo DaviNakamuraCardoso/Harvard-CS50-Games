@@ -149,7 +149,7 @@ function Player:init(map, name, side)
                 self.specialPoints = 0.1
                 self.state = 'special_2'
 
-            elseif love.keyboard.isDown(keyRelations[self.side]['dancing']) then
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['dancing']] then
                 self.state = 'dancing'
 
             end
@@ -157,9 +157,7 @@ function Player:init(map, name, side)
 
         end,
         ['dancing'] = function(dt)
-            if love.keyboard.isDown(keyRelations[self.side]['dancing']) then
-                self.state = 'dancing'
-            else
+            if self.animation.ending then
                 self.state = 'idle'
             end
         end,
@@ -457,7 +455,7 @@ function Player:detectDamage(position, range)
         },
         ['back'] = {
             ['start'] = -90,
-            ['end'] = 90,
+            ['end'] = 270,
             ['direction'] = -1
         },
         ['up'] = {
@@ -489,8 +487,10 @@ end
 
 function Player:hit(x, y, range, damage)
 
+    local dx = self.x - self.enemy.x
+    local dy = self.y - self.enemy.y
     local damage = damage or self.damage
-    if (self:enemyAt(x, y)) and self.enemy.state ~= 'hurt' and self.enemy.health > 0 then
+    if (self:enemyAt(x, y)) and self.enemy.state ~= 'hurt' and self.enemy.health > 0 or range^2 > dx^2 + dy^2 then
         self.enemy.state = 'hurt'
         self.enemy.health = self.enemy.health - (damage - damage * self.enemy.armor / 100)
         self.enemy.x = math.min(self.map.mapWidth - self.width - 10, math.max(0, math.floor(self.enemy.x - self.direction * range / 4)))
@@ -514,8 +514,8 @@ function Player:position(dt)
         self.y = self.map.floor - self.height
     end
     -- Offsets
-    self.xOffset = self.width / 2
-    self.yOffset = self.height / 2
+    self.xOffset = self.currentFrame:getWidth() / 2
+    self.yOffset = self.currentFrame:getHeight() / 2
 end
 
 

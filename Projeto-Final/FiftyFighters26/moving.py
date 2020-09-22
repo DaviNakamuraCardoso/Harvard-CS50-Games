@@ -40,11 +40,11 @@ def extrac_zip(path):
 
 
 def standard_icons():
-    icons = ['com.png', 'p1.png', 'p2.png', '999.png', '1000.png']
+    icons = ['1001.png']
     for dir in os.listdir():
         for icon in icons:
             if icon not in os.listdir(dir):
-                shutil.copy('Athena/' + icon, dir)
+                shutil.copy('Clark/' + icon, dir)
                 print(f"{icon} copied to {dir}")
     return
 
