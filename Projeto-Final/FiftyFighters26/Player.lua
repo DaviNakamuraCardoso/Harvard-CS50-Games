@@ -401,8 +401,8 @@ function Player:update(dt)
     self:position(dt)
 
     -- Behavior and abilities
-    self.passive(dt, self)
     self.behaviors[self.state](dt)
+    self.passive(dt, self)
     self.timer = self.timer + dt
     self:updateAllProjectiles(dt)
 
