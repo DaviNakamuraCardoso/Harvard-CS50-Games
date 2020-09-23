@@ -57,7 +57,7 @@ function Map:init(name)
     for k, v in pairs(Characters) do
         self.charactersButtons[k] = Button{
             label = k,
-            imageSource = 'graphics/CSEL/' .. 'little_' .. k .. '_portrait.png',
+            imageSource = 'graphics/' .. k .. '/portrait.png',
             map = self,
             action = function()
                 if self.state == 'player1_select' then
@@ -74,7 +74,7 @@ function Map:init(name)
             noLabel = true
 
         }
-        self.charactersImages['image'][k] = love.graphics.newImage('graphics/CSEL/Characters/'.. k .. '.png')
+        self.charactersImages['image'][k] = love.graphics.newImage('graphics/'.. k .. '/body.png')
         self.charactersImages['quad'][k] = love.graphics.newQuad(0, 0, self.charactersImages['image'][k]:getWidth(), self.charactersImages['image'][k]:getHeight(), self.charactersImages['image'][k]:getDimensions()
         )
         counter = counter + 1

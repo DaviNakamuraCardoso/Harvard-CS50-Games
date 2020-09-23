@@ -5,25 +5,22 @@ import re
 
 
 def main():
-    #delete_crops()
-    #big_resize('Fuuma.png')
-    little_resize('little_Fuuma_portrait.png')
+    for character in os.listdir('graphics'):
+        if not character.endswith('.png'):
+            little_resize(character)
 
     return
 
 
-def crop(image):
+def crop(image, xo, yo, x, y):
     """
     Takes a Image and crops it
     """
     if image.endswith('.png'):
         print(f'Cropping {image}...')
         image_reader = Image.open(image)
-        big_portrait = image_reader.crop((0, 0, 180, 220))
-        little_portrait = image_reader.crop((180, 220, 220, 250))
-        character = image.strip('.png')
-        big_portrait.save('big_' + character + '_portrait.png')
-        little_portrait.save('little_' + character + 'portrait.png')
+        portrait = image_reader.crop((xo, yo, x, y))
+        portrait.save('portrait.png')
     return
 
 
@@ -35,24 +32,27 @@ def delete_crops():
     return
 
 
-def resize(image, new_width, new_height):
+def resize(image, new_width, new_height, new_name):
     image_reader = Image.open(image)
     width, height = image_reader.size
-    new_image = image_reader.resize((int(new_width), int(new_height)))
-    new_image.save(image)
+    new_image = image_reader.resize((int(new_width*1.5), int(new_height*1.5)))
+    new_image.save(new_name)
     print(f'Cropping {image}...')
     return
 
 
-def little_resize(image):
-    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/Projeto-Final/FiftyFighters26/graphics/CSEL')
-    resize(image, 20, 15)
+def little_resize(character):
+
+    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/Projeto-Final/FiftyFighters26/graphics/' + character)
+    if 'portrait.png' in os.listdir():
+        resize('portrait.png', 20, 15, 'new_portrait.png')
     return
 
 
-def big_resize(image):
-    os.chdir('graphics/CSEL/Characters')
-    resize(image, 200, 170)
+def big_resize(character):
+    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/Projeto-Final/FiftyFighters26/graphics/' + character)
+    if '0.png' in os.listdir():
+        resize('0.png', 200, 170, 'body.png')
     return
 
 

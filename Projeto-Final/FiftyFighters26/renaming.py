@@ -4,8 +4,11 @@ import re, os, shutil
 
 
 def main():
-    rename()
+    #rename()
     #reorder('./graphics/Ai')
+    os.chdir('graphics')
+    for dir in os.listdir():
+        new_portrait(dir)
     return
 
 
@@ -42,6 +45,13 @@ def reorder(path):
         print('Passing ' + old_name + ' to ' + new_name + '...')
         counter += 1
     return
+
+
+def new_portrait(dir):
+    if 'img.png' in os.listdir(dir):
+        shutil.move(dir + '/img.png', 'portrait.png')
+    return
+
 
 if __name__ == '__main__':
     main()
