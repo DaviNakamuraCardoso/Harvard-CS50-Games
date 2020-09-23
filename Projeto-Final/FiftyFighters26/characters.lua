@@ -73,7 +73,12 @@ Characters = {
             end
         end,
         ['shoot'] = function(self)
-            Projectile{player = self, type = 'fly', number = 1, velocity = 400}
+            Projectile{
+                player = self,
+                type = 'fly',
+                number = 1,
+                velocity = 400
+            }
         end,
 
         ['special_1'] = function(dt, self)
@@ -869,7 +874,7 @@ Characters = {
         --//_______________________ Idle and Dance _________________________\\--
 
             ['idle'] = {{0, 10}},
-    --        ['dancing'] = {{}},
+            ['dancing'] = {{466, 476}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -878,7 +883,7 @@ Characters = {
             ['jumping'] = {{22, 34}},
             ['duck'] = {{35, 38}},
 
-        --//__________________________ Damage ______________________________\\--
+        --//___________________________ Damage ______________________________\\--
 
             -- Punch
             ['punch'] = {{91, 95}},
@@ -887,56 +892,87 @@ Characters = {
 
             -- Kick
             ['kick'] = {{104, 114}, {148, 158}},
-            ['duck_kick'] = {{119, 121}, {163, 170}}
+            ['duck_kick'] = {{119, 121}, {163, 170}}, 
             ['air_kick'] = {{84, 86}},
 
             -- Hurt
-    --        ['fall'] = {{}},
-    --        ['hurt'] = {{}},
+            ['fall'] = {{430, 434}},
+            ['hurt'] = {{456, 458}},
 
     --    --//________________________ End of Game ___________________________\\--
 
 
-    --        ['dying'] = {{}},
-    --        ['waiting'] = {{}},
-    --        ['winning'] = {{}},
+            ['dying'] = {{418, 421}},
+            ['waiting'] = {{439, 441}},
+            ['winning'] = {{483, 494}},
 
-    --    --//_________________________ Specials _____________________________\\--
+        --//_________________________ Specials _____________________________\\--
 
-    --        ['special_1'] = {{}},
-    --        ['special_2'] = {{}},
+            ['special_1'] = {{260, 266}},
+            ['special_2'] = {{286, 287, 288, 289, 355, 356, 357, 358, 359, 230, 231, 232, 233, 289, 290, 291, 292}},
 --    --//________________________ Projectiles ____________________________\\--
 
             ['shoot'] = {{122, 125}},
-    --        ['projectile_1_fly'] = {{}},
-    --        ['projectile_1_exploded'] = {{}},
-    --        ['projectile_1_destroyed'] = {{999, 1000}},
+
+            ['projectile_1_spawn'] = {{243, 245, 247, 249}},
+            ['projectile_1_exploded'] = {{301, 317}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+            ['projectile_2_spawn'] = {{318, 328}},
+            ['projectile_2_exploded'] = {{329, 335}},
+            ['projectile_2_destroyed'] = {{999, 1000}},
 
 
-    --    },
-    --    ['passive'] = function(dt, self)
+        },
+        ['passive'] = function(dt, self)
+            if self.enemy.state == 'hurt' then
+                self.enemy.heath = math.random(4) == 1 and self.enemy.health - 100 * dt or self.enemy.health
+            end
+        end,
+        ['shoot'] = function(self)
+            Projectile{
+              player = self,
+              type = 'fly',
+              number = 1,
+              velocity = 400
+            }
+        end,
 
-    --    end,
-    --    ['shoot'] = function(player)
-    --        Projectile{
-    --          player = self,
-    --          type = 'fly',
-    --          number = 1,
-    --          velocity = 400
-    --        }
-    --    end,
+        ['special_1'] = function(dt, self)
+            if self.animation.ending then
+                for i=-1, 1, 2 do
+                    Projectile{
+                        player = self,
+                        type = 'fly',
+                        number = 1,
+                        range = i * 100
+                    }
+                end
+            end
+        end,
+        ['special_2']  = function(dt, self)
+            if self.animation.ending then
+                Projectile{
+                    player = self,
+                    type = 'spawn',
+                    number = 2,
+                    range = 0,
+                    incline = 90
+                }
+                self.state = 'jumping'
+            elseif self.animation.currentFrame <= 4 then
+                self.x = math.floor(self.x + self.direction * self.speed * dt)
+            elseif self.animation.currentFrame == 5 and self.animation.changing then
+                self.y = math.floor(self.y - 200)
+            elseif self.animation.currentFrame > 5 then
+                self.inAir = true
+            end
+        end,
 
-    --    ['special_1'] = function(dt, self)
-    --
-    --    end,
-    --    ['special_2']  = function(dt, self)
 
-    --    end,
+        ['cooldown'] = 5
 
-
-    --    ['cooldown'] = 5
-
-    --},
+    }
     --['Character'] = {
 
     --    --//________________________ Attributtes ___________________________\\--
