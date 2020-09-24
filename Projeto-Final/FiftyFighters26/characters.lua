@@ -874,7 +874,7 @@ Characters = {
         --//_______________________ Idle and Dance _________________________\\--
 
             ['idle'] = {{0, 10}},
-            ['dancing'] = {{466, 476}},
+            ['dancing'] = {{366, 376}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -892,19 +892,19 @@ Characters = {
 
             -- Kick
             ['kick'] = {{104, 114}, {148, 158}},
-            ['duck_kick'] = {{119, 121}, {163, 170}}, 
+            ['duck_kick'] = {{119, 121}, {163, 170}},
             ['air_kick'] = {{84, 86}},
 
             -- Hurt
             ['fall'] = {{430, 434}},
-            ['hurt'] = {{456, 458}},
+            ['hurt'] = {{455, 456}},
 
     --    --//________________________ End of Game ___________________________\\--
 
 
             ['dying'] = {{418, 421}},
             ['waiting'] = {{439, 441}},
-            ['winning'] = {{483, 494}},
+            ['winning'] = {{383, 394}},
 
         --//_________________________ Specials _____________________________\\--
 
@@ -919,7 +919,7 @@ Characters = {
             ['projectile_1_destroyed'] = {{999, 1000}},
 
             ['projectile_2_spawn'] = {{318, 328}},
-            ['projectile_2_exploded'] = {{329, 335}},
+            ['projectile_2_exploded'] = {{329, 334}},
             ['projectile_2_destroyed'] = {{999, 1000}},
 
 
@@ -932,7 +932,7 @@ Characters = {
         ['shoot'] = function(self)
             Projectile{
               player = self,
-              type = 'fly',
+              type = 'spawn',
               number = 1,
               velocity = 400
             }
@@ -943,11 +943,12 @@ Characters = {
                 for i=-1, 1, 2 do
                     Projectile{
                         player = self,
-                        type = 'fly',
+                        type = 'spawn',
                         number = 1,
                         range = i * 100
                     }
                 end
+                self.state = 'idle'
             end
         end,
         ['special_2']  = function(dt, self)
@@ -956,14 +957,15 @@ Characters = {
                     player = self,
                     type = 'spawn',
                     number = 2,
-                    range = 0,
-                    incline = 90
+                    range = self.direction * (self.x - self.enemy.x),
+                    relativeY = self.enemy.y - self.y
                 }
                 self.state = 'jumping'
             elseif self.animation.currentFrame <= 4 then
-                self.x = math.floor(self.x + self.direction * self.speed * dt)
-            elseif self.animation.currentFrame == 5 and self.animation.changing then
-                self.y = math.floor(self.y - 200)
+                self.x = math.floor(self.x - self.direction * self.speed * dt)
+            elseif self.animation.currentFrame == 5 then
+                self.y = math.floor(self.y - 1000 * dt)
+                self.inAir = true
             elseif self.animation.currentFrame > 5 then
                 self.inAir = true
             end
@@ -972,7 +974,119 @@ Characters = {
 
         ['cooldown'] = 5
 
+    },
+
+    ['Geese-Howard'] = {
+
+        --//________________________ Attributtes ___________________________\\--
+
+        ['armor'] = 20,
+        ['damage'] = 13,
+        ['punch_range'] = 30,
+        ['kick_range'] = 50,
+        ['sex'] = 'male',
+        ['shootTrigger'] = 2,
+
+        ['animations'] = {
+        --//_______________________ Idle and Dance _________________________\\--
+
+            ['idle'] = {{0, 4}},
+            ['dancing'] = {{537, 539}},
+
+        --//__________________________ Movement ____________________________\\--
+
+            ['walking'] = {{5, 12}},
+            ['running'] = {{39, 44}},
+            ['jumping'] = {{21, 27}},
+            ['duck'] = {{34, 38}},
+
+        --//__________________________ Damage ______________________________\\--
+
+            -- Punch
+            ['punch'] = {{87, 90}},
+            ['duck_punch'] = {{99, 101}},
+            ['air_punch'] = {{121, 123}},
+
+            -- Kick
+            ['kick'] = {{132, 136}},
+            ['duck_kick'] = {{112, 114}},
+            ['air_kick'] = {{47, 48}},
+
+            -- Hurt
+            ['fall'] = {{593, 597}},
+            ['hurt'] = {{532, 533}},
+
+        --//________________________ End of Game ___________________________\\--
+
+
+            ['dying'] = {{577, 582}},
+            ['waiting'] = {{611, 613}},
+            ['winning'] = {{544, 546}},
+
+        --//_________________________ Specials _____________________________\\--
+
+            ['special_1'] = {{309, 322}},
+            ['special_2'] = {{346, 356}},
+        --//________________________ Projectiles ____________________________\\--
+
+            ['shoot'] = {{476, 488}},
+            ['projectile_1_spawn'] = {{277, 287}},
+            ['projectile_1_exploded'] = {{288, 290}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+            ['projectile_2_fly'] = {{449, 455}},
+            ['projectile_2_exploded'] = {{443, 448}},
+            ['projectile_2_destroyed'] = {{999, 1000}},
+
+            ['projectile_3_spawn'] = {{459, 473}},
+            ['projectile_3_exploded'] = {{288, 290}},
+            ['projectile_3_destroyed'] = {{999, 1000}}
+        },
+        ['passive'] = function(dt, self)
+            self.armor = self.armor + 50 * dt
+        end,
+        ['shoot'] = function(self)
+            Projectile{
+              player = self,
+              type = 'spawn',
+              number = 1,
+              range = 400
+            }
+        end,
+
+        ['special_1'] = function(dt, self)
+            if self.animation.ending then
+                Projectile{
+                    player = self,
+                    type = 'fly',
+                    number = 2,
+                    velocity = -400,
+                    direction = -self.direction
+                }
+                self.state = 'idle'
+            end
+        end,
+        ['special_2']  = function(dt, self)
+            if self.animation.ending then
+                for i=-5, 5, 2 do
+                    Projectile{
+                        player = self,
+                        type = 'spawn',
+                        number = 3,
+                        range = i * 100,
+                        direction = i > 0 and 1 or -1
+
+                    }
+                end
+                self.state = 'idle'
+            end
+        end,
+
+
+        ['cooldown'] = 5
+
     }
+
     --['Character'] = {
 
     --    --//________________________ Attributtes ___________________________\\--
