@@ -1315,6 +1315,98 @@ Characters = {
 
     },
 
+    ['Hotaru-Futaba'] = {
+
+        --//________________________ Attributtes ___________________________\\--
+
+        ['armor'] = 10,
+        ['damage'] = 11,
+        ['punch_range'] = 15,
+        ['kick_range'] = 50,
+        ['sex'] = 'female',
+        ['shootTrigger'] = 4,
+
+        ['animations'] = {
+        --//_______________________ Idle and Dance _________________________\\--
+
+            ['idle'] = {{0, 9}},
+            ['dancing'] = {{108, 112}},
+
+        --//__________________________ Movement ____________________________\\--
+
+            ['walking'] = {{10, 17}},
+            ['running'] = {{45, 53}},
+            ['jumping'] = {{29, 35}},
+            ['duck'] = {{312, 321}},
+
+        --//__________________________ Damage ______________________________\\--
+
+            -- Punch
+            ['punch'] = {{116, 121}},
+            ['duck_punch'] = {{125, 127}, {158, 170}},
+            ['air_punch'] = {{153, 157}},
+
+            -- Kick
+            ['kick'] = {{93, 105}, {128, 133}, {133, 138}, {171, 176}},
+            ['duck_kick'] = {{141, 145}, {191, 200}, {339, 345}},
+            ['air_kick'] = {{187, 190}, {244, 251}},
+
+    --        -- Hurt
+            ['fall'] = {{555, 558}},
+            ['hurt'] = {{584, 585}},
+
+    --    --//________________________ End of Game ___________________________\\--
+
+
+            ['dying'] = {{539, 553}},
+            ['waiting'] = {{562, 569}},
+            ['winning'] = {{515, 522}},
+
+    --    --//_________________________ Specials _____________________________\\--
+
+            ['special_1'] = {{54, 73}},
+            ['special_2'] = {{379, 431}},
+--    --//________________________ Projectiles ____________________________\\--
+
+            ['shoot'] = {{84, 92}, {146, 151}},
+            ['projectile_1_fly'] = {{433, 439}},
+            ['projectile_1_exploded'] = {{441, 449}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+
+        },
+        ['passive'] = function(dt, self)
+            self.damage = (115 - self.health)  / 4
+        end,
+        ['shoot'] = function(self)
+            Projectile{
+              player = self,
+              type = 'fly',
+              number = 1,
+              velocity = 400
+            }
+        end,
+
+        ['special_1'] = function(dt, self)
+            dash(dt, self, 200, 2, 6, 20)
+            dash(dt, self, 200, 7, 12, 20, 180)
+
+        end,
+        ['special_2']  = function(dt, self)
+            dash(dt, self, 130, 7, 12, 10, 180)
+            dash(dt, self, 100, 13, 23, 10, 90)
+            dash(dt, self, 200, 24, 39, 20, 315)
+            if self.animation.ending then
+                self.inAir = false
+                self.state = 'idle'
+            end
+
+        end,
+
+
+        ['cooldown'] = 5
+
+    },
 
     --['Character'] = {
 
@@ -1406,13 +1498,16 @@ Characters = {
 }
 
 
-function dash(dt, self, speed, startAnimation, finalAnimation, damage)
+function dash(dt, self, speed, startAnimation, finalAnimation, damage, incline)
     local speed = speed or self.speed
     local startAnimation = startAnimation or 0
     local finalAnimation = finalAnimation or #self.animation.frames
     local damage = damage or self.damage
+    local incline = incline or 0
     if self.animation.currentFrame >= startAnimation and self.animation.currentFrame< finalAnimation then
-        self.x = math.floor(self.x - 2 * speed * self.direction * dt)
+        self.inAir = true
+        self.x = math.floor(self.x - 2 * speed * self.direction * dt * math.cos(math.rad(incline)))
+        self.y = math.floor(self.y - 2 * speed * dt * math.sin(math.rad(incline)))
     end
     self:detectDamage('around', damage)
     if self.animation.ending then
