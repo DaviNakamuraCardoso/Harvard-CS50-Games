@@ -42,8 +42,8 @@ function generateAnimation(character, table)
     else
         for i=1, #table do
             local image = 'graphics/' .. character.name .. '/' .. tostring(table[i]) .. '.png'
-            frames[i] = love.graphics.newImage(image)
-            quads[i] = love.graphics.newQuad(0, 0, frames[i]:getWidth(), frames[i]:getHeight(), frames[i]:getDimensions())
+            frames[i-1] = love.graphics.newImage(image)
+            quads[i-1] = love.graphics.newQuad(0, 0, frames[i-1]:getWidth(), frames[i-1]:getHeight(), frames[i-1]:getDimensions())
         end
     end
 

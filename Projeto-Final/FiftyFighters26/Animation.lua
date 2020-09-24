@@ -35,8 +35,8 @@ function Animation:update(dt)
             self.currentFrame = 0
         else
             self.ending = false
+            self.currentFrame = (self.currentFrame + 1) % (#self.frames)
         end
-        self.currentFrame = (self.currentFrame + 1) % (#self.frames)
     else
         self.ending = false
         self.changing = false

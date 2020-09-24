@@ -34,7 +34,6 @@ function Player:init(map, name, side)
 
     -- Shoots
     self.shoot = Characters[self.name]['shoot']
-    self.bullets = 10
 
 
 
@@ -138,9 +137,8 @@ function Player:init(map, name, side)
             elseif love.keyboard.wasPressed[keyRelations[self.side]['duck']] then
                 self.state = 'duck'
 
-            elseif love.keyboard.wasPressed[keyRelations[self.side]['shoot']] and self.bullets > 0 then
+            elseif love.keyboard.wasPressed[keyRelations[self.side]['shoot']] then
                 self.state = 'shoot'
-                self.bullets = self.bullets - 1
 
             elseif love.keyboard.wasPressed[keyRelations[self.side]['special_1']] and self.timer >= self.cooldown then
                 self.state = 'special_1'
@@ -388,7 +386,6 @@ function Player:init(map, name, side)
 end
 
 
-
 function Player:update(dt)
 
     -- Animation
@@ -401,8 +398,8 @@ function Player:update(dt)
     self:position(dt)
 
     -- Behavior and abilities
-    self.behaviors[self.state](dt)
     self.passive(dt, self)
+    self.behaviors[self.state](dt)
     self.timer = self.timer + dt
     self:updateAllProjectiles(dt)
 
@@ -491,7 +488,7 @@ function Player:hit(x, y, range, damage, isProjectile)
     local dx = not projectile and self.x - self.enemy.x or self.projectiles[projectile].x - self.enemy.x
     local dy = not projectile and self.y - self.enemy.y or self.projectiles[projectile].y - self.enemy.y
     local damage = damage or self.damage
-    if (self:enemyAt(x, y)) and self.enemy.state ~= 'hurt' and self.enemy.health > 0 or range^2 > dx^2 + dy^2 then
+    if (self:enemyAt(x, y) or range^2 > dx^2 + dy^2) and self.enemy.state ~= 'hurt' and self.enemy.health > 0 then
         self.enemy.state = 'hurt'
         self.enemy.health = self.enemy.health - (damage - damage * self.enemy.armor / 100)
         self.enemy.x = math.min(self.map.mapWidth - self.width - 10, math.max(0, math.floor(self.enemy.x - self.direction * range / 4)))

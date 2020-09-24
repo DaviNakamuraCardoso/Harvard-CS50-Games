@@ -1,7 +1,7 @@
 #rename files
 
 import re, os, shutil
-
+import sys
 
 def main():
     #rename()
@@ -13,7 +13,7 @@ def main():
 
 
 def rename():
-    dirs = ['Gato-Futaba']
+    dirs = sys.argv[1:]
     file_re = re.compile(r'^(.*)(_)(\d+.png)')
     os.chdir('./graphics')
     for dir in dirs:

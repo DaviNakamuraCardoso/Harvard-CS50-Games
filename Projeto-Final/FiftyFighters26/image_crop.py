@@ -5,7 +5,8 @@ import re
 
 
 def main():
-    crop_gato()
+    big_resize('Haohmaru')
+    return
 
 
 def crop(image, xo, yo, x, y):
@@ -52,8 +53,8 @@ def big_resize(character):
     return
 
 
-def crop_gato():
-    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/Projeto-Final/FiftyFighters26/graphics/Gato-Futaba')
+def crop_tall(character, xcrop, ycrop):
+    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/Projeto-Final/FiftyFighters26/graphics/' + character)
     image_re = re.compile(r'\d+.png')
     for filename in os.listdir():
         if image := image_re.search(filename): # WALRUS! WALRUS! WALRUS!
@@ -61,7 +62,7 @@ def crop_gato():
             width, height = reader.size
             if int(height) > 20:
                 print(f"Cropping {image.group(0)}")
-                new_image = reader.crop((0, 0, int(width), int(height-17)))
+                new_image = reader.crop((0, 0, int(width-xcrop), int(height-ycrop)))
                 new_image.save(image.group(0))
             else:
                 print(f"Couldn't crop {image.group(0)}")

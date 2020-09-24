@@ -252,16 +252,16 @@ function Map:renderCharacterButtons()
         v:render()
         if v.color[1] == v.hover[1] then
             if self.state == 'player1_select' then
-                love.graphics.draw(self.charactersImages['image'][k], self.charactersImages['quad'][k], self.camX + 20, self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][k]:getHeight())
+                love.graphics.draw(self.charactersImages['image'][k], self.charactersImages['quad'][k], self.camX + 20 + self.charactersImages['image'][k]:getWidth(), self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][k]:getHeight(), 0, -1, 1)
             else
 
-                love.graphics.draw(self.charactersImages['image'][k], self.charactersImages['quad'][k],self.camX + VIRTUAL_WIDTH / 2,self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][k]:getHeight())
+                love.graphics.draw(self.charactersImages['image'][k], self.charactersImages['quad'][k],self.camX + VIRTUAL_WIDTH - self.charactersImages['image'][k]:getWidth()-20,self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][k]:getHeight())
             end
         end
 
     end
     if self.state == 'player2_select' then
-        love.graphics.draw(self.charactersImages['image'][self.player1.name], self.charactersImages['quad'][self.player1.name], self.camX + 20, self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][self.player1.name]:getHeight())
+        love.graphics.draw(self.charactersImages['image'][self.player1.name], self.charactersImages['quad'][self.player1.name], self.camX + 20 + self.charactersImages['image'][self.player1.name]:getWidth(), self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][self.player1.name]:getHeight(), 0, -1, 1)
     end
 end
 
@@ -306,7 +306,7 @@ function Map:updateReferences()
 
     -- Creates the players
     self.player1 = Player(self, 'Athena', -1)
-    self.player2 = Player(self, 'Bonne', 1)
+    self.player2 = Player(self, 'Bonne-Jenet', 1)
 
     -- Sets each one as other's enemy
     self.player1.enemy = self.player2
