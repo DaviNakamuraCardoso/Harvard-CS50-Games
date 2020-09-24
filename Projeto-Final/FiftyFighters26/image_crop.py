@@ -5,7 +5,8 @@ import re
 
 
 def main():
-    big_resize('Haohmaru')
+    resize('Hanzo', 'body.png')
+    resize('Haohmaru', 'body.png')
     return
 
 
@@ -29,10 +30,11 @@ def delete_crops():
     return
 
 
-def resize(image, new_width, new_height, new_name):
-    image_reader = Image.open(image)
+def resize(image, new_name):
+    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/Projeto-Final/FiftyFighters26/graphics/' + image)
+    image_reader = Image.open('0.png')
     width, height = image_reader.size
-    new_image = image_reader.resize((int(new_width*1.5), int(new_height*1.5)))
+    new_image = image_reader.resize((int(width*1.5), int(height*1.5)))
     new_image.save(new_name)
     print(f'Cropping {image}...')
     return
