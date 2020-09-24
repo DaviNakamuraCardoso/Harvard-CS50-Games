@@ -68,7 +68,7 @@ function Map:init(name)
                     self.state = 'map_select'
                 end
             end,
-            relativeX = 50 * counter,
+            relativeX = 40 * counter,
             relativeY = 10,
             border = {2, 2},
             noLabel = true

@@ -28,7 +28,7 @@ function Projectile:init(parameters)
     local relativeY = parameters.relativeY or - self.player.height / 2
 
     -- Initial Position
-    self.direction = self.player.direction
+    self.direction = parameters.direction or self.player.direction
     self.x = self.player.x + self.player.width / 2 + relativeX
     self.y = self.player.y + self.player.height / 2 + relativeY
 

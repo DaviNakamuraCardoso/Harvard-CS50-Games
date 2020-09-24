@@ -6,14 +6,14 @@ import re, os, shutil
 def main():
     #rename()
     #reorder('./graphics/Ai')
-    os.chdir('graphics')
-    for dir in os.listdir():
-        new_portrait(dir)
-    return
+    rename()
+    #for dir in os.listdir():
+    #    new_portrait(dir)
+    #return
 
 
 def rename():
-    dirs = ['Fuuma']
+    dirs = ['Gato-Futaba']
     file_re = re.compile(r'^(.*)(_)(\d+.png)')
     os.chdir('./graphics')
     for dir in dirs:

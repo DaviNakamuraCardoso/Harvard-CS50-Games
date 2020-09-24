@@ -40,7 +40,7 @@ function Lifebar:init(player)
 
     --//________________________ Player Image ______________________________\\--
 
-    self.image = love.graphics.newImage('graphics/CSEL/little_' .. self.player.name .. '_portrait.png')
+    self.image = love.graphics.newImage('graphics/' .. self.player.name .. '/portrait.png')
 
     -- Dimensions
     self.quad = love.graphics.newQuad(0, 0, self.image:getWidth(), self.image:getHeight(), self.image:getDimensions())
