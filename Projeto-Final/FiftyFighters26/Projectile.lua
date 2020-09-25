@@ -49,7 +49,7 @@ function Projectile:init(parameters)
         ['fly'] = function(dt)
             self:checkCollisions()
             self.x = math.floor(self.x - self.velocity * self.direction * math.cos(math.rad(self.incline)) * dt)
-            self.y = math.floor(self.y + self.velocity * math.sin(math.rad(self.incline)) * dt)
+            self.y = math.floor(self.y - self.velocity * math.sin(math.rad(self.incline)) * dt)
             if self.x > self.player.map.mapWidth or self.x < 0 then
                 self.state = 'destroyed'
             end

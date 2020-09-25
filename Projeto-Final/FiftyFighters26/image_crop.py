@@ -5,8 +5,7 @@ import re
 
 
 def main():
-    resize('Hanzo', 'body.png')
-    resize('Haohmaru', 'body.png')
+    resize(sys.argv[1:], 'body.png')
     return
 
 
