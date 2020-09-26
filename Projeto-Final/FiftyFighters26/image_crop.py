@@ -2,10 +2,12 @@ from PIL import Image
 import os
 import send2trash
 import re
+import sys
 
 
 def main():
-    resize(sys.argv[1:], 'body.png')
+    for name in sys.argv[1:]:
+        resize(name, 'body.png')
     return
 
 

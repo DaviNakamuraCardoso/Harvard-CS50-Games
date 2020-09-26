@@ -258,6 +258,7 @@ function Player:init(map, name, side)
         end,
         ['duck'] = function(dt)
             if not love.keyboard.isDown(keyRelations[self.side]['duck']) then
+                self.inAir = false 
                 self.state = 'idle'
                 self.y = self.map.floor - self.height
             elseif love.keyboard.wasPressed[keyRelations[self.side]['punch']] then
