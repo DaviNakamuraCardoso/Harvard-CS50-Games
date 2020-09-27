@@ -586,13 +586,13 @@ Characters = {
 
         ['special_1'] = function(dt, self)
             dash(dt, self, {
-                velocity = 70,
+                velocity = 50,
                 startAnimation = 3,
                 finalAnimation = 10,
                 incline = 180
             })
             if self.animation.ending then
-                self.state = 'idle'
+                self.state = 'jumping'
             end
         end,
         ['special_2']  = function(dt, self)

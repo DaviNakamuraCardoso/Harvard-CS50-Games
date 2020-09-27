@@ -53,6 +53,12 @@ function Map:init(name)
         ['image'] = {},
         ['quad'] = {}
     }
+    local names = {}
+    local index = 1
+    for k, v in pairs(Characters) do
+        names[index] = k
+        index = index + 1
+    end
     local counter = 1
     for k, v in pairs(Characters) do
         self.charactersButtons[k] = Button{
@@ -68,8 +74,8 @@ function Map:init(name)
                     self.state = 'map_select'
                 end
             end,
-            relativeX = 40 * counter,
-            relativeY = 10,
+            relativeX = 100 * math.cos(math.rad(counter * 360 / #names)) + VIRTUAL_WIDTH / 2,
+            relativeY = 100 * math.sin(math.rad(counter * 360 / #names)) + VIRTUAL_HEIGHT / 2,
             border = {2, 2},
             noLabel = true
 
@@ -187,7 +193,6 @@ function Map:init(name)
 end
 
 
-
 function Map:render()
     self.renders[self.state]()
 end
@@ -286,7 +291,7 @@ function Map:updateReferences()
     self.camY = self.mapHeight - VIRTUAL_HEIGHT
 
     -- Floor and gravity
-    self.floor = self.mapHeight
+    self.floor = self.mapHeight - 10
     self.gravity = 800
 
     --\\____________________________________________________________________//--
