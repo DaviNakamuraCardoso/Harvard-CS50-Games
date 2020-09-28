@@ -2166,9 +2166,195 @@ Characters = {
 
         ['cooldown'] = 5
 
-    }
+    },
 
-    ['Character'] = {
+
+    ['Kula-Diamond'] = {
+
+        --//________________________ Attributtes ___________________________\\--
+
+        ['armor'] = 30,
+        ['damage'] = 10,
+        ['punch_range'] = 30,
+        ['kick_range'] = 50,
+        ['sex'] = 'female',
+        ['shootTrigger'] = 9,
+
+        ['animations'] = {
+        --//_______________________ Idle and Dance _________________________\\--
+
+            ['idle'] = {{0, 5}},
+            ['dancing'] = {{102, 125}, {143, 147}},
+
+        --//__________________________ Movement ____________________________\\--
+
+            ['walking'] = {{16, 27}},
+            ['running'] = {{80, 90}},
+            ['jumping'] = {{35, 46}},
+            ['duck'] = {{49, 56}},
+
+        --//__________________________ Damage ______________________________\\--
+
+            -- Punch
+            ['punch'] = {{91, 96}, {150, 154}, {215, 219}},
+            ['duck_punch'] = {{264, 270}},
+            ['air_punch'] = {{258, 263}},
+
+            -- Kick
+            ['kick'] = {{174, 184}, {135, 141}, {185, 193}},
+            ['duck_kick'] = {{199, 202}},
+            ['air_kick'] = {{192, 198}},
+
+            -- Hurt
+            ['fall'] = {{703, 706}},
+            ['hurt'] = {{746, 748}},
+
+        --//________________________ End of Game ___________________________\\--
+
+
+            ['dying'] = {{685, 690}},
+            ['waiting'] = {{727, 729}},
+            ['winning'] = {{528, 540}, {541, 545}},
+
+    --    --//_________________________ Specials _____________________________\\--
+
+            ['special_1'] = {{341, 350}},
+            ['special_2'] = {{300, 301, 302, 303, 304, 305, 306, 234, 235, 236, 237, 238, 239, 240, 162, 163, 164, 166, 168, 445, 446, 449, 450, 451, 455, 456, 457, 458, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383}},
+--    --//________________________ Projectiles ____________________________\\--
+
+            ['shoot'] = {{351, 361}},
+            ['projectile_1_spawn'] = {{362, 370}},
+            ['projectile_1_exploded'] = {{362, 370}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+            ['projectile_2_spawn'] = {{65, 65, 65}},
+            ['projectile_2_exploded'] = {{69, 70, 71}},
+            ['projectile_2_destroyed'] = {{999, 1000}},
+
+            ['projectile_3_fly'] = {{337, 340}},
+            ['projectile_3_exploded'] = {{321, 323}},
+            ['projectile_3_destroyed'] = {{999, 1000}},
+
+            ['projectile_4_fly'] = {{165, 167, 169}},
+            ['projectile_4_exploded'] = {{321, 323}},
+            ['projectile_4_destroyed'] = {{999, 1000}},
+
+            ['projectile_5_spawn'] = {{447, 448, 452, 453, 454}},
+            ['projectile_5_exploded'] = {{999, 1000}},
+            ['projectile_5_destroyed'] = {{999, 1000}}
+
+
+
+
+        },
+        ['passive'] = function(dt, self)
+            if self.state == 'hurt' and self.animation.ending then
+                for _, projectile in pairs(self.projectiles) do
+                    projectile.state = 'exploded'
+                end
+                self.projectiles = {}
+                self.numberOfProjectiles = 0
+
+            elseif self.state == 'shoot' and self.animation.ending then
+                Projectile{
+                    player = self,
+                    number = 2,
+                    type = 'spawn',
+                    range = 10,
+                    infinity = true,
+                    explodeAtEnemy = false,
+                    relativeY = -70
+                }
+            end
+            if self.numberOfProjectiles >= 1 then
+                if self.projectiles[self.numberOfProjectiles].state == 'spawn' then
+                    self.armor = 100
+                else
+                    self.armor = 30
+                end
+            else
+                self.armor = 30
+            end
+        end,
+        ['shoot'] = function(self)
+            Projectile{
+              player = self,
+              type = 'spawn',
+              number = 1,
+              range = self.direction * (self.x - self.enemy.x)
+            }
+        end,
+
+        ['special_1'] = function(dt, self)
+            if self.animation.ending then
+                self.state = 'duck'
+            elseif self.animation.currentFrame == 1 and self.animation.changing then
+                Projectile{
+                    player = self,
+                    type = 'fly',
+                    number = 3,
+                    velocity = 300
+                }
+            end
+            dash(dt, self, {
+                startAnimation = 2,
+                damage = 15,
+                velocity = self.speed * 3
+            })
+        end,
+        ['special_2']  = function(dt, self)
+            dash(dt, self, {
+                startAnimation = 1,
+                finalAnimation = 6,
+                incline = 90,
+                velocity = 50
+            })
+            dash(dt ,self, {
+                startAnimation = 7,
+                finalAnimation = 14,
+                incline = 300,
+                damage = 20,
+                velocity = 100
+            })
+            if self.animation.ending then
+                self.state = 'jumping'
+                self.armor = 30
+            elseif self.animation.currentFrame == 19 and self.animation.changing then
+                self.inAir = false
+                self.y = self.map.floor - self.height
+                for i=-3, 3 do
+                    Projectile{
+                        player = self,
+                        type = 'fly',
+                        number = 4,
+                        incline = 320,
+                        velocity = 300,
+                        relativeY = -300,
+                        relativeY = 40 * i
+                    }
+                end
+            elseif self.animation.currentFrame == 25 and self.animation.changing then
+                Projectile{
+                    player = self,
+                    type = 'spawn',
+                    number = 5,
+                    range = 0
+                }
+                self.armor = 100
+            elseif self.animation.currentFrame == 33 and self.animation.changing then
+                self.health = self.health + 10
+                self.lifebar:updateDimensionsAndColors()
+            end
+
+
+        end,
+
+
+        ['cooldown'] = 5
+
+    },
+
+    --['Character'] = {
 
     --    --//________________________ Attributtes ___________________________\\--
 

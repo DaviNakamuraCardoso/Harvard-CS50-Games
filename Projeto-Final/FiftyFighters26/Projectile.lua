@@ -17,11 +17,14 @@ function Projectile:init(parameters)
     self.damage = parameters.damage or self.player.damage
 
     self.incline = parameters.incline or 0
+    self.infinity = parameters.infinity or false
+    self.explodeAtEnemy = parameters.explodeAtEnemy or true 
 
 
     self.player.numberOfProjectiles = self.player.numberOfProjectiles + 1
     self.index = self.player.numberOfProjectiles
     self.player.projectiles[self.player.numberOfProjectiles] = self
+
 
 
     local relativeX = parameters.relativeX or - self.player.width / 4
@@ -63,13 +66,19 @@ function Projectile:init(parameters)
                 else
                     self.state = 'destroyed'
                 end
+                if self.infinity then
+                    self.animation.currentFrame = 0
+                    self.state = 'spawn'
+                end
 
             end
         end,
 
         ['exploded'] = function(dt)
-            self.x = self.player.enemy.x + self.direction * (self.currentFrame:getWidth() / 2 - self.player.enemy.width / 2)
-            self.y = self.player.enemy.y
+            if self.explodeAtEnemy then
+                self.x = self.player.enemy.x + self.direction * (self.currentFrame:getWidth() / 2 - self.player.enemy.width / 2)
+                self.y = self.player.enemy.y
+            end
             if self.animation.ending then
                 self.state = 'destroyed'
             end
