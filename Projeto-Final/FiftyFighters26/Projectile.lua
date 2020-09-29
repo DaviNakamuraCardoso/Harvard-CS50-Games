@@ -18,7 +18,7 @@ function Projectile:init(parameters)
 
     self.incline = parameters.incline or 0
     self.infinity = parameters.infinity or false
-    self.explodeAtEnemy = parameters.explodeAtEnemy or true 
+    self.explodeAtEnemy = parameters.explode or true
 
 
     self.player.numberOfProjectiles = self.player.numberOfProjectiles + 1
@@ -78,6 +78,9 @@ function Projectile:init(parameters)
             if self.explodeAtEnemy then
                 self.x = self.player.enemy.x + self.direction * (self.currentFrame:getWidth() / 2 - self.player.enemy.width / 2)
                 self.y = self.player.enemy.y
+            else
+                self.x = self.x
+                self.y = self.y
             end
             if self.animation.ending then
                 self.state = 'destroyed'

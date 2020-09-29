@@ -2561,89 +2561,147 @@ Characters = {
 
     },
 
-    --['Character'] = {
+    ['Malin'] = {
 
-    --    --//________________________ Attributtes ___________________________\\--
+        --//________________________ Attributtes ___________________________\\--
 
-    --    ['armor'] = ,
-    --    ['damage'] = ,
-    --    ['punch_range'] = ,
-    --    ['kick_range'] = ,
-    --    ['sex'] = 'sex',
-    --    ['shootTrigger'] = ,
+        ['armor'] = 15,
+        ['damage'] = 10,
+        ['punch_range'] = 20,
+        ['kick_range'] = 40,
+        ['sex'] = 'female',
+        ['shootTrigger'] = 3,
 
-    --    ['animations'] = {
-    --    --//_______________________ Idle and Dance _________________________\\--
+        ['animations'] = {
+        --//_______________________ Idle and Dance _________________________\\--
 
-    --        ['idle'] = {{}},
-    --        ['dancing'] = {{}},
+            ['idle'] = {{3, 7}},
+            ['dancing'] = {{57, 62}, {134, 138}, {531, 544}, {545, 554}},
 
-    --    --//__________________________ Movement ____________________________\\--
+        --//__________________________ Movement ____________________________\\--
 
-    --        ['walking'] = {{}},
-    --        ['running'] = {{}},
-    --        ['jumping'] = {{}},
-    --        ['duck'] = {{}},
+            ['walking'] = {{17, 24}},
+            ['running'] = {{71, 77}},
+            ['jumping'] = {{32, 40}},
+            ['duck'] = {{454, 455}},
 
-    --    --//__________________________ Damage ______________________________\\--
+        --//__________________________ Damage ______________________________\\--
 
-    --        -- Punch
-    --        ['punch'] = {{}},
-    --        ['duck_punch'] = {{}},
-    --        ['air_punch'] = {{}},
+            -- Punch
+            ['punch'] = {{140, 150}},
+            ['duck_punch'] = {{158, 164}},
+            ['air_punch'] = {{151, 157}},
 
-    --        -- Kick
-    --        ['kick'] = {{}},
-    --        ['duck_kick'] = {{}},
-    --        ['air_kick'] = {{}},
+            -- Kick
+            ['kick'] = {{424, 431}, {106, 114}, {165, 168}},
+            ['duck_kick'] = {{174, 178}},
+            ['air_kick'] = {{243, 251}},
 
-    --        -- Hurt
-    --        ['fall'] = {{}},
-    --        ['hurt'] = {{}},
+            -- Hurt
+            ['fall'] = {{616, 619}},
+            ['hurt'] = {{652, 654}},
 
-    --    --//________________________ End of Game ___________________________\\--
-
-
-    --        ['dying'] = {{}},
-    --        ['waiting'] = {{}},
-    --        ['winning'] = {{}},
-
-    --    --//_________________________ Specials _____________________________\\--
-
-    --        ['special_1'] = {{}},
-    --        ['special_2'] = {{}},
---    --//________________________ Projectiles ____________________________\\--
-
-    --        ['shoot'] = {{}},
-    --        ['projectile_1_fly'] = {{}},
-    --        ['projectile_1_exploded'] = {{}},
-    --        ['projectile_1_destroyed'] = {{999, 1000}},
+        --//________________________ End of Game ___________________________\\--
 
 
-    --    },
-    --    ['passive'] = function(dt, self)
+            ['dying'] = {{601, 606}},
+            ['waiting'] = {{86, 91}},
+            ['winning'] = {{520, 530}, {564, 588}},
 
-    --    end,
-    --    ['shoot'] = function(self)
-    --        Projectile{
-    --          player = self,
-    --          type = 'fly',
-    --          number = 1,
-    --          velocity = 400
-    --        }
-    --    end,
+        --//_________________________ Specials _____________________________\\--
 
-    --    ['special_1'] = function(dt, self)
-    --
-    --    end,
-    --    ['special_2']  = function(dt, self)
+            ['special_1'] = {{268, 269, 270, 271, 272, 273, 274, 275, 276, 278, 279, 301, 302, 303, 304, 305, 307, 309, 311, 313, 314, 315, 456, 457, 458, 459, 460, 462, 464, 466, 468, 470, 472, 474, 476, 478}},
+            ['special_2'] = {{380, 384, 385, 387, 389, 391, 392, 393, 395, 397, 399, 401, 403, 405, 407, 409, 411, 481, 482, 483, 484, 485, 487, 489, 491, 493, 495, 497, 499, 501, 503}},
+        --//________________________ Projectiles ____________________________\\--
 
-    --    end,
+            ['shoot'] = {{115, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134}},
+            ['projectile_1_fly'] = {{123, 125, 127}},
+            ['projectile_1_exploded'] = {{999, 1000}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+            ['projectile_2_spawn'] = {{999, 1000}},
+            ['projectile_2_exploded'] = {{486, 488, 490, 492, 494, 496, 498, 500, 502, 504}},
+            ['projectile_2_destroyed'] = {{999, 1000}},
 
 
-    --    ['cooldown'] = 5
+        },
+        ['passive'] = function(dt, self)
+            self.enemy.specialPoints = self.enemy.specialPoints - 2 * dt
+        end,
+        ['shoot'] = function(self)
+            Projectile{
+              player = self,
+              type = 'fly',
+              number = 1,
+              velocity = 400
+            }
+        end,
 
-    --},
+        ['special_1'] = function(dt, self)
+            self:detectDamage('front', 150)
+            dash(dt, self, {
+                startAnimation = 12,
+                finalAnimation = 14,
+                incline = 45
+            })
+            dash(dt, self, {
+                startAnimation = 15,
+                finalAnimation = 17,
+                incline = 270
+            })
+            dash(dt, self, {
+                startAnimation = 21,
+                finalAnimation = 28,
+                incline = 135
+            })
+            dash(dt, self, {
+                startAnimation = 32,
+                incline = 270
+            })
+            if self.animation.ending then
+                self.inAir = false
+                self.state = 'idle'
+            end
+        end,
+        ['special_2']  = function(dt, self)
+            dash(dt, self, {
+                startAnimation = 2,
+                finalAnimation = 7
+            })
+            dash(dt, self, {
+                startAnimation = 8,
+                finalAnimation = 15,
+                incline = 90
+            })
+            dash(dt, self, {
+                startAnimation = 16,
+                finalAnimation = 17,
+                incline = 45
+            })
+            if self.animation.currentFrame == 23 and self.animation.changing then
+                self.inAir = false
+                self.y = self.map.floor - self.height
+                projectile = Projectile{
+                    player = self,
+                    number = 2,
+                    type = 'spawn',
+                    relativeX = -self.direction * self.width/2,
+                    explode = false
+                }
+                projectile.state = 'exploded'
+                projectile.explodeAtEnemy = false
+            elseif self.animation.ending then
+                self.state = 'idle'
+
+            end
+
+
+        end,
+
+
+        ['cooldown'] = 5
+
+    },
 
 
 
