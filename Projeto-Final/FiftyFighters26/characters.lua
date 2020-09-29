@@ -520,17 +520,17 @@ Characters = {
 
         --//__________________________ Damage ______________________________\\--
 
-    --        -- Punch
+            -- Punch
             ['punch'] = {{125, 133}, {205, 213}, {218, 226}},
             ['duck_punch'] = {{168, 172}, {245, 251}},
             ['air_punch'] = {{130, 134}, {236, 241}},
 
-    --        -- Kick
+            -- Kick
             ['kick'] = {{133, 143}, {255, 268}},
             ['duck_kick'] = {{155, 159}, {272, 280}},
             ['air_kick'] = {{189, 195}},
 
-    --        -- Hurt
+            -- Hurt
             ['fall'] = {{692, 696}},
             ['hurt'] = {{735, 736}},
 
@@ -541,12 +541,12 @@ Characters = {
             ['waiting'] = {{713, 716}},
             ['winning'] = {{597, 610}},
 
-    --    --//_________________________ Specials _____________________________\\--
+        --//_________________________ Specials _____________________________\\--
 
             ['special_1'] = {{101, 108}},
             ['special_2'] = {{281, 426}},
 
-    --    --//________________________ Projectiles ____________________________\\--
+        --//________________________ Projectiles ____________________________\\--
 
             ['shoot'] = {{145, 152}, {283, 295}},
 
@@ -2588,7 +2588,7 @@ Characters = {
         --//__________________________ Damage ______________________________\\--
 
             -- Punch
-            ['punch'] = {{140, 150}},
+            ['punch'] = {{140, 150}, {1486, 1495}},
             ['duck_punch'] = {{158, 164}},
             ['air_punch'] = {{151, 157}},
 
@@ -2611,18 +2611,13 @@ Characters = {
         --//_________________________ Specials _____________________________\\--
 
             ['special_1'] = {{268, 269, 270, 271, 272, 273, 274, 275, 276, 278, 279, 301, 302, 303, 304, 305, 307, 309, 311, 313, 314, 315, 456, 457, 458, 459, 460, 462, 464, 466, 468, 470, 472, 474, 476, 478}},
-            ['special_2'] = {{380, 384, 385, 387, 389, 391, 392, 393, 395, 397, 399, 401, 403, 405, 407, 409, 411, 481, 482, 483, 484, 485, 487, 489, 491, 493, 495, 497, 499, 501, 503}},
+            ['special_2'] = {{380, 384, 385, 387, 389, 391, 392, 393, 395, 397, 399, 401, 403, 405, 407, 409, 411}},
         --//________________________ Projectiles ____________________________\\--
 
             ['shoot'] = {{115, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134}},
             ['projectile_1_fly'] = {{123, 125, 127}},
             ['projectile_1_exploded'] = {{999, 1000}},
             ['projectile_1_destroyed'] = {{999, 1000}},
-
-            ['projectile_2_spawn'] = {{999, 1000}},
-            ['projectile_2_exploded'] = {{486, 488, 490, 492, 494, 496, 498, 500, 502, 504}},
-            ['projectile_2_destroyed'] = {{999, 1000}},
-
 
         },
         ['passive'] = function(dt, self)
@@ -2678,19 +2673,9 @@ Characters = {
                 finalAnimation = 17,
                 incline = 45
             })
-            if self.animation.currentFrame == 23 and self.animation.changing then
+
+            if self.animation.ending then
                 self.inAir = false
-                self.y = self.map.floor - self.height
-                projectile = Projectile{
-                    player = self,
-                    number = 2,
-                    type = 'spawn',
-                    relativeX = -self.direction * self.width/2,
-                    explode = false
-                }
-                projectile.state = 'exploded'
-                projectile.explodeAtEnemy = false
-            elseif self.animation.ending then
                 self.state = 'idle'
 
             end
@@ -2815,6 +2800,223 @@ Characters = {
         ['cooldown'] = 5
 
     },
+
+    ['Momoko'] = {
+
+        --//________________________ Attributtes ___________________________\\--
+
+        ['armor'] = 12,
+        ['damage'] = 15,
+        ['punch_range'] = 20,
+        ['kick_range'] = 50,
+        ['sex'] = 'female',
+        ['shootTrigger'] = 17,
+
+        ['animations'] = {
+        --//_______________________ Idle and Dance _________________________\\--
+
+            ['idle'] = {{0, 14}},
+            ['dancing'] = {{147, 152}, {154, 159}, {740, 746}, {1747, 1765}},
+            ['special_dance'] = {{1713, 1721}},
+
+        --//__________________________ Movement ____________________________\\--
+
+            ['walking'] = {{15, 28}},
+            ['running'] = {{99, 104}},
+            ['jumping'] = {{37, 46}, {47, 56}},
+            ['duck'] = {{59, 76}},
+
+        --//__________________________ Damage ______________________________\\--
+
+            -- Punch
+            ['punch'] = {{218, 226}, {226, 237}, {268, 282}, {428, 443}},
+            ['duck_punch'] = {{169, 173}, {589, 597}},
+            ['air_punch'] = {{164, 168}, {238, 247}},
+
+            -- Kick
+            ['kick'] = {{174, 180}, {188, 194}, {196, 204}},
+            ['duck_kick'] = {{215, 217}, {248, 256}, {561, 574}},
+            ['air_kick'] = {{211, 214}, {259, 267}},
+
+            -- Hurt
+            ['fall'] = {{909, 912}},
+            ['hurt'] = {{939, 941}},
+
+        --//________________________ End of Game ___________________________\\--
+
+
+            ['dying'] = {{896, 901}},
+            ['waiting'] = {{922, 923}},
+            ['winning'] = {{678, 697}},
+
+        --//_________________________ Specials _____________________________\\--
+
+            ['special_1'] = {{282, 328}},
+            ['special_2'] = {{1819, 1834}, {1618, 1636}},
+        --//________________________ Projectiles ____________________________\\--
+
+            ['shoot'] = {{470, 492}},
+            ['projectile_1_fly'] = {{497, 504}},
+            ['projectile_1_exploded'] = {{999, 1000}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+
+        },
+        ['passive'] = function(dt, self)
+            if self.enemy.name == 'Athena' then
+                self.animations['waiting'].animationsTable = generateAnimation(self, {1713, 1720})
+                self.animations['waiting'].frames = self.animations['waiting'].animationsTable.frames
+                self.animations['waiting'].quads = self.animations['waiting'].animationsTable.quads
+                self.enemy.animations['waiting'].animationsTable = generateAnimation(self.enemy, {999, 1000})
+                self.enemy.animations['waiting'].frames = self.enemy.animations['waiting'].animationsTable.frames
+                self.enemy.animations['waiting'].quads = self.enemy.animations['waiting'].animationsTable.quads
+
+
+                if self.state == 'winning' or self.enemy.state == 'winning' then
+                    self.enemy.state = 'waiting'
+                    self.state = 'waiting'
+                    self.enemy.x = self.x
+                end
+
+            end
+            if self.state == 'dancing' or self.state == 'idle' then
+                self.specialPoints = math.min(100, self.specialPoints + 5 * dt)
+
+            end
+        end,
+        ['shoot'] = function(self)
+            Projectile{
+              player = self,
+              type = 'fly',
+              number = 1,
+              velocity = 300
+            }
+        end,
+
+        ['special_1'] = function(dt, self)
+            dash(dt, self, {
+                startAnimation = 4,
+                finalAnimation = 6,
+                velocity = 70
+            })
+            dash(dt, self, {
+                startAnimation = 15,
+                finalAnimation = 18,
+                velocity = 50
+            })
+            dash(dt, self, {
+                startAnimation = 20,
+                finalAnimation = 22,
+                velocity = 60,
+                incline = 135
+            })
+            dash(dt, self, {
+                startAnimation = 23,
+                finalAnimation = 27,
+                incline = 280
+            })
+            if self.animation.ending then
+                self.inAir = false
+                self.state = 'idle'
+            end
+        end,
+        ['special_2']  = function(dt, self)
+            if self.animation.ending then
+                self.health = math.min(100, self.health + 20)
+                self.armor = self.armor + 10
+                self.lifebar:updateDimensionsAndColors()
+                self.state = 'idle'
+            end
+        end,
+
+
+        ['cooldown'] = 5
+
+    },
+
+ --['Moriya-Minakata'] = {
+
+    --    --//________________________ Attributtes ___________________________\\--
+
+    --    ['armor'] = ,
+    --    ['damage'] = ,
+    --    ['punch_range'] = ,
+    --    ['kick_range'] = ,
+    --    ['sex'] = 'sex',
+    --    ['shootTrigger'] = ,
+
+    --    ['animations'] = {
+    --    --//_______________________ Idle and Dance _________________________\\--
+
+    --        ['idle'] = {{}},
+    --        ['dancing'] = {{}},
+
+    --    --//__________________________ Movement ____________________________\\--
+
+    --        ['walking'] = {{}},
+    --        ['running'] = {{}},
+    --        ['jumping'] = {{}},
+    --        ['duck'] = {{}},
+
+    --    --//__________________________ Damage ______________________________\\--
+
+    --        -- Punch
+    --        ['punch'] = {{}},
+    --        ['duck_punch'] = {{}},
+    --        ['air_punch'] = {{}},
+
+    --        -- Kick
+    --        ['kick'] = {{}},
+    --        ['duck_kick'] = {{}},
+    --        ['air_kick'] = {{}},
+
+    --        -- Hurt
+    --        ['fall'] = {{}},
+    --        ['hurt'] = {{}},
+
+    --    --//________________________ End of Game ___________________________\\--
+
+
+    --        ['dying'] = {{}},
+    --        ['waiting'] = {{}},
+    --        ['winning'] = {{}},
+
+    --    --//_________________________ Specials _____________________________\\--
+
+    --        ['special_1'] = {{}},
+    --        ['special_2'] = {{}},
+--    --//________________________ Projectiles ____________________________\\--
+
+    --        ['shoot'] = {{}},
+    --        ['projectile_1_fly'] = {{}},
+    --        ['projectile_1_exploded'] = {{}},
+    --        ['projectile_1_destroyed'] = {{999, 1000}},
+
+
+    --    },
+    --    ['passive'] = function(dt, self)
+
+    --    end,
+    --    ['shoot'] = function(self)
+    --        Projectile{
+    --          player = self,
+    --          type = 'fly',
+    --          number = 1,
+    --          velocity = 400
+    --        }
+    --    end,
+
+    --    ['special_1'] = function(dt, self)
+    --
+    --    end,
+    --    ['special_2']  = function(dt, self)
+
+    --    end,
+
+
+    --    ['cooldown'] = 5
+
+    --},
 
 
 
