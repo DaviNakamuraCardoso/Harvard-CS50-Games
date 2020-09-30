@@ -22,8 +22,10 @@ def fusion(start, end):
     for i in range(start, end, 2):
         image1 = Image.open(str(i) + '.png').convert("RGBA")
         image2 = Image.open(str(i+1) + '.png').convert("RGBA")
-        new_image = image2.copy()
-        new_image.paste(image1, (0, 0), image1)
+        image1_width, image1_height = image1.size
+        image2_width, image2_height = image2.size
+        new_image = image1.copy()
+        new_image.paste(image2, (int(image1_width - image2_width), 0), image2)
         new_image.save(str(1001 + counter) + '.png')
         counter += 1
     return

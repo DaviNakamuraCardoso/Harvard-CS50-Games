@@ -53,8 +53,10 @@ function Projectile:init(parameters)
             self:checkCollisions()
             self.x = math.floor(self.x - self.velocity * self.direction * math.cos(math.rad(self.incline)) * dt)
             self.y = math.floor(self.y - self.velocity * math.sin(math.rad(self.incline)) * dt)
-            if self.x > self.player.map.mapWidth or self.x < 0 then
-                self.state = 'destroyed'
+            if (self.x > self.player.map.mapWidth or self.x < 0) then
+                if not self.infinity then
+                    self.state = 'destroyed'
+                end
             end
         end,
         ['spawn'] = function(dt)
@@ -120,8 +122,10 @@ function Projectile:checkCollisions()
         local x = math.floor(self.x + self.size / 2 + self.size / 2 * math.cos(math.rad(i)))
         local y = math.floor(self.y + self.size / 2 + self.size / 2 * math.sin(math.rad(i)))
         if self.player:hit(x, y, self.size, self.damage, self.index) then
-            self.state = 'exploded'
-            self.sound:play()
+            if not self.infinity then
+                self.state = 'exploded'
+                self.sound:play()
+            end 
         end
 
     end
