@@ -2948,12 +2948,12 @@ Characters = {
         ['animations'] = {
         --//_______________________ Idle and Dance _________________________\\--
 
-            ['idle'] = {{0, 22}},
-    --        ['dancing'] = {{}},
+            ['idle'] = {{0, 20}},
+            ['dancing'] = {{285, 290}},
 
         --//__________________________ Movement ____________________________\\--
 
-            ['walking'] = {{24, 38}},
+            ['walking'] = {{79, 85}},
             ['running'] = {{79, 85}},
             ['jumping'] = {{24, 38}},
             ['duck'] = {{40, 43}},
@@ -2961,7 +2961,7 @@ Characters = {
         --//__________________________ Damage ______________________________\\--
 
             -- Punch
-            ['punch'] = {{132, 133, 1135, 1136, 1137, 143, 144}, {145, 146, 147, 148, 149, 150, 151, 152, 153, 156, 159, 160}, {1205, 1207}},
+            ['punch'] = {{132, 133, 1135, 1136, 1137, 143, 144}, {145, 146, 147, 148, 149, 150, 151, 152, 153, 156, 159, 160}, {1205, 1207}, {274, 283}, {252, 253, 254, 255, 256, 257, 1259}},
             ['duck_punch'] = {{172, 180}, {230, 231, 232, 1234, 1235, 1236, 241, 242}},
             ['air_punch'] = {{162, 164}, {219, 220, 1222, 1223, 1224, 229}},
 
@@ -2970,53 +2970,64 @@ Characters = {
             ['duck_kick'] = {{197, 201}, {246, 251}},
             ['air_kick'] = {{192, 196}, {243, 245}},
 
-    --        -- Hurt
-    --        ['fall'] = {{}},
-    --        ['hurt'] = {{}},
+            -- Hurt
+            ['fall'] = {{662, 665}},
+            ['hurt'] = {{679, 680}},
 
-    --    --//________________________ End of Game ___________________________\\--
-
-
-    --        ['dying'] = {{}},
-    --        ['waiting'] = {{}},
-    --        ['winning'] = {{}},
-
-    --    --//_________________________ Specials _____________________________\\--
-
-    --        ['special_1'] = {{252, 253, 254, 255, 256, 257, 1259}},
-    --        ['special_2'] = {{}},
---    --//________________________ Projectiles ____________________________\\--
-
-    --        ['shoot'] = {{274, 282}},
-    --        ['projectile_1_fly'] = {{}},
-    --        ['projectile_1_exploded'] = {{}},
-    --        ['projectile_1_destroyed'] = {{999, 1000}},
+        --//________________________ End of Game ___________________________\\--
 
 
-    --    },
-    --    ['passive'] = function(dt, self)
+            ['dying'] = {{648, 652}},
+            ['waiting'] = {{617, 618}},
+            ['winning'] = {{588, 609}},
 
-    --    end,
-    --    ['shoot'] = function(self)
-    --        Projectile{
-    --          player = self,
-    --          type = 'fly',
-    --          number = 1,
-    --          velocity = 400
-    --        }
-    --    end,
+        --//_________________________ Specials _____________________________\\--
 
-    --    ['special_1'] = function(dt, self)
-    --
-    --    end,
-    --    ['special_2']  = function(dt, self)
+            ['special_1'] = {{291, 302}},
+            ['special_2'] = {{416, 434}},
+        --//________________________ Projectiles ____________________________\\--
 
-    --    end,
+            ['shoot'] = {{274, 282}},
+            ['projectile_1_spawn'] = {{455, 463}},
+            ['projectile_1_exploded'] = {{470, 476}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
 
 
-    --    ['cooldown'] = 5
+        },
+        ['passive'] = function(dt, self)
+            if not self.passiveUpdated then
+                self.passiveUpdated = true
+                self.speed = 2 * self.speed
+            end
+        end,
+        ['shoot'] = function(self)
+            Projectile{
+              player = self,
+              type = 'spawn',
+              number = 1,
+              range = 150
+            }
+        end,
 
-    --},
+        ['special_1'] = function(dt, self)
+            self.enemy.state = 'hurt'
+            self.enemy.x = self.enemy.x + self.direction * dt * 200
+            if self.animation.ending then
+                self.state = 'idle'
+            end
+        end,
+        ['special_2']  = function(dt, self)
+            self.damage = 20
+            self:detectDamage('around')
+            if self.animation.ending then
+                self.state = 'idle'
+            end
+        end,
+
+
+        ['cooldown'] = 5
+
+    },
 
     --['Character'] = {
 
