@@ -474,7 +474,9 @@ function Player:detectDamage(position, range)
             ['direction'] = 1
         }
     }
-    if self.animation.timer >= self.animation.interval then
+    local distance = (self.x - self.enemy.x)^2 + (self.y - self.enemy.y)^2
+
+    if self.animation.changing then
 
         -- checks for enemies in a circle arround the character
         for i=positions[position]['start'], positions[position]['end'] do
