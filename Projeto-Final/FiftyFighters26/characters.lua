@@ -3418,6 +3418,100 @@ Characters = {
 
     },
 
+    ['Ralf-Jones'] = {
+
+        --//________________________ Attributtes ___________________________\\--
+
+        ['armor'] = 40,
+        ['damage'] = 7,
+        ['punch_range'] = 20,
+        ['kick_range'] = 30,
+        ['sex'] = 'male',
+        ['shootTrigger'] = 1,
+
+        ['animations'] = {
+        --//_______________________ Idle and Dance _________________________\\--
+
+            ['idle'] = {{1, 3}},
+            ['dancing'] = {{322, 332}},
+
+        --//__________________________ Movement ____________________________\\--
+
+            ['walking'] = {{18, 25}},
+            ['running'] = {{53, 62}},
+            ['jumping'] = {{26, 36}},
+            ['duck'] = {{142, 145}},
+
+        --//__________________________ Damage ______________________________\\--
+
+            -- Punch
+            ['punch'] = {{85, 92}},
+            ['duck_punch'] = {{115, 117}},
+            ['air_punch'] = {{135, 139}},
+
+            -- Kick
+            ['kick'] = {{118, 122}, {152, 156}},
+            ['duck_kick'] = {{124, 127}, {163, 167}},
+            ['air_kick'] = {{168, 170}},
+
+            -- Hurt
+            ['fall'] = {{381, 384}},
+            ['hurt'] = {{419, 421}},
+
+        --//________________________ End of Game ___________________________\\--
+
+
+            ['dying'] = {{365, 370}},
+            ['waiting'] = {{397, 401}},
+            ['winning'] = {{346, 351}},
+
+        --//_________________________ Specials _____________________________\\--
+
+            ['special_1'] = {{199, 207}},
+            ['special_2'] = {{270, 285}},
+        --//________________________ Projectiles ____________________________\\--
+
+            ['shoot'] = {{224, 245}},
+
+
+        },
+        ['passive'] = function(dt, self)
+
+        end,
+        ['shoot'] = function(self)
+            self.damage = 20
+            self:detectDamage('front')
+        end,
+
+        ['special_1'] = function(dt, self)
+            dash(dt, self, {
+                startAnimation = 2,
+                finalAnimation = 5,
+                incline = 90,
+
+            })
+            dash(dt, self, {
+                startAnimation = 6,
+                finalAnimation = 8,
+                incline = 310
+            })
+            if self.animation.ending then
+                self.state = 'fall'
+            end
+        end,
+        ['special_2']  = function(dt, self)
+            dash(dt, self, {
+                startAnimation = 11,
+                finalAnimation = 18,
+                damage = 100
+            })
+        end,
+
+
+        ['cooldown'] = 5
+
+    },
+
     --['Character'] = {
 
     --    --//________________________ Attributtes ___________________________\\--
