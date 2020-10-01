@@ -34,6 +34,7 @@ function Projectile:init(parameters)
     self.direction = parameters.direction or self.player.direction
     self.x = self.player.x + self.player.width / 2 + relativeX
     self.y = self.player.y + self.player.height / 2 + relativeY
+    self.updated = false
 
     -- Animation
     self.animations = {
@@ -60,7 +61,10 @@ function Projectile:init(parameters)
             end
         end,
         ['spawn'] = function(dt)
-            self.x = self.player.x - self.direction * self.range
+            if not self.updated then
+                self.x = self.player.x - self.direction * self.range
+                self.updated = true
+            end 
             self:checkCollisions()
             if self.animation.ending then
                 if self.player.enemy.state == 'hurt' then
@@ -125,7 +129,7 @@ function Projectile:checkCollisions()
             if not self.infinity then
                 self.state = 'exploded'
                 self.sound:play()
-            end 
+            end
         end
 
     end

@@ -25,7 +25,7 @@ def fusion(start, end):
         image1_width, image1_height = image1.size
         image2_width, image2_height = image2.size
         new_image = image1.copy()
-        new_image.paste(image2, (int(image1_width - image2_width), 0), image2)
+        new_image.paste(image2, (0, 0), image2)
         new_image.save(str(1001 + counter) + '.png')
         counter += 1
     return
