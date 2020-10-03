@@ -1,4 +1,4 @@
-import os, zipfile, shutil, send2trash
+import os, zipfile, shutil, send2trash, sys
 
 
 def main():
@@ -7,7 +7,8 @@ def main():
     #move_zip(os.getcwd())
     #delete_zip(path)
     #extrac_zip(path)
-    standard_icons()
+    characters = sys.argv[1:]
+    standard_icons(characters)
 
     return
 
@@ -39,9 +40,9 @@ def extrac_zip(path):
     return
 
 
-def standard_icons():
-    icons = ['1001.png']
-    for dir in os.listdir():
+def standard_icons(dirs):
+    icons = ['1001.png', '1000.png', '999.png', 'com.png', 'p1.png', 'p2.png']
+    for dir in dirs:
         for icon in icons:
             if icon not in os.listdir(dir):
                 shutil.copy('Clark/' + icon, dir)
