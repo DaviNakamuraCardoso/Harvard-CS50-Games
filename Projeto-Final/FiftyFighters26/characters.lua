@@ -3756,6 +3756,117 @@ Characters = {
         ['cooldown'] = 5
 
     },
+    ['Shermie'] = {
+
+        --//________________________ Attributtes ___________________________\\--
+
+        ['armor'] = 20,
+        ['damage'] = 12,
+        ['punch_range'] = 30,
+        ['kick_range'] = 50,
+        ['sex'] = 'female',
+        ['shootTrigger'] = 4,
+
+        ['animations'] = {
+        --//_______________________ Idle and Dance _________________________\\--
+
+            ['idle'] = {{0, 41}},
+            ['dancing'] = {{534, 545}, {546, 554}, {614, 649}},
+
+        --//__________________________ Movement ____________________________\\--
+
+            ['walking'] = {{42, 65}},
+            ['running'] = {{100, 106}},
+            ['jumping'] = {{66, 79}},
+            ['duck'] = {{531, 533}},
+
+        --//__________________________ Damage ______________________________\\--
+
+            -- Punch
+            ['punch'] = {{146, 151}},
+            ['duck_punch'] = {{159, 164}},
+            ['air_punch'] = {{152, 157}},
+
+            -- Kick
+            ['kick'] = {{135, 145}, {220, 228}},
+            ['duck_kick'] = {{178, 184}, {230, 232}},
+            ['air_kick'] = {{174, 177}, {238, 240}},
+
+            -- Hurt
+            ['fall'] = {{674, 677}},
+            ['hurt'] = {{650, 653}},
+
+        --//________________________ End of Game ___________________________\\--
+
+
+            ['dying'] = {{663, 666}},
+            ['waiting'] = {{593, 596}},
+            ['winning'] = {{549, 587}},
+
+        --//_________________________ Specials _____________________________\\--
+
+            ['special_1'] = {{284, 285, 286, 287, 288, 289, 292, 293, 295, 297, 299, 301, 302, 303, 304}},
+            ['special_2'] = {{364, 365, 366, 367, 368, 389, 390, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 424, 426, 428, 430, 432, 434, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450}},
+        --//________________________ Projectiles ____________________________\\--
+
+            ['shoot'] = {{185, 206}},
+            ['projectile_1_fly'] = {{517, 519, 521, 522, 524, 525}},
+            ['projectile_1_exploded'] = {{279, 283}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+
+        },
+        ['passive'] = function(dt, self)
+
+        end,
+        ['shoot'] = function(self)
+            Projectile{
+              player = self,
+              type = 'fly',
+              number = 1,
+              velocity = 400
+            }
+        end,
+
+        ['special_1'] = function(dt, self)
+            if self.animation.ending then
+                self.state = 'idle'
+            elseif self.animation.currentFrame == 6 and self.animation.changing then
+                self.health = math.min(100, self.health + 10)
+                self.enemy.health = self.enemy.health - 10
+                self.enemy.state = 'hurt'
+                self.lifebar:updateDimensionsAndColors()
+                self.enemy.lifebar:updateDimensionsAndColors()
+            end
+
+        end,
+        ['special_2']  = function(dt, self)
+            dash(dt, self, {
+                finalAnimation = 9,
+                incline = 135
+            })
+            dash(dt, self, {
+                startAnimation = 10,
+                finalAnimation = 19,
+                incline = 270
+            })
+            dash(dt, self, {
+                startAnimation = 30,
+                finalAnimation = 37,
+                incline = 180
+            })
+            if self.animation.ending then
+                self.state = 'idle'
+            elseif self.animation.currentFrame == 38 then
+                self.inAir = false
+            end
+        end,
+
+
+        ['cooldown'] = 5
+
+    },
+
     --['Character'] = {
 
     --    --//________________________ Attributtes ___________________________\\--
