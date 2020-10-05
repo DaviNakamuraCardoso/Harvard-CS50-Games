@@ -3867,6 +3867,128 @@ Characters = {
 
     },
 
+    ['Shiki'] = {
+
+        --//________________________ Attributtes ___________________________\\--
+
+        ['armor'] = 15,
+        ['damage'] = 15,
+        ['punch_range'] = 30,
+        ['kick_range'] = 50,
+        ['sex'] = 'female',
+        ['shootTrigger'] = 4,
+
+        ['animations'] = {
+        --//_______________________ Idle and Dance _________________________\\--
+
+            ['idle'] = {{0, 17}},
+            ['dancing'] = {{475, 483}, {492, 498}},
+
+        --//__________________________ Movement ____________________________\\--
+
+            ['walking'] = {{18, 41}},
+            ['running'] = {{98, 105}},
+            ['jumping'] = {{42, 54}},
+            ['duck'] = {{69, 71}},
+
+    --    --//__________________________ Damage ______________________________\\--
+
+            -- Punch
+            ['punch'] = {{147, 154}, {154, 161}, {161, 173}, {196, 205}},
+            ['duck_punch'] = {{180, 188}, {212, 221}},
+            ['air_punch'] = {{174, 179}, {206, 211}},
+
+            -- Kick
+            ['kick'] = {{270, 284}, {285, 299}},
+            ['duck_kick'] = {{306, 314}},
+            ['air_kick'] = {{300, 305}},
+
+            -- Hurt
+            ['fall'] = {{526, 529}},
+            ['hurt'] = {{499, 507}},
+
+        --//________________________ End of Game ___________________________\\--
+
+
+            ['dying'] = {{512, 517}},
+            ['waiting'] = {{127, 129}},
+            ['winning'] = {{463, 474}},
+
+        --//_________________________ Specials _____________________________\\--
+
+            ['special_1'] = {{222, 270}},
+            ['special_2'] = {{315, 376}},
+        --//________________________ Projectiles ____________________________\\--
+
+            ['shoot'] = {{381, 423}},
+            ['projectile_1_fly'] = {{377, 380}},
+            ['projectile_1_exploded'] = {{440, 457}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+
+        },
+        ['passive'] = function(dt, self)
+            if self.enemy.state == 'hurt' then
+                self.enemy.x = self.enemy.x - self.direction * dt
+            end
+        end,
+        ['shoot'] = function(self)
+            for i=-2, 2 do
+                 Projectile{
+                    player = self,
+                    type = 'fly',
+                    number = 1,
+                    velocity = 400,
+                    relativeY = -self.height/4 + i*20
+                }
+            end
+        end,
+
+        ['special_1'] = function(dt, self)
+            dash(dt, self, {
+                startAnimation = 26,
+                finalAnimation = 28,
+                incline = 90
+            })
+            dash(dt, self, {
+                startAnimation = 34,
+                finalAnimation = 39
+
+            })
+            self:detectDamage('around', 70)
+            if self.animation.ending then
+                self.state = 'jumping'
+            end
+        end,
+        ['special_2']  = function(dt, self)
+            dash(dt, self, {
+                startAnimation = 24,
+                finalAnimation = 31,
+                velocity = 75,
+                incline = 90
+            })
+            dash(dt, self, {
+                startAnimation = 32,
+                finalAnimation = 34
+            })
+            dash(dt, self, {
+                startAnimation = 43,
+                finalAnimation = 48,
+                incline = 270
+            })
+            if self.animation.ending then
+                self.state = 'idle'
+            elseif self.animation.currentFrame == 49 then
+                self.inAir = false
+            end
+            self:detectDamage('around', 100)
+        end,
+
+
+        ['cooldown'] = 5
+
+    },
+
     --['Character'] = {
 
     --    --//________________________ Attributtes ___________________________\\--
@@ -3963,7 +4085,7 @@ function dash(dt, self, params)
     local params = params or {}
     local startAnimation = params.startAnimation or 0
     local finalAnimation = params.finalAnimation or #self.animation.frames
-    local speed = params.speed or self.speed
+    local speed = params.velocity or self.speed
     local damage = params.damage or self.damage
     local incline = params.incline or 0
 
