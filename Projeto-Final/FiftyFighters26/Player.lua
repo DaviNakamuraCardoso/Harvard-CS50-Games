@@ -386,6 +386,7 @@ function Player:init(map, name, side)
     for k, v in pairs(self.behaviors) do
         self.sounds[k] = love.audio.newSource('sounds/' .. self.name .. '/' .. k .. '.wav', 'static')
     end
+    self.shuffle = true 
 end
 
 
@@ -425,8 +426,10 @@ end
 
 
 function Player:shuffleAnimations()
-    for k, v in pairs(self.animations) do
-        self.animations[k]:shuffle()
+    if self.shuffle then
+        for k, v in pairs(self.animations) do
+            self.animations[k]:shuffle()
+        end
     end
 end
 

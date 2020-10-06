@@ -18,6 +18,7 @@ function Animation:init(player, state)
 
     self.timer = 0
     self.currentFrame = 1
+    self.player.currentFrame = self.frames[1]
     self.ending = false
     self.changing = false
     self.shuffled = true
@@ -60,6 +61,7 @@ function Animation:shuffle()
         self.frames = self.animationsTable.frames
         self.quads = self.animationsTable.quads
         self.currentFrame = 0
+        self.shuffled = true
     elseif self.state == self.player.state then
         self.shuffled = false
     end

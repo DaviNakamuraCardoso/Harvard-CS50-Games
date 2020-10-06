@@ -114,7 +114,7 @@ function Lifebar:render()
 
     -- Reseting the color set
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.draw(self.image, self.quad, self.imageX, self.y)
+    love.graphics.draw(self.image, self.quad, self.imageX + 15, self.y + 12.5, 0, self.player.side, 1, 15, 12.5)
     self.messageName:render()
 
     love.graphics.setColor(1, 1, 1, 1)

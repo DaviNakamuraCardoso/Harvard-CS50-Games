@@ -3817,7 +3817,11 @@ Characters = {
 
         },
         ['passive'] = function(dt, self)
-
+            if self.specialPoints >= 50 then
+                self.damage = 16
+            else
+                self.damage = 12
+            end 
         end,
         ['shoot'] = function(self)
             Projectile{
@@ -3848,7 +3852,8 @@ Characters = {
             dash(dt, self, {
                 startAnimation = 10,
                 finalAnimation = 19,
-                incline = 270
+                incline = 270,
+                velocity = 50
             })
             dash(dt, self, {
                 startAnimation = 30,
@@ -3859,6 +3864,7 @@ Characters = {
                 self.state = 'idle'
             elseif self.animation.currentFrame == 38 then
                 self.inAir = false
+                self.y = self.map.floor - self.currentFrame:getHeight()
             end
         end,
 
@@ -3982,6 +3988,129 @@ Characters = {
                 self.inAir = false
             end
             self:detectDamage('around', 100)
+        end,
+
+
+        ['cooldown'] = 5
+
+    },
+
+    ['Shion'] = {
+
+        --//________________________ Attributtes ___________________________\\--
+
+        ['armor'] = 15,
+        ['damage'] = 8,
+        ['punch_range'] = 80,
+        ['kick_range'] = 50,
+        ['sex'] = 'female',
+        ['shootTrigger'] = 14,
+        ['spear'] = false,
+
+        ['animations'] = {
+        --//_______________________ Idle and Dance _________________________\\--
+
+            ['idle'] = {{0, 7}, {543, 546}},
+            ['dancing'] = {{343, 371}, {714, 723}},
+
+        --//__________________________ Movement ____________________________\\--
+
+            ['walking'] = {{8, 15}, {547, 554}},
+            ['running'] = {{79, 84}, {562, 567}},
+            ['jumping'] = {{31, 36}, {527, 535}},
+            ['duck'] = {{65, 67}, {537, 540}},
+
+        --//__________________________ Damage ______________________________\\--
+
+            -- Punch
+            ['punch'] = {{204, 216}, {597, 629}},
+            ['duck_punch'] = {{187, 192}, {555, 558}},
+            ['air_punch'] = {{335, 338}, {569, 575}},
+
+            -- Kick
+            ['kick'] = {{194, 203}, {684, 698}},
+            ['duck_kick'] = {{159, 163}, {242, 248}},
+            ['air_kick'] = {{155, 157}, {595, 599}},
+
+            -- Hurt
+            ['fall'] = {{755, 758}, {634, 641}},
+            ['hurt'] = {{740, 743}, {785, 787}},
+
+        --//________________________ End of Game ___________________________\\--
+
+
+            ['dying'] = {{745, 749}, {745, 749}},
+            ['waiting'] = {{771, 775}, {727, 730}},
+            ['winning'] = {{232, 240}, {731, 733}},
+
+        --//_________________________ Specials _____________________________\\--
+
+            ['special_1'] = {{292, 301}, {580, 589}},
+            ['special_2'] = {{407, 421}, {374, 397}},
+        --//________________________ Projectiles ____________________________\\--
+
+            ['shoot'] = {{124, 138}, {640, 655}},
+            ['projectile_1_fly'] = {{496, 498}},
+            ['projectile_1_exploded'] = {{499, 500}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+
+        },
+        ['passive'] = function(dt, self)
+            self.shuffle = false
+            self.specialPoints = 100
+            for state, animation in pairs(self.animations)  do
+                if Characters['Shion']['spear'] then
+                    animation.animationsTable = animation.animations[2]
+                    animation.frames = animation.animationsTable.frames
+                    animation.quads = animation.animationsTable.quads
+                else
+                    animation.animationsTable = animation.animations[1]
+                    animation.frames = animation.animationsTable.frames
+                    animation.quads = animation.animationsTable.quads
+                end
+
+            end
+
+
+
+        end,
+        ['shoot'] = function(self)
+           Projectile{
+              player = self,
+              type = 'fly',
+              number = 1,
+              velocity = 400
+            }
+        end,
+
+        ['special_1'] = function(dt, self)
+            if self.animation.ending then
+                self.state = 'idle'
+            end
+            dash(dt, self, {
+                startAnimation = 2,
+                finalAnimation = 7,
+                incline = 180
+            })
+        end,
+        ['special_2']  = function(dt, self)
+            if self.animation.ending then
+                if Characters['Shion']['spear'] then
+                    Characters['Shion']['spear'] = false
+                    self.damage = 15
+                    self.range = 50
+                else
+                    Characters['Shion']['spear'] = true
+                    self.damage = 10
+                    self.range = 100
+                end
+                self.state = 'idle'
+                for k, animation in pairs(self.animations) do
+                    animation.currentFrame = 1
+                end
+
+            end
         end,
 
 
