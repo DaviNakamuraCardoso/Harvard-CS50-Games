@@ -54,10 +54,8 @@ function Button:init(params)
 end
 
 
-function Button:update()
-    mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
-    mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
-
+function Button:update(mouseX, mouseY)
+    
     if mouseX >= self.relativeX - self.width / 2 and mouseX <= self.relativeX + self.width / 2 and
     mouseY >= self.relativeY - self.height / 2 and mouseY <= self.relativeY + self.height / 2 then
         self.color = self.hover

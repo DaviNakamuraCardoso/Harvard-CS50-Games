@@ -116,24 +116,31 @@ function Map:init(name)
     --//_____________________ States and Behaviors _________________________\\--
     self.behaviors = {
         ['menu'] = function(dt)
-            --self.animation:update(dt)
+            local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
+            local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self.title:update()
             self:updateCam()
-            self.buttonPlay:update()
+            self.buttonPlay:update(mouseX, mouseY)
         end,
         ['player1_select'] = function(dt)
+            local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
+            local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self:updateCam()
-            self:updateCharacterButtons()
+            self:updateCharacterButtons(mouseX, mouseY)
             self.h2:update()
         end,
         ['player2_select'] = function(dt)
+            local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
+            local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self:updateCam()
-            self:updateCharacterButtons()
+            self:updateCharacterButtons(mouseX, mouseY)
             self.h2:update()
             self.h2.text = 'Player 2 Select'
         end,
         ['map_select'] = function(dt)
-            self:updateMapButtons()
+            local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
+            local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
+            self:updateMapButtons(mouseX, mouseY)
             -- Dimensions
             self.player1.enemy = self.player2
             self.player2.enemy = self.player1
@@ -238,16 +245,17 @@ function Map:cover()
 end
 
 
-function Map:updateCharacterButtons()
+function Map:updateCharacterButtons(mouseX, mouseY)
     for k, v in pairs(self.charactersButtons) do
-        v:update()
+        v:update(mouseX, mouseY)
     end
 end
 
 
-function Map:updateMapButtons()
+function Map:updateMapButtons(mouseX, mouseY)
     for i=1, #self.maps do
-        self.mapButtons[i]:update()
+        self.mapButtons[i]:update(mouseX, mouseY)
+
 
     end
 end
