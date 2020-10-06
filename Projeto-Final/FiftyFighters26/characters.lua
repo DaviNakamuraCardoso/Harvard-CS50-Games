@@ -4232,6 +4232,109 @@ Characters = {
 
     },
 
+    ['Vanessa'] = {
+
+        --//________________________ Attributtes ___________________________\\--
+
+        ['armor'] = 20,
+        ['damage'] = 12,
+        ['punch_range'] = 20,
+        ['kick_range'] = 50,
+        ['sex'] = 'female',
+        ['shootTrigger'] = 3,
+
+        ['animations'] = {
+        --//_______________________ Idle and Dance _________________________\\--
+
+            ['idle'] = {{0, 21}},
+            ['dancing'] = {{519, 536}, {546, 552}, {556, 569}, {570, 585}, {603, 611}},
+
+        --//__________________________ Movement ____________________________\\--
+
+            ['walking'] = {{22, 29}},
+            ['running'] = {{73, 78}},
+            ['jumping'] = {{38, 49}},
+            ['duck'] = {{53, 62}},
+
+        --//__________________________ Damage ______________________________\\--
+
+            -- Punch
+            ['punch'] = {{107, 122}, {142, 147}, {157, 166}, {174, 179}, {185, 193}},
+            ['duck_punch'] = {{152, 156}, {170, 173}, {235, 244}},
+            ['air_punch'] = {{148, 150}, {194, 199}, {229, 233}},
+
+            -- Kick
+            ['kick'] = {{123, 131}},
+            ['duck_kick'] = {{201, 211}},
+            ['air_kick'] = {{248, 251}},
+
+            -- Hurt
+            ['fall'] = {{640, 643}},
+            ['hurt'] = {{612, 615}},
+
+        --//________________________ End of Game ___________________________\\--
+
+
+            ['dying'] = {{625, 630}},
+            ['waiting'] = {{656, 660}},
+            ['winning'] = {{133, 136}, {505, 518}, {537, 544}},
+
+        --//_________________________ Specials _____________________________\\--
+
+            ['special_1'] = {{252, 287}},
+            ['special_2'] = {{318, 336}},
+        --//________________________ Projectiles ____________________________\\--
+
+            ['shoot'] = {{445, 460}},
+            ['projectile_1_fly'] = {{488, 492}},
+            ['projectile_1_exploded'] = {{480, 484}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+
+        },
+        ['passive'] = function(dt, self)
+            if self.state == 'duck' then
+                self.specialPoints = self.specialPoints + dt
+            end
+        end,
+        ['shoot'] = function(self)
+            Projectile{
+              player = self,
+              type = 'fly',
+              number = 1,
+              velocity = 400
+            }
+        end,
+
+        ['special_1'] = function(dt, self)
+            if self.animation.ending then
+                self.state = 'idle'
+            elseif self.animation.currentFrame == 5 and self.animation.changing then
+                self.inAir = false
+                self.y = self.map.floor - self.height
+            end
+            dash(dt, self, {
+                startAnimation = 2,
+                finalAnimation = 5
+            })
+            self:detectDamage('around', 40)
+        end,
+        ['special_2']  = function(dt, self)
+            if self.animation.ending then
+                self.state = 'idle'
+            end
+            dash(dt, self, {
+                startAnimation = 4,
+                finalAnimation = 6
+            })
+            self:detectDamage('around', 50)
+        end,
+
+
+        ['cooldown'] = 5
+
+    },
+
     --['Character'] = {
 
     --    --//________________________ Attributtes ___________________________\\--
