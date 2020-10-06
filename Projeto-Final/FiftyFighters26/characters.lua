@@ -3821,7 +3821,7 @@ Characters = {
                 self.damage = 16
             else
                 self.damage = 12
-            end 
+            end
         end,
         ['shoot'] = function(self)
             Projectile{
@@ -4110,6 +4110,120 @@ Characters = {
                     animation.currentFrame = 1
                 end
 
+            end
+        end,
+
+
+        ['cooldown'] = 5
+
+    },
+
+    ['Tung-Fu-Rue'] = {
+
+        --//________________________ Attributtes ___________________________\\--
+
+        ['armor'] = 20,
+        ['damage'] = 25,
+        ['punch_range'] = 15,
+        ['kick_range'] = 20,
+        ['sex'] = 'male',
+        ['shootTrigger'] = 4,
+
+        ['animations'] = {
+        --//_______________________ Idle and Dance _________________________\\--
+
+            ['idle'] = {{0, 5}},
+            ['dancing'] = {{139, 144}, {493, 501}, {506, 525}, {526, 539}},
+
+        --//__________________________ Movement ____________________________\\--
+
+            ['walking'] = {{13, 19}},
+            ['running'] = {{79, 84}},
+            ['jumping'] = {{43, 52}},
+            ['duck'] = {{1056, 1059}},
+
+        --//__________________________ Damage ______________________________\\--
+
+            -- Punch
+            ['punch'] = {{128, 136}, {146, 153}},
+            ['duck_punch'] = {{158, 159}, {192, 199}},
+            ['air_punch'] = {{154, 157}, {185, 191}},
+
+            -- Kick
+            ['kick'] = {{160, 169}, {200, 207}},
+            ['duck_kick'] = {{177, 183}, {230, 238}},
+            ['air_kick'] = {{170, 176}, {220, 225}},
+
+            -- Hurt
+            ['fall'] = {{570, 574}},
+            ['hurt'] = {{549, 553}},
+
+        --//________________________ End of Game ___________________________\\--
+
+
+            ['dying'] = {{554, 559}},
+            ['waiting'] = {{588, 591}},
+            ['winning'] = {{487, 492}},
+
+        --//_________________________ Specials _____________________________\\--
+
+            ['special_1'] = {{344, 355}},
+            ['special_2'] = {{372, 437}},
+        --//________________________ Projectiles ____________________________\\--
+
+            ['shoot'] = {{1240, 1244}},
+            ['projectile_1_fly'] = {{250, 251}},
+            ['projectile_1_exploded'] = {{264, 269}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+            ['projectile_2_spawn'] = {{356, 370}},
+            ['projectile_2_exploded'] = {{264, 269}},
+            ['projectile_2_destroyed'] = {{999, 1000}},
+
+            ['projectile_3_spawn'] = {{356, 370}},
+            ['projectile_3_exploded'] = {{439, 443}},
+            ['projectile_3_destroyed'] = {{999, 1000}},
+
+
+        },
+        ['passive'] = function(dt, self)
+            if self.state == 'punch' then
+                self.specialPoints = self.specialPoints + dt
+            end
+        end,
+        ['shoot'] = function(self)
+            Projectile{
+              player = self,
+              type = 'fly',
+              number = 1,
+              velocity = 400
+            }
+        end,
+
+        ['special_1'] = function(dt, self)
+            if self.animation.ending then
+                self.state = 'idle'
+            elseif self.animation.currentFrame == 4 and self.animation.changing then
+                Projectile{
+                    player = self,
+                    type = 'spawn',
+                    number = 2,
+                    range = 100
+                }
+            end
+        end,
+        ['special_2']  = function(dt, self)
+            if self.animation.ending then
+                self.state = 'idle'
+            elseif self.animation.currentFrame == 58 and self.animation.changing then
+                Projectile{
+                    player = self,
+                    type = 'spawn',
+                    number= 3,
+                    range = self.direction * (self.x - self.enemy.x),
+                    damage = 40
+
+                }
             end
         end,
 
