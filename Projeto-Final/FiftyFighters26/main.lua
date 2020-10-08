@@ -34,6 +34,8 @@ function love.load()
     --//__________________________ Screen ______________________________\\--
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
+    love.window.setTitle('Fifty Fighters - Beta Version')
+
 
     maps = {'Castle', 'Mansion', 'Gym', 'Gas', 'Korea', 'Forest', 'Bay'}
 
