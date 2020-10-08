@@ -374,7 +374,7 @@ function Player:init(map, name, side)
     --//_______________________ Sound Effects ______________________________\\--
 
     -- Sound Directory
-    self.soundDir = 'sounds/' .. self.name .. '/'
+    self.soundDir = 'sounds/' .. self.sex .. '/'
 
     -- Sounds
     self.sounds = {}
@@ -386,7 +386,7 @@ function Player:init(map, name, side)
     for k, v in pairs(self.behaviors) do
         self.sounds[k] = love.audio.newSource('sounds/' .. self.name .. '/' .. k .. '.wav', 'static')
     end
-    self.shuffle = true 
+    self.shuffle = true
 end
 
 
