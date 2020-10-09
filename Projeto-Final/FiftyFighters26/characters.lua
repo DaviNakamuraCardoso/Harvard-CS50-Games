@@ -4349,7 +4349,7 @@ Characters = {
         ['animations'] = {
         --//_______________________ Idle and Dance _________________________\\--
 
-            ['idle'] = {{0, 12}},
+            ['idle'] = {{0, 11}},
             ['dancing'] = {{413, 421}, {706, 724}, {725, 735}, {741, 768}},
 
         --//__________________________ Movement ____________________________\\--
@@ -4380,44 +4380,88 @@ Characters = {
 
             ['dying'] = {{805, 807}},
             ['waiting'] = {{131, 133}},
-            ['winning'] = {{769, 776}},
+            ['winning'] = {{769, 776}, {391, 393}},
 
-    --    --//_________________________ Specials _____________________________\\--
+        --//_________________________ Specials _____________________________\\--
 
-    --        ['special_1'] = {{}},
-    --        ['special_2'] = {{}},
+            ['special_1'] = {{395, 397, 399, 408, 408, 408, 408, 409, 409, 409}},
+            ['special_2'] = {{584, 621}},
         --//________________________ Projectiles ____________________________\\--
 
             ['shoot'] = {{504, 521}},
-    --        ['projectile_1_fly'] = {{}},
-    --        ['projectile_1_exploded'] = {{}},
-    --        ['projectile_1_destroyed'] = {{999, 1000}},
+            ['projectile_1_spawn'] = {{999, 1000}},
+            ['projectile_1_exploded'] = {{536, 548}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+            ['projectile_2_spawn'] = {{396, 398, 400, 401, 402, 403, 404, 405, 406, 407}},
+            ['projectile_2_exploded'] = {{536, 548}},
+            ['projectile_2_destroyed'] = {{999, 1000}},
+
+            ['projectile_3_spawn'] = {{396, 398, 400, 401, 402, 403, 404, 405, 406, 407}},
+            ['projectile_3_exploded'] = {{622, 629}},
+            ['projectile_3_destroyed'] = {{999, 1000}},
 
 
-    --    },
-    --    ['passive'] = function(dt, self)
+        },
+        ['passive'] = function(dt, self)
+            if self.enemy.state == 'hurt' then
+                if self.timer <= 5 then
+                    self.timer = self.timer + dt
+                    self.enemy.health = self.enemy.health - 5 * dt
+                    self.enemy.lifebar:updateDimensionsAndColors()
+                end
+            end
+        end,
+        ['shoot'] = function(self)
+            Projectile{
+              player = self,
+              type = 'spawn',
+              number = 1,
+              range = self.direction * (self.x - self.enemy.x)
+            }
+        end,
 
-    --    end,
-    --    ['shoot'] = function(self)
-    --        Projectile{
-    --          player = self,
-    --          type = 'fly',
-    --          number = 1,
-    --          velocity = 400
-    --        }
-    --    end,
+        ['special_1'] = function(dt, self)
+            if self.animation.currentFrame == 1 and self.animation.changing then
+                Projectile{
+                    player = self,
+                    number = 2,
+                    type = 'spawn',
+                    infinity = true
+                }
+            elseif self.animation.ending then
+                self.state = 'idle'
+                self.projectiles = {}
+                self.numberOfProjectiles = 0
+            end
+            dash(dt, self, {
+                startAnimation = 2,
+                velocity = 100
+            })
 
-    --    ['special_1'] = function(dt, self)
-    --
-    --    end,
-    --    ['special_2']  = function(dt, self)
+        end,
+        ['special_2']  = function(dt, self)
+            if self.animation.ending then
+                Projectile{
+                    type = 'spawn',
+                    player = self,
+                    number = 3,
+                    range = self.direction * (self.x - self.enemy.x)
+                }
+                self.state = 'idle'
+            end
+            dash(dt, self, {
+                startAnimation = 2,
+                finalAnimation = 18,
+                velocity = 50
+            })
+            self:detectDamage('around', 200)
+        end,
 
-    --    end,
 
+        ['cooldown'] = 5
 
-    --    ['cooldown'] = 5
-
-    --},
+    },
 
     --['Character'] = {
 
