@@ -58,8 +58,12 @@ Backgrounds = {
         ['width'] = 624,
         ['height'] = 396
     },
-    ['Palace'] = {
+    ['Java'] = {
         ['width'] = 624,
         ['height'] = 396
+    },
+    ['Baloons'] = {
+        ['width'] = 6406,
+        ['height'] = 320
     }
 }
