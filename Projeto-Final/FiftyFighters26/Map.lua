@@ -8,7 +8,12 @@ require 'backgrounds'
 SCROOL_SPEED = 0
 
 function Map:init(name)
-    self.maps = {'Castle', 'Mansion', 'Gym', 'Gas', 'Korea', 'Forest', 'Bay'}
+    self.maps = {}
+    local index = 1
+    for k, v in pairs(Backgrounds) do
+        self.maps[index] = k
+        index = index + 1
+    end
 
     self.name = name
 
@@ -31,7 +36,8 @@ function Map:init(name)
         self.mapButtons[i] = Button{
             map = self,
             label = self.maps[i],
-            relativeY = (i - #self.maps/2) * 30 + VIRTUAL_WIDTH / 4,
+            relativeY = math.floor(i/3-0.1) * 50 + 20,
+            relativeX = math.cos(math.rad((i % 3 * 90))) * 100 + VIRTUAL_WIDTH / 2,
             action = function()
                 self.name = self.maps[i]
                 local player1 = self.player1
