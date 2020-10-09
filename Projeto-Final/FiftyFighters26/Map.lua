@@ -324,7 +324,7 @@ function Map:updateReferences()
     --//____________________________ Players _______________________________\\--
 
     -- Creates the players
-    self.player1 = Player(self, 'Athena', -1)
+    self.player1 = Player(self, 'Athena-Asamiya', -1)
     self.player2 = Player(self, 'Bonne-Jenet', 1)
 
     -- Sets each one as other's enemy
