@@ -33,5 +33,33 @@ Backgrounds = {
     ['Factory'] = {
         ['width'] = 740,
         ['height'] = 224
+    },
+    ['Brazil'] = {
+        ['width'] = 752,
+        ['height'] = 224,
+    },
+    ['Athena'] = {
+        ['width'] = 752,
+        ['height'] = 224
+    },
+    ['Airport'] = {
+        ['width'] = 768,
+        ['height'] = 384
+    },
+    ['Toilet'] = {
+        ['width'] = 621,
+        ['height'] = 224
+    },
+    ['Dinosaurs'] = {
+        ['width'] = 1000,
+        ['height'] = 581
+    },
+    ['Docks'] = {
+        ['width'] = 624,
+        ['height'] = 396
+    },
+    ['Palace'] = {
+        ['width'] = 624,
+        ['height'] = 396
     }
 }
