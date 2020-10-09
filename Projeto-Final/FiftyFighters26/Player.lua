@@ -384,7 +384,7 @@ function Player:init(map, name, side)
 
     -- Loads the sounds for the character
     for k, v in pairs(self.behaviors) do
-        self.sounds[k] = love.audio.newSource('sounds/' .. self.name .. '/' .. k .. '.wav', 'static')
+        self.sounds[k] = love.audio.newSource(self.soundDir .. k .. '.wav', 'static')
     end
     self.shuffle = true
 end

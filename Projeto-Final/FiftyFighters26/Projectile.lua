@@ -64,7 +64,7 @@ function Projectile:init(parameters)
             if not self.updated then
                 self.x = self.player.x - self.direction * self.range
                 self.updated = true
-            end 
+            end
             self:checkCollisions()
             if self.animation.ending then
                 if self.player.enemy.state == 'hurt' then
@@ -102,7 +102,7 @@ function Projectile:init(parameters)
 
     self.size = parameters.size or 40
     -- Sounds
-    self.sound = love.audio.newSource('sounds/' .. self.player.name .. '/projectile.wav', 'static')
+    self.sound = love.audio.newSource('sounds/' .. self.player.sex .. '/projectile.wav', 'static')
 end
 
 
