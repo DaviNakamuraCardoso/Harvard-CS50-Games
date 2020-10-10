@@ -47,7 +47,7 @@ Backgrounds = {
         ['height'] = 384
     },
     ['Toilet'] = {
-        ['width'] = 621,
+        ['width'] = 660,
         ['height'] = 224
     },
     ['Dinosaurs'] = {
@@ -60,7 +60,7 @@ Backgrounds = {
     },
     ['Java'] = {
         ['width'] = 624,
-        ['height'] = 396
+        ['height'] = 384
     },
     ['Baloons'] = {
         ['width'] = 6406,
