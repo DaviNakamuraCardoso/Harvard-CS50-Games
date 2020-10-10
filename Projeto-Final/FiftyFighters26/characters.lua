@@ -2738,7 +2738,7 @@ Characters = {
         --//__________________________ Damage ______________________________\\--
 
             -- Punch
-            ['punch'] = {{140, 150}, {1486, 1495}},
+            ['punch'] = {{140, 150}, {1486, 1494}},
             ['duck_punch'] = {{158, 164}},
             ['air_punch'] = {{151, 157}},
 
@@ -4473,7 +4473,7 @@ Characters = {
         ['kick_range'] = 30,
         ['sex'] = 'male',
         ['shootTrigger'] = 3,
-		['powered'] = false, 
+		['powered'] = false,
 
         ['animations'] = {
         --//_______________________ Idle and Dance _________________________\\--
@@ -4514,7 +4514,7 @@ Characters = {
         --//_________________________ Specials _____________________________\\--
 
             ['special_1'] = {{763, 780}, {1815, 1817}},
-            ['special_2'] = {{801,813}, {853, 855}}, 
+            ['special_2'] = {{801,813}, {853, 855}},
         --//________________________ Projectiles ____________________________\\--
 
             ['shoot'] = {{1287, 1292}, {1648, 1649}},
@@ -4537,21 +4537,21 @@ Characters = {
                     animation.quads = animation.animationsTable.quads
                 end
 	    end
-		if Characters[self.name]['powered'] then 
-	    	if self.state == 'hurt' or self.state == 'shoot' or self.state == 'special_1' then 
+		if Characters[self.name]['powered'] then
+	    	if self.state == 'hurt' or self.state == 'shoot' or self.state == 'special_1' then
 				self.state = 'idle'
-			elseif self.state == 'winning' or self.state == 'dying' or self.state == 'shoot' then 
+			elseif self.state == 'winning' or self.state == 'dying' or self.state == 'shoot' then
 				Characters[self.name]['powereded'] = false
 
 			end
-			if self.specialPoints >= 100 then 
+			if self.specialPoints >= 100 then
 				self.state = 'special_2'
-			end 
-		end 
-		  
+			end
+		end
 
 
-		
+
+
         end,
         ['shoot'] = function(self)
             Projectile{
@@ -4563,28 +4563,28 @@ Characters = {
         end,
 
         ['special_1'] = function(dt, self)
-   			if self.animation.ending then 
-				self.state = 'idle'	
+   			if self.animation.ending then
+				self.state = 'idle'
 				self.health = math.min(100, self.health + 10)
 				self.lifebar:updateDimensionsAndColors()
-			end 
+			end
        	end,
         ['special_2']  = function(dt, self)
-			if self.animation.ending then 
+			if self.animation.ending then
 				self.state = 'idle'
-				if Characters[self.name]['powered'] then 
-					Characters[self.name]['powered'] = false 
+				if Characters[self.name]['powered'] then
+					Characters[self.name]['powered'] = false
 					self.damge = 20
 					self.armor = 100
 					self.jumpSpeed = 100
-				else 
-					Characters[self.name]['powered'] = true 
+				else
+					Characters[self.name]['powered'] = true
 					self.damage = 8
 					self.armor = 20
 					self.jumpSpeed = 200
-				end 
+				end
 
-			end 
+			end
 		end,
 
 
