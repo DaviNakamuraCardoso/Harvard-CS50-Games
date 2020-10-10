@@ -80,8 +80,8 @@ function Map:init(name)
                     self.state = 'map_select'
                 end
             end,
-            relativeX = 100 * math.cos(math.rad(counter * 360 / #names)) + VIRTUAL_WIDTH / 2,
-            relativeY = 100 * math.sin(math.rad(counter * 360 / #names)) + VIRTUAL_HEIGHT / 2,
+            relativeX = math.cos(math.rad((counter % 9 * 20))) * 100 + VIRTUAL_WIDTH / 2,
+            relativeY = math.floor(counter/9-0.1) * 50 + 20,
             border = {2, 2},
             noLabel = true
 
