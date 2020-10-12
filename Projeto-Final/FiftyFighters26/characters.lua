@@ -119,6 +119,120 @@ Characters = {
         ['cooldown'] = 5
 
     },
+
+    ['Blue-Mary'] = {
+
+        --//________________________ Attributtes ___________________________\\--
+
+        ['armor'] = 30,
+        ['damage'] = 10,
+        ['punch_range'] = 20,
+        ['kick_range'] = 40,
+        ['sex'] = 'female',
+        ['shootTrigger'] = 3,
+
+        ['animations'] = {
+        --//_______________________ Idle and Dance _________________________\\--
+
+            ['idle'] = {{0, 6}},
+            ['dancing'] = {{142, 144}, {527, 531}, {532, 541}, {543, 546}},
+
+        --//__________________________ Movement ____________________________\\--
+
+            ['walking'] = {{23, 32}},
+            ['running'] = {{99, 112}},
+            ['jumping'] = {{39, 52}},
+            ['duck'] = {{64, 75}},
+
+        --//__________________________ Damage ______________________________\\--
+
+            -- Punch
+            ['punch'] = {{131, 139}, {147, 152}, {184, 200}},
+            ['duck_punch'] = {{156, 159}},
+            ['air_punch'] = {{203, 205}},
+
+            -- Kick
+            ['kick'] = {{165, 170}, {212, 218}},
+            ['duck_kick'] = {{181, 183}, {219, 223}, {230, 239}},
+            ['air_kick'] = {{171, 174}, {175, 180}, {224, 229}},
+
+            -- Hurt
+            ['fall'] = {{575, 578}},
+            ['hurt'] = {{549, 553}},
+
+        --//________________________ End of Game ___________________________\\--
+
+
+            ['dying'] = {{561, 565}},
+            ['waiting'] = {{114, 116}, {400, 402}, {1489, 1490}},
+            ['winning'] = {{505, 512}},
+
+        --//_________________________ Specials _____________________________\\--
+
+            ['special_1'] = {{392, 399}},
+            ['special_2'] = {{450, 459}},
+        --//________________________ Projectiles ____________________________\\--
+
+            ['shoot'] = {{431, 441}},
+            ['projectile_1_spawn'] = {{442, 449}},
+            ['projectile_1_exploded'] = {{467, 478}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
+
+            ['projectile_2_fly'] = {{461, 463, 464, 465, 466}},
+            ['projectile_2_exploded'] = {{493, 496}},
+            ['projectile_2_destroyed'] = {{999, 1000}},
+
+
+        },
+        ['passive'] = function(dt, self)
+            if not self.passiveUpdated then
+                self.damage = self.damage + self.enemy.damage / 5
+                self.enemy.damage = self.enemy.damage - self.enemy.damage / 5
+                self.passiveUpdated = true 
+            end
+        end,
+        ['shoot'] = function(self)
+            Projectile{
+              player = self,
+              type = 'spawn',
+              number = 1,
+              range = 200
+            }
+        end,
+
+        ['special_1'] = function(dt, self)
+            if self.animation.ending then
+                self.inAit = false
+                self.state = 'idle'
+            end
+            dash(dt, self, {
+                finalAnimation = 3,
+                velocity = 300,
+                incline = 90
+            })
+            dash(dt, self, {
+                startAnimation = 4,
+                velocity = 300,
+                incline = 270
+            })
+        end,
+        ['special_2']  = function(dt, self)
+            if self.animation.ending then
+                self.state = 'idle'
+                Projectile{
+                    player = self,
+                    type = 'fly',
+                    velocity = 200,
+                    damage = 30
+                }
+            end
+        end,
+
+
+        ['cooldown'] = 5
+
+    },
+
     ['Bonne-Jenet'] = {
         ['armor'] = 30,
         ['damage'] = 5,

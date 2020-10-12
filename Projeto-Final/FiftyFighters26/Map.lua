@@ -80,7 +80,7 @@ function Map:init(name)
                     self.state = 'map_select'
                 end
             end,
-            relativeX = math.cos(math.rad((counter % 9 * 20))) * 100 + VIRTUAL_WIDTH / 2,
+            relativeX = counter % 9 * 40 + 70,
             relativeY = math.floor(counter/9-0.1) * 50 + 20,
             border = {2, 2},
             noLabel = true
@@ -120,6 +120,7 @@ function Map:init(name)
     --\\____________________________________________________________________//--
 
     --//_____________________ States and Behaviors _________________________\\--
+    self.enemiesUpdated = false
     self.behaviors = {
         ['menu'] = function(dt)
             local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
@@ -131,14 +132,12 @@ function Map:init(name)
         ['player1_select'] = function(dt)
             local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
             local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
-            self:updateCam()
             self:updateCharacterButtons(mouseX, mouseY)
             self.h2:update()
         end,
         ['player2_select'] = function(dt)
             local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
             local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
-            self:updateCam()
             self:updateCharacterButtons(mouseX, mouseY)
             self.h2:update()
             self.h2.text = 'Player 2 Select'
@@ -147,14 +146,9 @@ function Map:init(name)
             local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
             local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self:updateMapButtons(mouseX, mouseY)
-            -- Dimensions
-            self.player1.enemy = self.player2
-            self.player2.enemy = self.player1
-
-
+            self:updateEnemies()
         end,
         ['play'] = function(dt)
-        --    self.animation:update(dt)
             self:updateCam()
             self.player1:update(dt)
             self.player2:update(dt)
@@ -216,6 +210,15 @@ function Map:update(dt)
     self:updateAnimation(dt)
 end
 
+
+function Map:updateEnemies()
+    if not self.enemiesUpdated then
+        self.player1.enemy = self.player2
+        self.player2.enemy = self.player1
+        self.enemiesUpdated = true 
+    end
+
+end
 
 function Map:updateCam()
 

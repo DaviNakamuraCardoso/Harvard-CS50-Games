@@ -10,7 +10,7 @@ Backgrounds = {
         ['width'] = 752,
         ['height'] = 360
     },
-    ['Mansion'] = {
+    ['Adam-Bernstein'] = {
         ['width'] = 768,
         ['height'] = 368
     },
@@ -18,7 +18,7 @@ Backgrounds = {
         ['width'] = 752,
         ['height'] = 224
     },
-    ['Korea'] = {
+    ['Kim'] = {
         ['width'] = 752,
         ['height'] = 224
     },
@@ -50,7 +50,7 @@ Backgrounds = {
         ['width'] = 660,
         ['height'] = 224
     },
-    ['Dinosaurs'] = {
+    ['Malin'] = {
         ['width'] = 1000,
         ['height'] = 581
     },
@@ -63,7 +63,11 @@ Backgrounds = {
         ['height'] = 384
     },
     ['Baloons'] = {
-        ['width'] = 6406,
+        ['width'] = 640,
         ['height'] = 320
+    },
+    ['Hotaru-Futaba'] = {
+        ['width'] = 752,
+        ['height'] = 224
     }
 }
