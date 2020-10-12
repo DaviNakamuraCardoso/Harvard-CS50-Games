@@ -75,7 +75,7 @@ function love.draw()
 
     push:apply('start')
     -- body...
-    love.graphics.clear(1.2 / 255, 12.9 / 255, 65.5 / 255, 1)
+    love.graphics.clear(94 / 255, 178 / 255, 224 / 255, 1)
     love.graphics.translate(math.floor(-map.camX), math.floor(-map.camY))
     map:render()
 
