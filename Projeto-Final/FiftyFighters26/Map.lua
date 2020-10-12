@@ -146,7 +146,6 @@ function Map:init(name)
             local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
             local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self:updateMapButtons(mouseX, mouseY)
-            self:updateEnemies()
         end,
         ['play'] = function(dt)
             self:updateCam()
@@ -175,10 +174,12 @@ function Map:init(name)
             self.player2:renderAllProjectiles()
         end,
         ['player1_select'] = function()
+            love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
             self:renderCharacterButtons()
             self.h2:render()
         end,
         ['player2_select'] = function()
+            love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
             self:renderCharacterButtons()
             self.h2:render()
         end,
@@ -210,15 +211,6 @@ function Map:update(dt)
     self:updateAnimation(dt)
 end
 
-
-function Map:updateEnemies()
-    if not self.enemiesUpdated then
-        self.player1.enemy = self.player2
-        self.player2.enemy = self.player1
-        self.enemiesUpdated = true 
-    end
-
-end
 
 function Map:updateCam()
 
@@ -272,18 +264,14 @@ end
 function Map:renderCharacterButtons()
     for k, v in pairs(self.charactersButtons) do
         v:render()
-        if v.color[2] == v.hover[2] then
-            if self.state == 'player1_select' then
-                love.graphics.draw(self.charactersImages['image'][k], self.charactersImages['quad'][k], self.camX + 20 + self.charactersImages['image'][k]:getWidth(), self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][k]:getHeight(), 0, -1, 1)
-            else
-
-                love.graphics.draw(self.charactersImages['image'][k], self.charactersImages['quad'][k],self.camX + VIRTUAL_WIDTH - self.charactersImages['image'][k]:getWidth()-20,self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][k]:getHeight())
-            end
-        end
 
     end
     if self.state == 'player2_select' then
         love.graphics.draw(self.charactersImages['image'][self.player1.name], self.charactersImages['quad'][self.player1.name], self.camX + 20 + self.charactersImages['image'][self.player1.name]:getWidth(), self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][self.player1.name]:getHeight(), 0, -1, 1)
+    elseif self.state == 'next' then
+        love.graphics.draw(self.charactersImages['image'][self.player1.name], self.charactersImages['quad'][self.player1.name], self.camX + 20 + self.charactersImages['image'][self.player1.name]:getWidth(), self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][self.player1.name]:getHeight(), 0, -1, 1)
+
+        love.graphics.draw(self.charactersImages['image'][self.player2.name], self.charactersImages['quad'][self.player2.name], self.camX + 20 + VIRTUAL_WIDTH / 2,  self.charactersImages['image'][self.player2.name]:getWidth(), self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][self.player2.name]:getHeight(), 0, -1, 1)
     end
 end
 

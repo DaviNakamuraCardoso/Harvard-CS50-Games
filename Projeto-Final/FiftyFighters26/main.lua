@@ -37,11 +37,9 @@ function love.load()
     love.window.setTitle('Fifty Fighters - Beta Version')
 
 
-    maps = {'Castle', 'Mansion', 'Gym', 'Gas', 'Korea', 'Forest', 'Bay'}
 
-    name = maps[math.random(1, #maps)]
 
-    map = Map(name)
+    map = Map('Select')
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT,
     {

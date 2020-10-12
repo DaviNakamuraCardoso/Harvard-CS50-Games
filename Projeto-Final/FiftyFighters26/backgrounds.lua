@@ -1,6 +1,10 @@
 --====================== The Background Table ================================--
 
 Backgrounds = {
+    ['Select'] = {
+        ['width'] = 768,
+        ['height'] = 368 
+    },
     ['Castle'] = {
         ['width'] = 640,
         ['height'] = 384
