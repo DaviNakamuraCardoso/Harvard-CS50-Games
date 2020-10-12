@@ -21,8 +21,8 @@ function Button:init(params)
 
     self.border = params.border or {6, 6}
 
-    self.noHover = params.color or {1, 1, 0.1, 1}
-    self.hover = {self.noHover[1] / 3, self.noHover[2] / 3, self.noHover[3] / 3, 1}
+    self.noHover = params.color or {224 / 255, 132 / 255, 27 / 255, 1}
+    self.hover = {224 / 255, 170 / 255, 99 / 255, 1}
     self.color = self.noHover
 
     self.font = params.font or 'great_fighter.ttf'
@@ -55,7 +55,7 @@ end
 
 
 function Button:update(mouseX, mouseY)
-    
+
     if mouseX >= self.relativeX - self.width / 2 and mouseX <= self.relativeX + self.width / 2 and
     mouseY >= self.relativeY - self.height / 2 and mouseY <= self.relativeY + self.height / 2 then
         self.color = self.hover
