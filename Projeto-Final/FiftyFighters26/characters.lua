@@ -188,7 +188,7 @@ Characters = {
             if not self.passiveUpdated then
                 self.damage = self.damage + self.enemy.damage / 5
                 self.enemy.damage = self.enemy.damage - self.enemy.damage / 5
-                self.passiveUpdated = true 
+                self.passiveUpdated = true
             end
         end,
         ['shoot'] = function(self)
@@ -4705,7 +4705,89 @@ Characters = {
         ['cooldown'] = 5
 
     }
+    ['Yuri-Sakazaki'] = {
 
+        --//________________________ Attributtes ___________________________\\--
+
+    --    ['armor'] = ,
+    --    ['damage'] = ,
+    --    ['punch_range'] = ,
+    --    ['kick_range'] = ,
+    --    ['sex'] = 'sex',
+    --    ['shootTrigger'] = ,
+
+    --    ['animations'] = {
+    --    --//_______________________ Idle and Dance _________________________\\--
+
+    --        ['idle'] = {{}},
+    --        ['dancing'] = {{}},
+
+    --    --//__________________________ Movement ____________________________\\--
+
+    --        ['walking'] = {{}},
+    --        ['running'] = {{}},
+    --        ['jumping'] = {{}},
+    --        ['duck'] = {{}},
+
+    --    --//__________________________ Damage ______________________________\\--
+
+    --        -- Punch
+    --        ['punch'] = {{}},
+    --        ['duck_punch'] = {{}},
+    --        ['air_punch'] = {{}},
+
+    --        -- Kick
+    --        ['kick'] = {{}},
+    --        ['duck_kick'] = {{}},
+    --        ['air_kick'] = {{}},
+
+    --        -- Hurt
+    --        ['fall'] = {{}},
+    --        ['hurt'] = {{}},
+
+    --    --//________________________ End of Game ___________________________\\--
+
+
+    --        ['dying'] = {{}},
+    --        ['waiting'] = {{}},
+    --        ['winning'] = {{}},
+
+    --    --//_________________________ Specials _____________________________\\--
+
+    --        ['special_1'] = {{}},
+    --        ['special_2'] = {{}},
+    --    --//________________________ Projectiles ____________________________\\--
+
+    --        ['shoot'] = {{}},
+    --        ['projectile_1_fly'] = {{}},
+    --        ['projectile_1_exploded'] = {{}},
+    --        ['projectile_1_destroyed'] = {{999, 1000}},
+
+
+    --    },
+    --    ['passive'] = function(dt, self)
+
+    --    end,
+    --    ['shoot'] = function(self)
+    --        Projectile{
+    --          player = self,
+    --          type = 'fly',
+    --          number = 1,
+    --          velocity = 400
+    --        }
+    --    end,
+
+    --    ['special_1'] = function(dt, self)
+    --
+    --    end,
+    --    ['special_2']  = function(dt, self)
+
+    --    end,
+
+
+    --    ['cooldown'] = 5
+
+    --},
     --['Character'] = {
 
     --    --//________________________ Attributtes ___________________________\\--
