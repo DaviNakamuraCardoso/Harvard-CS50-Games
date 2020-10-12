@@ -269,7 +269,7 @@ end
 function Map:renderCharacterButtons()
     for k, v in pairs(self.charactersButtons) do
         v:render()
-        if v.color[1] == v.hover[1] then
+        if v.color[2] == v.hover[2] then
             if self.state == 'player1_select' then
                 love.graphics.draw(self.charactersImages['image'][k], self.charactersImages['quad'][k], self.camX + 20 + self.charactersImages['image'][k]:getWidth(), self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][k]:getHeight(), 0, -1, 1)
             else
