@@ -3,9 +3,9 @@
 
 Map = Class{}
 
+
 require 'backgrounds'
 
-SCROOL_SPEED = 0
 
 function Map:init(name)
     self.maps = {}
@@ -31,28 +31,7 @@ function Map:init(name)
         end
     }
 
-    self.mapButtons = {}
-    for i=1, #self.maps do
-        self.mapButtons[i] = Button{
-            map = self,
-            label = self.maps[i],
-            relativeY = math.floor(i/3-0.1) * 50 + 20,
-            relativeX = math.cos(math.rad((i % 3 * 90))) * 100 + VIRTUAL_WIDTH / 2,
-            action = function()
-                self.name = self.maps[i]
-                local player1 = self.player1
-                local player2 = self.player2
-                self:updateReferences()
-                self.player1 = player1
-                self.player2 = player2
-                self.player1.enemy = self.player2
-                self.player2.enemy = self.player1
-                self.state = 'play'
-            end
-        }
-    end
-
-        --//                       Characters                            \\--
+    --//                       Characters                            \\--
 
     self.charactersButtons = {}
     self.charactersImages = {
@@ -77,11 +56,11 @@ function Map:init(name)
                     self.state = 'player2_select'
                 elseif self.state == 'player2_select' then
                     self.player2 = Player(self, k, 1)
-                    self.state = 'map_select'
+                    self.state = 'next'
                 end
             end,
             relativeX = counter % 9 * 40 + 70,
-            relativeY = math.floor(counter/9-0.1) * 50 + 20,
+            relativeY = math.floor(counter/9-0.1) * 35 + 20,
             border = {2, 2},
             noLabel = true
 
@@ -92,6 +71,14 @@ function Map:init(name)
         counter = counter + 1
     end
 
+    self.next = Button{
+        label = 'Next',
+        action = function()
+            self.state = 'loading'
+        end,
+        map = self
+    }
+    self.next.active = false
     --//                            Pause                              \\--
 --    self.pause = Button{
 --        map = self,
@@ -119,6 +106,16 @@ function Map:init(name)
 
     --\\____________________________________________________________________//--
 
+
+    self.loadingImage = love.graphics.newImage('graphics/Backgrounds/loading.png')
+    self.loadingQuads = generateQuads('graphics/Backgrounds/loading.png', 20, 20)
+    self.loadingTimer = 0
+    self.loadingInterval = 0.1
+    self.loadingFrame = 1
+    self.loading = 0
+
+
+
     --//_____________________ States and Behaviors _________________________\\--
     self.enemiesUpdated = false
     self.behaviors = {
@@ -134,6 +131,7 @@ function Map:init(name)
             local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self:updateCharacterButtons(mouseX, mouseY)
             self.h2:update()
+            self.next:update(mouseX, mouseY)
         end,
         ['player2_select'] = function(dt)
             local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
@@ -141,11 +139,22 @@ function Map:init(name)
             self:updateCharacterButtons(mouseX, mouseY)
             self.h2:update()
             self.h2.text = 'Player 2 Select'
+            self.next:update(mouseX, mouseY)
         end,
-        ['map_select'] = function(dt)
+        ['next'] = function(dt)
             local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
             local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
-            self:updateMapButtons(mouseX, mouseY)
+            self.next.active = true
+            self.next:update(mouseX, mouseY)
+            self.player1.enemy = self.player2
+            self.player2.enemy = self.player1
+        end,
+        ['loading'] = function(dt)
+            if not self.loaded then
+                self.name = self.maps[math.random(#self.maps)]
+                self:updateReferences()
+            end
+            self:updateLoad(dt)
         end,
         ['play'] = function(dt)
             self:updateCam()
@@ -177,16 +186,22 @@ function Map:init(name)
             love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
             self:renderCharacterButtons()
             self.h2:render()
+            self.next:render()
         end,
         ['player2_select'] = function()
             love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
             self:renderCharacterButtons()
             self.h2:render()
+            self.next:render()
         end,
-        ['map_select'] = function()
+        ['next'] = function()
+            love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
+            self.next:render()
+            self:renderCharacterButtons()
 
-            self:renderMapButtons()
-
+        end,
+        ['loading'] = function()
+            love.graphics.draw(self.loadingImage, self.loadingQuads[self.loadingFrame], VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2)
         end,
         ['pause'] = function()
             self.player1:render()
@@ -238,6 +253,22 @@ function Map:updateAnimation(dt)
 
 end
 
+
+function Map:updateLoad(dt)
+    if self.loadingTimer >= self.loadingInterval then
+        self.loadingTimer = 0
+        self.loadingFrame = (self.loadingFrame + 1) % (#self.loadingQuads)
+    else
+        self.loadingTimer = self.loadingTimer + dt
+    end
+    if self.loading > 100 then
+        self.state = 'play'
+    else
+        self.loading = self.loading + dt
+    end
+end
+
+
 function Map:cover()
     -- Draws a black cover in the screen
     love.graphics.setColor(0, 0, 0, 0.8)
@@ -253,14 +284,6 @@ function Map:updateCharacterButtons(mouseX, mouseY)
 end
 
 
-function Map:updateMapButtons(mouseX, mouseY)
-    for i=1, #self.maps do
-        self.mapButtons[i]:update(mouseX, mouseY)
-
-
-    end
-end
-
 function Map:renderCharacterButtons()
     for k, v in pairs(self.charactersButtons) do
         v:render()
@@ -271,14 +294,7 @@ function Map:renderCharacterButtons()
     elseif self.state == 'next' then
         love.graphics.draw(self.charactersImages['image'][self.player1.name], self.charactersImages['quad'][self.player1.name], self.camX + 20 + self.charactersImages['image'][self.player1.name]:getWidth(), self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][self.player1.name]:getHeight(), 0, -1, 1)
 
-        love.graphics.draw(self.charactersImages['image'][self.player2.name], self.charactersImages['quad'][self.player2.name], self.camX + 20 + VIRTUAL_WIDTH / 2,  self.charactersImages['image'][self.player2.name]:getWidth(), self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][self.player2.name]:getHeight(), 0, -1, 1)
-    end
-end
-
-
-function Map:renderMapButtons()
-    for i=1, #self.maps do
-        self.mapButtons[i]:render()
+        love.graphics.draw(self.charactersImages['image'][self.player2.name], self.charactersImages['quad'][self.player2.name], self.camX + 20 + VIRTUAL_WIDTH / 2 +   self.charactersImages['image'][self.player2.name]:getWidth(), self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][self.player2.name]:getHeight(), 0, 1, 1)
     end
 end
 
