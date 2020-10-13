@@ -5,6 +5,7 @@ Button = Class{}
 
 function Button:init(params)
     self.map = params.map
+    self.active = params.active or true
 
     self.relativeX = params.relativeX or VIRTUAL_WIDTH / 2
     self.relativeY = params.relativeY or VIRTUAL_HEIGHT / 2
@@ -23,7 +24,8 @@ function Button:init(params)
 
     self.noHover = params.color or {224 / 255, 132 / 255, 27 / 255, 1}
     self.hover = {224 / 255, 170 / 255, 99 / 255, 1}
-    self.color = self.noHover
+    self.inactiveColor = {0.6, 0.6, 0.6, 1}
+    self.color = self.active and self.noHover or self.inactiveColor
 
     self.font = params.font or 'great_fighter.ttf'
     self.size = params.size or 20
@@ -58,12 +60,19 @@ function Button:update(mouseX, mouseY)
 
     if mouseX >= self.relativeX - self.width / 2 and mouseX <= self.relativeX + self.width / 2 and
     mouseY >= self.relativeY - self.height / 2 and mouseY <= self.relativeY + self.height / 2 then
-        self.color = self.hover
-        if mouse['clicked'] then
+        if not self.active then
+            self.color = self.inactiveColor
+        else
+            self.color = self.hover
+        end
+
+        if mouse['clicked'] and self.active then
             self.action()
         end
     else
-        self.color = self.noHover
+        if self.active then
+            self.color = self.noHover
+        end
     end
     self.x = self.relativeX - self.width / 2 + self.map.camX
     self.y = self.relativeY - self.height / 2 + self.map.camY
