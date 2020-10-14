@@ -27,8 +27,8 @@ function Button:init(params)
     self.inactiveColor = {0.6, 0.6, 0.6, 1}
     self.color = self.active and self.noHover or self.inactiveColor
 
-    self.font = params.font or 'great_fighter.ttf'
-    self.size = params.size or 20
+    self.font = params.font or 'strikefighter.ttf'
+    self.size = params.size or 19
 
     self.imageSource = params.imageSource or nil
 
@@ -47,7 +47,7 @@ function Button:init(params)
         map = self.map,
         parameter = VIRTUAL_WIDTH,
         relativeX = self.relativeX - VIRTUAL_WIDTH / 2,
-        relativeY = self.relativeY - self.height / 2,
+        relativeY = self.relativeY - self.height / 2 -1,
         font = self.font,
         size = self.size
     }

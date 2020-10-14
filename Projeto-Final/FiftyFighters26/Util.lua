@@ -33,7 +33,7 @@ function generateAnimation(character, table)
     local index = 0
     if #table == 2 then
 
-        for i=table[1], table[2]+1 do
+        for i=table[1], table[2] do
             local image = 'graphics/' .. character.name .. '/' .. tostring(i) .. '.png'
             frames[index] = love.graphics.newImage(image)
             quads[index] = love.graphics.newQuad(0, 0, frames[index]:getWidth(),    frames[index]:getHeight(), frames[index]:getWidth(), frames[index]:getHeight())
