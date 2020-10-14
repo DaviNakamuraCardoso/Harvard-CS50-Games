@@ -221,6 +221,7 @@ Characters = {
                 self.state = 'idle'
                 Projectile{
                     player = self,
+                    number = 2,
                     type = 'fly',
                     velocity = 200,
                     damage = 30
@@ -432,7 +433,7 @@ Characters = {
         ['punch_range'] = 45,
         ['kick_range'] = 55,
         ['sex'] = 'female',
-        ['shootTrigger'] = 8,
+        ['shootTrigger'] = 7,
 
         ['animations'] = {
         --//_______________________ Idle and Dance _________________________\\--
@@ -477,7 +478,7 @@ Characters = {
 --    --//________________________ Projectiles ____________________________\\--
 
             ['shoot'] = {{220, 221, 1222, 1223, 1224, 1225, 1226, 1227, 1228}},
-            ['projectile_1_fly'] = {{258, 259}},
+            ['projectile_1_fly'] = {{1258, 1260}},
             ['projectile_1_exploded'] = {{999, 1000}},
             ['projectile_1_destroyed'] = {{999, 1000}},
 
@@ -507,11 +508,12 @@ Characters = {
                 end
             end
         end,
-        ['shoot'] = function(player)
+        ['shoot'] = function(self)
             Projectile{
                 player = self,
-                number = 2,
+                number = 1,
                 type = 'fly',
+                velocity = 500
             }
         end,
 
@@ -4606,12 +4608,12 @@ Characters = {
 
             -- Punch
             ['punch'] = {{1202, 1208}, {1828, 1829}},
-            ['duck_punch'] = {{1245, 1247}, {1831, 1831, 1831}},
-            ['air_punch'] = {{1236, 1238}, {1824, 1827}},
+            ['duck_punch'] = {{1245, 1246}, {1831, 1831, 1831}},
+            ['air_punch'] = {{1236, 1237}, {1824, 1827}},
 
             -- Kick
-            ['kick'] = {{1262, 1268}, {1828, 1830}},
-            ['duck_kick'] = {{1268, 1271}, {1831, 1831, 1831}},
+            ['kick'] = {{1262, 1267}, {1828, 1830}},
+            ['duck_kick'] = {{1268, 1270}, {1831, 1831, 1831}},
             ['air_kick'] = {{507, 518}, {1824, 1827}},
 
             -- Hurt
@@ -4631,7 +4633,7 @@ Characters = {
             ['special_2'] = {{801,813}, {853, 855}},
         --//________________________ Projectiles ____________________________\\--
 
-            ['shoot'] = {{1287, 1292}, {1648, 1649}},
+            ['shoot'] = {{1287, 1291}, {1648, 1648}},
             ['projectile_1_fly'] = {{581, 613}},
             ['projectile_1_exploded'] = {{560, 576}},
             ['projectile_1_destroyed'] = {{576, 576}},
