@@ -74,7 +74,7 @@ function Map:init(name)
                     self.active = false
                 end
             end,
-            relativeX = counter % 9 * 40 + 70,
+            relativeX = counter % 9 * 40 + 55,
             relativeY = math.floor(counter/9-0.1) * 35 + 20,
             border = {2, 2},
             noLabel = true
@@ -127,11 +127,12 @@ function Map:init(name)
 
 
     self.loadingImage = love.graphics.newImage('graphics/Backgrounds/loading.png')
-    self.loadingQuads = generateQuads('graphics/Backgrounds/loading.png', 20, 20)
+    self.loadingQuads = generateQuads('graphics/Backgrounds/loading.png', 200, 200)
     self.loadingTimer = 0
     self.loadingInterval = 0.1
     self.loadingFrame = 1
     self.loading = 0
+    self.loaded = false
 
 
 
@@ -172,7 +173,11 @@ function Map:init(name)
             if not self.loaded then
                 self.name = self.maps[math.random(#self.maps)]
                 self:updateReferences()
+                self:updateCam()
+
+                self.loaded = true
             end
+
             self:updateLoad(dt)
         end,
         ['play'] = function(dt)
@@ -220,7 +225,8 @@ function Map:init(name)
 
         end,
         ['loading'] = function()
-            love.graphics.draw(self.loadingImage, self.loadingQuads[self.loadingFrame], VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2)
+            love.graphics.clear(198 / 255, 201 / 255, 227 / 255, 1)
+            love.graphics.draw(self.loadingImage, self.loadingQuads[self.loadingFrame], VIRTUAL_WIDTH / 2 + self.camX - 100, self.camY + VIRTUAL_HEIGHT / 2 - 100)
         end,
         ['pause'] = function()
             self.player1:render()
