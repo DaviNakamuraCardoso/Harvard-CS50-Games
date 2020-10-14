@@ -19,6 +19,19 @@ function Map:init(name)
 
     self:updateReferences()
 
+    --//____________________________ Players _______________________________\\--
+
+    -- Creates the players
+    self.player1 = Player(self, 'Athena-Asamiya', -1)
+    self.player2 = Player(self, 'Bonne-Jenet', 1)
+
+    -- Sets each one as other's enemy
+    self.player1.enemy = self.player2
+    self.player2.enemy = self.player1
+
+    --\\____________________________________________________________________//--
+
+
     --//__________________________ Buttons _________________________________\\--
 
         --//                      Main Menu                            \\--
@@ -54,9 +67,11 @@ function Map:init(name)
                 if self.state == 'player1_select' then
                     self.player1 = Player(self, k, -1)
                     self.state = 'player2_select'
+                    self.active = false
                 elseif self.state == 'player2_select' then
                     self.player2 = Player(self, k, 1)
                     self.state = 'next'
+                    self.active = false
                 end
             end,
             relativeX = counter % 9 * 40 + 70,
@@ -76,9 +91,13 @@ function Map:init(name)
         action = function()
             self.state = 'loading'
         end,
-        map = self
+        map = self,
+        relativeX = VIRTUAL_WIDTH - 110,
+        relativeY = VIRTUAL_HEIGHT - 40,
+        active = false
     }
     self.next.active = false
+    self.next.color = self.next.inactiveColor
     --//                            Pause                              \\--
 --    self.pause = Button{
 --        map = self,
@@ -261,7 +280,7 @@ function Map:updateLoad(dt)
     else
         self.loadingTimer = self.loadingTimer + dt
     end
-    if self.loading > 100 then
+    if self.loading >= 10 then
         self.state = 'play'
     else
         self.loading = self.loading + dt
@@ -325,18 +344,6 @@ function Map:updateReferences()
     self.timer = 0
     self.interval = 0.2
 
-
-    --\\____________________________________________________________________//--
-
-    --//____________________________ Players _______________________________\\--
-
-    -- Creates the players
-    self.player1 = Player(self, 'Athena-Asamiya', -1)
-    self.player2 = Player(self, 'Bonne-Jenet', 1)
-
-    -- Sets each one as other's enemy
-    self.player1.enemy = self.player2
-    self.player2.enemy = self.player1
 
     --\\____________________________________________________________________//--
 
