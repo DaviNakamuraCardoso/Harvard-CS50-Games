@@ -22,7 +22,7 @@ function Button:init(params)
 
     self.border = params.border or {6, 6}
 
-    self.noHover = params.color or {224 / 255, 132 / 255, 27 / 255, 1}
+    self.noHover = params.color or {252 / 255, 173 / 255, 38 / 255, 0.9}
     self.hover = {224 / 255, 170 / 255, 99 / 255, 1}
     self.inactiveColor = {0.6, 0.6, 0.6, 1}
     self.color = self.active and self.noHover or self.inactiveColor
@@ -47,7 +47,7 @@ function Button:init(params)
         map = self.map,
         parameter = VIRTUAL_WIDTH,
         relativeX = self.relativeX - VIRTUAL_WIDTH / 2,
-        relativeY = self.relativeY - self.height / 2 -1,
+        relativeY = self.relativeY - self.height / 2 -1 ,
         font = self.font,
         size = self.size
     }

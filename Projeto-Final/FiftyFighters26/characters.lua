@@ -164,7 +164,7 @@ Characters = {
 
 
             ['dying'] = {{561, 565}},
-            ['waiting'] = {{114, 116}, {400, 402}, {1489, 1490}},
+            ['waiting'] = {{114, 116}, {400, 402}, {1489, 1490, 1491}},
             ['winning'] = {{505, 512}},
 
         --//_________________________ Specials _____________________________\\--
@@ -4594,7 +4594,7 @@ Characters = {
         ['animations'] = {
         --//_______________________ Idle and Dance _________________________\\--
 
-            ['idle'] = {{1000, 1008}, {1815, 1817}},
+            ['idle'] = {{1001, 1008}, {1815, 1817}},
             ['dancing'] = {{961, 968}, {1815, 1817}},
 
         --//__________________________ Movement ____________________________\\--
@@ -4602,7 +4602,7 @@ Characters = {
             ['walking'] = {{1009, 1018}, {1818, 1823}},
             ['running'] = {{132, 146}, {1818, 1823}},
             ['jumping'] = {{54, 58}, {1824, 1827}},
-            ['duck'] = {{1083, 1085}},
+            ['duck'] = {{1083, 1085}, {1815, 1817}},
 
         --//__________________________ Damage ______________________________\\--
 
@@ -4633,15 +4633,15 @@ Characters = {
             ['special_2'] = {{801,813}, {853, 855}},
         --//________________________ Projectiles ____________________________\\--
 
-            ['shoot'] = {{1287, 1291}, {1648, 1648}},
+            ['shoot'] = {{1287, 1291}, {1648, 1648, 1648}},
             ['projectile_1_fly'] = {{581, 613}},
             ['projectile_1_exploded'] = {{560, 576}},
-            ['projectile_1_destroyed'] = {{576, 576}},
+            ['projectile_1_destroyed'] = {{576, 576, 576}},
 
 
         },
         ['passive'] = function(dt, self)
-	    self.shuffle = false
+	        self.shuffle = false
             for state, animation in pairs(self.animations)  do
                 if Characters[self.name]['powered'] then
                     animation.animationsTable = animation.animations[2]
@@ -4654,8 +4654,10 @@ Characters = {
                 end
 	    end
 		if Characters[self.name]['powered'] then
+            self.specialPoints = self.specialPoints + 5 * dt
 	    	if self.state == 'hurt' or self.state == 'shoot' or self.state == 'special_1' then
 				self.state = 'idle'
+
 			elseif self.state == 'winning' or self.state == 'dying' or self.state == 'shoot' then
 				Characters[self.name]['powereded'] = false
 
@@ -4663,6 +4665,8 @@ Characters = {
 			if self.specialPoints >= 100 then
 				self.state = 'special_2'
 			end
+        else
+            self.armor = 20
 		end
 
 
@@ -4690,16 +4694,18 @@ Characters = {
 				self.state = 'idle'
 				if Characters[self.name]['powered'] then
 					Characters[self.name]['powered'] = false
-					self.damge = 20
-					self.armor = 100
-					self.jumpSpeed = 100
+					self.damage = 12
+					self.armor = 20
+					self.jumpSpeed =  -400
 				else
 					Characters[self.name]['powered'] = true
 					self.damage = 8
-					self.armor = 20
-					self.jumpSpeed = 200
+					self.armor = 100
+					self.jumpSpeed = -500
 				end
-
+                for _, animation in pairs(self.animations) do
+                    animation.currentFrame = 1
+                end
 			end
 		end,
 

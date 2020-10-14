@@ -64,6 +64,7 @@ function Map:init(name)
             imageSource = 'graphics/' .. k .. '/portrait.png',
             map = self,
             action = function()
+                self.charactersButtons[k].active = false
                 if self.state == 'player1_select' then
                     self.player1 = Player(self, k, -1)
                     self.state = 'player2_select'
@@ -111,26 +112,22 @@ function Map:init(name)
         map = self,
         text = 'Fifty Fighters',
         size = 50,
-        font = 'fighter.ttf',
-        relativeY = 30
+        font = 'strikefighter.ttf',
+        relativeY = 0
     }
 
     self.h2 = Message{
         map = self,
         text = 'Player 1 Select',
         size = 40,
-        font = 'fighter.ttf',
+        font = 'strikefighter.ttf',
         relativeY = 30
     }
 
     --\\____________________________________________________________________//--
 
-
-    self.loadingImage = love.graphics.newImage('graphics/Backgrounds/loading.png')
-    self.loadingQuads = generateQuads('graphics/Backgrounds/loading.png', 200, 200)
-    self.loadingTimer = 0
-    self.loadingInterval = 0.1
-    self.loadingFrame = 1
+    self.loadingBarWidth = 0
+    self.loadingBarHeight = 20
     self.loading = 0
     self.loaded = false
 
@@ -176,6 +173,8 @@ function Map:init(name)
                 self:updateCam()
 
                 self.loaded = true
+                self.h2.text = 'Loading...'
+                self.h2:update()
             end
 
             self:updateLoad(dt)
@@ -220,13 +219,15 @@ function Map:init(name)
         end,
         ['next'] = function()
             love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
-            self.next:render()
             self:renderCharacterButtons()
+            self.next:render()
 
         end,
         ['loading'] = function()
             love.graphics.clear(198 / 255, 201 / 255, 227 / 255, 1)
-            love.graphics.draw(self.loadingImage, self.loadingQuads[self.loadingFrame], VIRTUAL_WIDTH / 2 + self.camX - 100, self.camY + VIRTUAL_HEIGHT / 2 - 100)
+            love.graphics.rectangle('fill', self.camX + VIRTUAL_WIDTH / 2 - 100, self.camY + VIRTUAL_HEIGHT / 3, self.loadingBarWidth, self.loadingBarHeight)
+            love.graphics.rectangle('line', self.camX + VIRTUAL_WIDTH / 2 - 100 - 2, self.camY + VIRTUAL_HEIGHT / 3 - 2, 204, 24)
+            self.h2:render()
         end,
         ['pause'] = function()
             self.player1:render()
@@ -280,17 +281,12 @@ end
 
 
 function Map:updateLoad(dt)
-    if self.loadingTimer >= self.loadingInterval then
-        self.loadingTimer = 0
-        self.loadingFrame = (self.loadingFrame + 1) % (#self.loadingQuads)
-    else
-        self.loadingTimer = self.loadingTimer + dt
-    end
-    if self.loading >= 10 then
+    if self.loading >= 20 then
         self.state = 'play'
     else
         self.loading = self.loading + dt
     end
+    self.loadingBarWidth = self.loading * 200 / 20
 end
 
 
@@ -315,11 +311,12 @@ function Map:renderCharacterButtons()
 
     end
     if self.state == 'player2_select' then
-        love.graphics.draw(self.charactersImages['image'][self.player1.name], self.charactersImages['quad'][self.player1.name], self.camX + 20 + self.charactersImages['image'][self.player1.name]:getWidth(), self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][self.player1.name]:getHeight(), 0, -1, 1)
-    elseif self.state == 'next' then
-        love.graphics.draw(self.charactersImages['image'][self.player1.name], self.charactersImages['quad'][self.player1.name], self.camX + 20 + self.charactersImages['image'][self.player1.name]:getWidth(), self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][self.player1.name]:getHeight(), 0, -1, 1)
 
-        love.graphics.draw(self.charactersImages['image'][self.player2.name], self.charactersImages['quad'][self.player2.name], self.camX + 20 + VIRTUAL_WIDTH / 2 +   self.charactersImages['image'][self.player2.name]:getWidth(), self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][self.player2.name]:getHeight(), 0, 1, 1)
+        love.graphics.draw(self.charactersImages['image'][self.player1.name], self.charactersImages['quad'][self.player1.name], self.camX + 20 + self.charactersImages['image'][self.player1.name]:getWidth() / 2, self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][self.player1.name]:getHeight() / 2 - 10, 0, -1, 1, self.charactersImages['image'][self.player1.name]:getWidth() / 2, self.charactersImages['image'][self.player1.name]:getHeight() / 2)
+    elseif self.state == 'next' then
+        love.graphics.draw(self.charactersImages['image'][self.player1.name], self.charactersImages['quad'][self.player1.name], self.camX + 20 + self.charactersImages['image'][self.player1.name]:getWidth() / 2, self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][self.player1.name]:getHeight() / 2 - 10, 0, -1, 1, self.charactersImages['image'][self.player1.name]:getWidth() / 2, self.charactersImages['image'][self.player1.name]:getHeight() / 2)
+
+        love.graphics.draw(self.charactersImages['image'][self.player2.name], self.charactersImages['quad'][self.player2.name], self.camX + 20 + VIRTUAL_WIDTH / 2 +   self.charactersImages['image'][self.player2.name]:getWidth() / 2, self.camY + VIRTUAL_HEIGHT - self.charactersImages['image'][self.player2.name]:getHeight() / 2 - 10, 0, 1, 1,  self.charactersImages['image'][self.player2.name]:getWidth() / 2, self.charactersImages['image'][self.player2.name]:getHeight() / 2)
     end
 end
 
