@@ -18,7 +18,7 @@ Characters = {
 
             ['idle'] = {{0, 7}},
             ['dancing'] = {{595, 601}, {578, 586}, {561, 572}, {586, 591}},
-
+            ['start'] = {{582, 586}},
         --//__________________________ Movement ____________________________\\--
 
             ['walking'] = {{8, 19}},
@@ -136,7 +136,7 @@ Characters = {
 
             ['idle'] = {{0, 6}},
             ['dancing'] = {{142, 144}, {527, 531}, {532, 541}, {543, 546}},
-
+            ['start'] = {{468, 478}},
         --//__________________________ Movement ____________________________\\--
 
             ['walking'] = {{23, 32}},
@@ -246,7 +246,7 @@ Characters = {
         --//_______________________ Idle and Dance _________________________\\--
             ['idle'] = {{0, 15}},
             ['dancing'] = {{574, 582}, {518, 522}, {564, 569}, {570, 573}, {583, 589}},
-
+            ['start'] = {{548, 559}},
         --//__________________________ Movement ____________________________\\--
 
             ['walking'] = {{16, 31}},
@@ -345,6 +345,7 @@ Characters = {
 
             ['idle'] = {{0, 4}},
             ['dancing'] = {{87, 91}},
+            ['start'] = {{1457, 1460}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -440,6 +441,7 @@ Characters = {
 
             ['idle'] = {{0, 7}},
             ['dancing'] = {{141, 143}, {470, 474}, {540, 550}, {551, 561}, {561, 566}, {77, 80}},
+            ['start'] = {{573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 1588, 1589, 1590, 1591, 1592, 1593, 599, 600}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -575,6 +577,7 @@ Characters = {
 
             ['idle'] = {{0, 11}},
             ['dancing'] = {{249, 252}, {717, 725}},
+            ['start'] = {{408, 418}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -692,6 +695,7 @@ Characters = {
 
             ['idle'] = {{0, 10}},
             ['dancing'] = {{361, 366}},
+            ['start'] = {{467, 479}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -776,6 +780,7 @@ Characters = {
 
             ['idle'] = {{0, 11}},
             ['dancing'] = {{579, 595}, {611, 627}, {628, 634}, {635, 645}},
+            ['start'] = {{668, 673}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -910,6 +915,7 @@ Characters = {
 
             ['idle'] = {{0, 9}},
             ['dancing'] = {{601, 617}},
+            ['start'] = {{601, 617}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -1027,6 +1033,7 @@ Characters = {
 
             ['idle'] = {{0, 5}},
             ['dancing'] = {{666, 671}, {674, 690}},
+            ['start'] = {{674, 679}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -1146,6 +1153,7 @@ Characters = {
 
             ['idle'] = {{0, 10}},
             ['dancing'] = {{366, 376}},
+            ['start'] = {{319, 335}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -1263,6 +1271,7 @@ Characters = {
 
             ['idle'] = {{0, 4}},
             ['dancing'] = {{537, 539}},
+            ['start'] = {{1554, 1560}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -1374,6 +1383,7 @@ Characters = {
 
             ['idle'] = {{0, 5}},
             ['dancing'] = {{532, 534}, {541, 546}},
+            ['start'] = {{1511, 1516}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -1484,6 +1494,7 @@ Characters = {
 
             ['idle'] = {{0, 11}},
             ['dancing'] = {{273, 280}, {482, 496}},
+            ['start'] = {{451, 496}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -1602,6 +1613,7 @@ Characters = {
 
             ['idle'] = {{0, 9}},
             ['dancing'] = {{108, 112}},
+            ['start'] = {{1489, 1495}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -1724,6 +1736,7 @@ Characters = {
 
             ['idle'] = {{0, 8}},
             ['dancing'] = {{111, 113}, {541, 550}, {552, 559}},
+            ['start'] = {{423, 443}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -1835,6 +1848,7 @@ Characters = {
 
             ['idle'] = {{7, 12}},
             ['dancing'] = {{672, 684}, {136, 139}},
+            ['start'] = {{578, 577, 576, 575, 574, 573}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -1963,6 +1977,7 @@ Characters = {
 
             ['idle'] = {{0, 7}},
             ['dancing'] = {{552, 558}},
+            ['start'] = {{551, 558}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -2076,6 +2091,7 @@ Characters = {
 
             ['idle'] = {{4, 7}},
             ['dancing'] = {{344, 355}},
+            ['start'] = {{336, 360, 362, 364, 366, 368, 370, 372, 374, 376, 378, 380, 384}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -2099,7 +2115,6 @@ Characters = {
             -- Hurt
             ['fall'] = {{425, 429}},
             ['hurt'] = {{457, 459}},
-
         --//________________________ End of Game ___________________________\\--
 
 
@@ -2203,7 +2218,7 @@ Characters = {
 
             ['idle'] = {{0, 9}},
             ['dancing'] = {{359, 362}},
-
+            ['start'] = {{413,419}},
         --//__________________________ Movement ____________________________\\--
 
             ['walking'] = {{11, 16}},
@@ -2245,7 +2260,10 @@ Characters = {
 
         },
         ['passive'] = function(dt, self)
-            self.enemy.range = Characters[self.enemy.name]['punch_range'] / 1.5
+            if not self.passiveUpdated then
+                self.enemy.range = Characters[self.enemy.name]['punch_range'] / 1.5
+                self.passiveUpdated = true
+            end
         end,
         ['shoot'] = function(self)
             dash(dt, self, {
@@ -2312,6 +2330,7 @@ Characters = {
 
             ['idle'] = {{0, 6}},
             ['dancing'] = {{575, 584}, {636, 645}, {646, 660}, {665, 683}, {7, 30}},
+            ['start'] = {{665, 684}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -2451,6 +2470,7 @@ Characters = {
 
             ['idle'] = {{0, 5}},
             ['dancing'] = {{102, 125}, {143, 147}},
+            ['start'] = {{566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -2636,6 +2656,7 @@ Characters = {
 
             ['idle'] = {{0, 6}},
             ['dancing'] = {{94, 100}},
+            ['start'] = {{1542, 1543, 1544, 1545, 1546, 1547, 1553, 1554, 1555, 1556, 1557, 1558, 1559, 1560, 1561, 1562, 1563, 1564, 1565, 1566, 1567}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -2733,8 +2754,9 @@ Characters = {
         ['animations'] = {
         --//_______________________ Idle and Dance _________________________\\--
 
-        ['idle'] = {{0, 4}},
+            ['idle'] = {{0, 4}},
             ['dancing'] = {{419, 426}, {424, 443}, {457, 466}},
+            ['start'] = {{419, 426}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -2841,75 +2863,158 @@ Characters = {
         ['animations'] = {
         --//_______________________ Idle and Dance _________________________\\--
 
-    --        ['idle'] = {{}},
-    --        ['dancing'] = {{}},
+            ['idle'] = {{0, 11}},
+            ['dancing'] = {{191, 196}, {467, 477}, {489, 494}},
+            ['start'] = {{495, 517}},
 
-    --    --//__________________________ Movement ____________________________\\--
+        --//__________________________ Movement ____________________________\\--
 
-    --        ['walking'] = {{}},
-    --        ['running'] = {{}},
-    --        ['jumping'] = {{}},
-    --        ['duck'] = {{}},
+            ['walking'] = {{12, 17}},
+            ['running'] = {{49, 56}},
+            ['jumping'] = {{25, 32}},
+            ['duck'] = {{33, 37}},
 
-    --    --//__________________________ Damage ______________________________\\--
+        --//__________________________ Damage ______________________________\\--
 
-    --        -- Punch
-    --        ['punch'] = {{}},
-    --        ['duck_punch'] = {{}},
-    --        ['air_punch'] = {{}},
+            -- Punch
+            ['punch'] = {{102, 111}},
+            ['duck_punch'] = {{117, 126}},
+            ['air_punch'] = {{112, 116}},
 
     --        -- Kick
-    --        ['kick'] = {{}},
-    --        ['duck_kick'] = {{}},
-    --        ['air_kick'] = {{}},
+            ['kick'] = {{127, 134}, {161, 173}},
+            ['duck_kick'] = {{70, 73}, {141, 143}, {180, 190}},
+            ['air_kick'] = {{135, 139}, {176, 179}},
 
     --        -- Hurt
-    --        ['fall'] = {{}},
-    --        ['hurt'] = {{}},
+            ['fall'] = {{545, 548}},
+            ['hurt'] = {{518, 521}},
 
     --    --//________________________ End of Game ___________________________\\--
 
 
-    --        ['dying'] = {{}},
-    --        ['waiting'] = {{}},
-    --        ['winning'] = {{}},
+            ['dying'] = {{531, 536}},
+            ['waiting'] = {{539, 541}},
+            ['winning'] = {{451, 466}, {479, 488}},
 
-    --    --//_________________________ Specials _____________________________\\--
+        --//_________________________ Specials _____________________________\\--
 
-    --        ['special_1'] = {{}},
-    --        ['special_2'] = {{}},
-    --    --//________________________ Projectiles ____________________________\\--
+            ['special_1'] = {{255, 303}},
+            ['special_2'] = {{326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 340, 341, 342, 343, 344, 345, 346, 347, 348, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 322, 323, 324, 325}},
+        --//________________________ Projectiles ____________________________\\--
 
-    --        ['shoot'] = {{}},
-    --        ['projectile_1_fly'] = {{}},
-    --        ['projectile_1_exploded'] = {{}},
-    --        ['projectile_1_destroyed'] = {{999, 1000}},
-
-
-    --    },
-    --    ['passive'] = function(dt, self)
-
-    --    end,
-    --    ['shoot'] = function(self)
-    --        Projectile{
-    --          player = self,
-    --          type = 'fly',
-    --          number = 1,
-    --          velocity = 400
-    --        }
-    --    end,
-
-    --    ['special_1'] = function(dt, self)
-    --
-    --    end,
-    --    ['special_2']  = function(dt, self)
-
-    --    end,
+            ['shoot'] = {{240, 252}},
+            ['projectile_1_fly'] = {{394, 399}},
+            ['projectile_1_exploded'] = {{410, 423}},
+            ['projectile_1_destroyed'] = {{999, 1000}},
 
 
-    --    ['cooldown'] = 5
+        },
+        ['passive'] = function(dt, self)
+            if not self.passiveUpdated then
+                if self.enemy.sex == 'male' then
+                    self.enemy.damage = self.enemy.damage - self.enemy.damage / 5
+                else
+                    self.armor = self.armor + 15
+                end
+                self.passiveUpdated = true
+            end
+        end,
+        ['shoot'] = function(self)
+            Projectile{
+              player = self,
+              type = 'fly',
+              number = 1,
+              velocity = 400
+            }
+        end,
 
-    --},
+        ['special_1'] = function(dt, self)
+            if self.animation.ending then
+                self.inAir = false
+                self.state = 'idle'
+            elseif self.animation.currentFrame == 8 then
+                self.inAir = false
+            end
+            dash(dt, self, {
+                finalAnimation = 3,
+                incline = 45,
+                velocity = 300
+            })
+            dash(dt, self, {
+                startAnimation = 4,
+                finalAnimation = 7,
+                incline = 315,
+                velocity = 200
+            })
+            dash(dt, self, {
+                startAnimation = 13,
+                finalAnimation = 15,
+                incline = 270,
+                velocity = 100
+            })
+            dash(dt, self, {
+                startAnimation = 37,
+                finalAnimation = 39,
+                incline = 90
+            })
+            dash(dt, self, {
+                startAnimation = 40,
+                finalAnimation = 43,
+                incline = 270
+            })
+        end,
+        ['special_2']  = function(dt, self)
+            if (self.animation.currentFrame > 51 and self.y > self.map.floor) or self.animation.ending then
+                self.inAir = false
+                self.state = 'idle'
+                self.animation.currentFrame = 1
+
+            elseif self.animation.currentFrame == 29 and self.animation.changing then
+                self.inAir = false
+            end
+            dash(dt, self, {
+                finalAnimation = 12,
+                incline = 90,
+                velocity = 100
+            })
+            dash(dt, self, {
+                startAnimation = 13,
+                finalAnimation = 14,
+                incline = 315
+            })
+            dash(dt, self, {
+                startAnimation = 22,
+                finalAnimation = 23,
+                incline = 345
+            })
+            dash(dt, self, {
+                startAnimation = 26,
+                finalAnimation = 28,
+                incline = 270
+            })
+            dash(dt, self, {
+                startAnimation = 41,
+                finalAnimation = 43,
+                incline = 135
+            })
+            dash(dt, self, {
+                startAnimation = 44,
+                finalAnimation = 49
+            })
+            dash(dt, self, {
+                startAnimation = 50,
+                velocity = 50,
+                incline = 270
+            })
+
+
+        end,
+
+
+        ['cooldown'] = 5
+
+    },
 
     ['Malin'] = {
 
@@ -2927,7 +3032,7 @@ Characters = {
 
             ['idle'] = {{3, 7}},
             ['dancing'] = {{57, 62}, {134, 138}, {531, 544}, {545, 554}},
-
+            ['start'] = {{1352, 1357}},
         --//__________________________ Movement ____________________________\\--
 
             ['walking'] = {{17, 24}},
@@ -3053,6 +3158,7 @@ Characters = {
 
             ['idle'] = {{0, 9}},
             ['dancing'] = {{14, 17}},
+            ['start'] = {{309, 316}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -3082,7 +3188,7 @@ Characters = {
 
             ['dying'] = {{461, 465}},
             ['waiting'] = {{466, 469}},
-            ['winning'] = {{309, 316}},
+            ['winning'] = {{1444, 1451}},
 
         --//_________________________ Specials _____________________________\\--
 
@@ -3168,6 +3274,7 @@ Characters = {
             ['idle'] = {{0, 14}},
             ['dancing'] = {{147, 152}, {154, 159}, {740, 746}, {1747, 1765}},
             ['special_dance'] = {{1713, 1721}},
+            ['start'] = {{1747, 1768}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -3213,7 +3320,7 @@ Characters = {
 
         },
         ['passive'] = function(dt, self)
-            if self.enemy.name == 'Athena' then
+            if self.enemy.name == 'Athena-Asamiya' then
                 self.animations['waiting'].animationsTable = generateAnimation(self, {1713, 1720})
                 self.animations['waiting'].frames = self.animations['waiting'].animationsTable.frames
                 self.animations['waiting'].quads = self.animations['waiting'].animationsTable.quads
@@ -3303,6 +3410,7 @@ Characters = {
 
             ['idle'] = {{0, 20}},
             ['dancing'] = {{285, 290}},
+            ['start'] = {{588,602}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -3398,6 +3506,7 @@ Characters = {
 
             ['idle'] = {{0, 3}},
             ['dancing'] = {{355, 357}},
+            ['start'] = {{2361, 2364}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -3543,6 +3652,7 @@ Characters = {
 
             ['idle'] = {{0, 3}},
             ['dancing'] = {{593, 602}},
+            ['start'] = {{556, 587}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -3668,6 +3778,7 @@ Characters = {
 
             ['idle'] = {{0, 32}},
             ['dancing'] = {{125, 133}, {654, 670}, {671, 682}, {734, 753}},
+            ['start'] = {{734, 751}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -3785,6 +3896,7 @@ Characters = {
 
             ['idle'] = {{1, 3}},
             ['dancing'] = {{322, 332}},
+            ['start'] = {{413, 415}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -3880,6 +3992,7 @@ Characters = {
 
             ['idle'] = {{0, 17}},
             ['dancing'] = {{441, 455}, {456, 466}, {467, 479}, {482, 500}},
+            ['start'] = {{419, 440}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -3973,6 +4086,7 @@ Characters = {
 
             ['idle'] = {{0, 41}},
             ['dancing'] = {{534, 545}, {546, 554}, {614, 649}},
+            ['start'] = {{597, 607}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -4090,6 +4204,7 @@ Characters = {
 
             ['idle'] = {{0, 17}},
             ['dancing'] = {{475, 483}, {492, 498}},
+            ['start'] = {{492, 498}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -4213,6 +4328,7 @@ Characters = {
 
             ['idle'] = {{0, 7}, {543, 546}},
             ['dancing'] = {{343, 371}, {714, 723}},
+            ['start'] = {{785, 787}, {785, 787}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -4335,6 +4451,7 @@ Characters = {
 
             ['idle'] = {{0, 5}},
             ['dancing'] = {{139, 144}, {493, 501}, {506, 525}, {526, 539}},
+            ['start'] = {{506, 526}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -4449,6 +4566,7 @@ Characters = {
 
             ['idle'] = {{0, 21}},
             ['dancing'] = {{519, 536}, {546, 552}, {556, 569}, {570, 585}, {603, 611}},
+            ['start'] = {{556, 574}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -4552,6 +4670,7 @@ Characters = {
 
             ['idle'] = {{0, 24}},
             ['dancing'] = {{413, 421}, {706, 724}, {725, 735}, {741, 768}},
+            ['start'] = {{741, 776}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -4679,6 +4798,7 @@ Characters = {
 
             ['idle'] = {{1001, 1008}, {1815, 1817}},
             ['dancing'] = {{961, 968}, {1815, 1817}},
+            ['start'] = {{1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1928, 1929, 939, 940, 941, 942, 943, 944, 945}, {1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1928, 1929, 939, 940, 941, 942, 943, 944, 945}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -4811,7 +4931,8 @@ Characters = {
         --//_______________________ Idle and Dance _________________________\\--
 
             ['idle'] = {{0, 5}},
-            ['dancing'] = {{400, 405}, {406, 411}, {420, 424}},
+            ['dancing'] = {{400, 405}, {406, 411}, {420, 424}, {508, 522}},
+            ['start'] = {{382, 399}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -4839,7 +4960,7 @@ Characters = {
         --//________________________ End of Game ___________________________\\--
 
 
-            ['dying'] = {{445, 450}},
+            ['dying'] = {{445, 450}, {502, 507}},
             ['waiting'] = {{490, 492}},
             ['winning'] = {{390, 399}, {425, 432}},
 
@@ -4986,6 +5107,7 @@ Characters = {
     --    ['cooldown'] = 5
 
     --},
+    
 
 
 
@@ -5008,8 +5130,8 @@ function dash(dt, self, params)
 
     if self.animation.currentFrame >= startAnimation and self.animation.currentFrame< finalAnimation then
         self.inAir = true
-        self.x = math.floor(self.x - 2 * speed * self.direction * dt * math.cos(math.rad(incline)))
-        self.y = math.floor(self.y - 2 * speed * dt * math.sin(math.rad(incline)))
+        self.x = math.floor(self.x - speed * self.direction * dt * math.cos(math.rad(incline)))
+        self.y = math.floor(self.y - speed * dt * math.sin(math.rad(incline)))
     end
     if self.animation.ending then
         self.state = 'jumping'
