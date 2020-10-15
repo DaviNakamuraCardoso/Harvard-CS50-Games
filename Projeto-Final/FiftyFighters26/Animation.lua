@@ -14,7 +14,7 @@ function Animation:init(player, state)
     self.animationsTable = self.animations[math.random(#self.table)]
     self.frames = self.animationsTable.frames
     self.quads = self.animationsTable.quads
-    self.interval = 0.05
+    self.interval = 0.075
 
     self.timer = 0
     self.currentFrame = 1

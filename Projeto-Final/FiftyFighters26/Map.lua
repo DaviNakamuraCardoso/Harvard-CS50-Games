@@ -57,7 +57,9 @@ function Map:init(name)
         names[index] = k
         index = index + 1
     end
+    names[index] = '???'
     local counter = 1
+    Characters['???'] = {}
     for k, v in pairs(Characters) do
         self.charactersButtons[k] = Button{
             label = k,
@@ -87,6 +89,10 @@ function Map:init(name)
         counter = counter + 1
     end
 
+
+    -- Swaping the ? with the 21th (center) button
+    self.charactersButtons['Whip'].relativeX = 21 % 9 * 40 + 55
+    self.charactersButtons['???'].relativeX = 22 % 9 * 40 + 55
     self.next = Button{
         label = 'Next',
         action = function()
@@ -283,6 +289,9 @@ end
 function Map:updateLoad(dt)
     if self.loading >= 20 then
         self.state = 'play'
+        self.player1.state = 'start'
+        self.player2.state = 'start'
+
     else
         self.loading = self.loading + dt
     end
