@@ -8,7 +8,6 @@ import sys
 def main():
     for name in sys.argv[1:]:
         resize(name, 'body.png')
-    return
 
 
 def crop(image, xo, yo, x, y):
@@ -19,8 +18,9 @@ def crop(image, xo, yo, x, y):
         print(f'Cropping {image}...')
         image_reader = Image.open(image)
         portrait = image_reader.crop((xo, yo, x, y))
-        portrait.save('portrait.png')
+        portrait.save(image)
     return
+
 
 
 def delete_crops():
