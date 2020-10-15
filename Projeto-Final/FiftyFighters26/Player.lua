@@ -8,7 +8,8 @@ require 'Lifebar'
 
 function Player:init(map, name, side)
     self.map = map
-    self.name = name
+    local randoms = {'Athena-Asamiya', 'Bonne-Jenet', 'Momoko', 'Magaki', 'Kaede', 'K'}
+    self.name = name == '???' and randoms[math.random(#randoms)] or name
 
     -- Stats
     self.health = 100
@@ -153,6 +154,11 @@ function Player:init(map, name, side)
             end
 
 
+        end,
+        ['start'] = function(dt)
+            if self.animation.ending then
+                self.state = 'idle'
+            end
         end,
         ['dancing'] = function(dt)
             if self.animation.ending then
