@@ -17,6 +17,7 @@ function Map:init(name)
 
     self.name = name
 
+
     self:updateReferences()
 
     --//____________________________ Players _______________________________\\--
@@ -113,7 +114,28 @@ function Map:init(name)
 --    }
     --\\____________________________________________________________________//--
 
-    --//__________________________ Messages ________________________________\\--
+    --//_________________________ Music and Sounds _________________________\\--
+
+    -- Music
+    self.music = love.audio.newSource('music/' .. tostring(math.random(3)) .. '.wav', 'static')
+    self.music:play()
+    self.music:setLooping(true)
+
+    -- Sounds
+    self.sounds = {
+        ['countdown'] = love.audio.newSource('sounds/map/321fight.wav', 'static')
+    }
+    for i=1, 5 do
+        self.sounds['round' .. tostring(i)] = love.audio.newSource('sounds/map/round' .. tostring(i) .. '.wav', 'static')
+    end
+
+    for _, sound in pairs(self.sounds) do
+        sound.setVolume(sound, 10)
+    end
+
+    --\\____________________________________________________________________//--
+
+    --//_____________________________ Messages _____________________________\\--
     self.title = Message{
         map = self,
         text = 'Fifty Fighters',
@@ -181,11 +203,24 @@ function Map:init(name)
                 self.loaded = true
                 self.h2.text = 'Loading...'
                 self.h2:update()
+                love.audio.setVolume(0.01)
             end
 
             self:updateLoad(dt)
         end,
+        ['prepare'] = function(dt)
+            self.sounds['round' .. tostring(self.round)]:play()
+            self:wait(2, function() self.state = 'countdown' end, dt)
+            self.behaviors['play'](dt)
+        end,
+        ['countdown'] = function(dt)
+            self.sounds['countdown']:play()
+            self:wait(4, function() self.state = 'play' end, dt)
+            self.behaviors['play'](dt)
+
+        end,
         ['play'] = function(dt)
+            love.audio.setVolume(0.15)
             self:updateCam()
             self.player1:update(dt)
             self.player2:update(dt)
@@ -193,6 +228,7 @@ function Map:init(name)
         ['pause'] = function(dt)
             self.pauseButton:update()
         end
+
 
 
     }
@@ -239,6 +275,12 @@ function Map:init(name)
             self.player1:render()
             self.player2:render()
             self:cover()
+        end,
+        ['countdown'] = function()
+            self.renders['play']()
+        end,
+        ['prepare'] = function()
+            self.renders['play']()
         end
     }
 
@@ -288,7 +330,7 @@ end
 
 function Map:updateLoad(dt)
     if self.loading >= 20 then
-        self.state = 'play'
+        self.state = 'prepare'
         self.player1.state = 'start'
         self.player2.state = 'start'
 
@@ -332,6 +374,10 @@ end
 
 function Map:updateReferences()
 
+    --//___________________________ Rounds _________________________________\\--
+    self.rounds = {}
+    self.round = 1
+
     --//______________________ Camera and Dimensions _______________________\\--
 
     -- Dimensions
@@ -360,19 +406,24 @@ function Map:updateReferences()
     --\\____________________________________________________________________//--
 
     --//________________________ Sound and Music ___________________________\\--
-    love.audio.setVolume(0)
+    love.audio.setVolume(0.15)
 
     -- Effects
     self.sound = love.audio.newSource('music/' .. self.name .. '.wav', 'static')
     self.sound:play()
     self.sound:setLooping(true)
 
-    -- Music
-    self.music = love.audio.newSource('music/' .. tostring(math.random(3)) .. '.wav', 'static')
-    self.music:play()
-    self.music:setLooping(true)
 
-    --\\____________________________________________________________________//--
+    self.waitTimer = 0
 end
 
+
+function Map:wait(time, action, dt)
+    if self.waitTimer >= time then
+        action()
+    else
+        self.waitTimer = self.waitTimer + dt
+    end
+
+end
 --============================================================================--
