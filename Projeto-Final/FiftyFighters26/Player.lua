@@ -295,8 +295,11 @@ function Player:init(map, name, side)
                 if self.inAir then
                     self.state = 'fall'
 
-                else
+                elseif not self.enemy.finished then
                     self.state = 'waiting'
+                else
+                    self.enemy.state = 'winning'
+                    self.state = 'death'
                 end
             else
                 self.direction = - self.enemy.direction
@@ -305,8 +308,7 @@ function Player:init(map, name, side)
             end
         end,
         ['waiting'] = function(dt)
-            self.y = self.map.floor - self.height
-
+            self:position()
         end,
         ['fall'] = function(dt)
             if self.y < self.map.floor - self.height then
@@ -325,7 +327,7 @@ function Player:init(map, name, side)
             if self.animation.ending then
                 if self.health <= 0 then
                     self.state = 'dying'
-                    self.enemy.state = 'winning'
+                    self.enemy.state = 'idle'
                     self.map.rounds[self.map.round] = self.enemy
                     self.map.round = self.map.round + 1
 
@@ -352,17 +354,25 @@ function Player:init(map, name, side)
         end,
         ['special_2'] = function(dt)
             self.special_2(dt, self)
+        end,
+        ['death'] = function(dt)
+            self.y = self.map.floor - self.height + 10 
         end
     }
     self.passiveUpdated = false
 
     --//_________________________ Animations ___________________________\\--
 
+    Characters[self.name]['animations']['death'] = {{}}
+    local dying = Characters[self.name]['animations']['dying'][1]
+    for i=1, 3 do
+        Characters[self.name]['animations']['death'][1][i] = dying[#dying]
+    end
+
     self.animations = {}
     for k, v in pairs(self.behaviors) do
         self.animations[k] = Animation(self, k)
     end
-    self.animations['dying'].interval = 0.2
 
 
 
@@ -396,6 +406,9 @@ function Player:init(map, name, side)
         self.sounds[k] = love.audio.newSource(self.soundDir .. k .. '.wav', 'static')
     end
     self.shuffle = true
+
+
+    self:reset()
 end
 
 
@@ -416,7 +429,6 @@ function Player:update(dt)
     self.timer = self.timer + dt
     self:updateAllProjectiles(dt)
 
-
     -- Lifebar
     self.lifebar:update(dt)
 
@@ -433,6 +445,22 @@ function Player:render()
 
 end
 
+
+function Player:reset()
+
+    -- Life and specials
+    self.health = 100
+    self.specialPoints = 0
+
+    -- Booleans
+    self.finished = false
+    self.passiveUpdated = false
+
+    -- Projectiles
+    self.projectiles = {}
+    self.numberOfProjectiles = 0
+
+end
 
 function Player:shuffleAnimations()
     if self.shuffle then
@@ -490,7 +518,6 @@ function Player:detectDamage(position, range)
 
     if self.animation.changing then
 
-        -- checks for enemies in a circle arround the character
         for i=positions[position]['start'], positions[position]['end'] do
             local x = self.x + self.width / 2 + (math.cos(math.rad(i)) * range * positions[position]['direction'] * self.direction)
             local y = self.y + self.height / 2 + (math.sin(math.rad(i)) * range * positions[position]['direction'] * self.direction)
@@ -505,36 +532,64 @@ function Player:hit(x, y, range, damage, isProjectile)
     local dx = not projectile and self.x - self.enemy.x or self.projectiles[projectile].x - self.enemy.x
     local dy = not projectile and self.y - self.enemy.y or self.projectiles[projectile].y - self.enemy.y
     local damage = damage or self.damage
-    if (self:enemyAt(x, y) or range^2 > dx^2 + dy^2) and self.enemy.state ~= 'hurt' and self.enemy.health > 0 then
-        self.enemy.state = 'hurt'
-        self.enemy.health = self.enemy.health - (damage - damage * self.enemy.armor / 100)
-        self.enemy.x = math.min(self.map.mapWidth - self.width - 10, math.max(0, math.floor(self.enemy.x - self.direction * range / 4)))
-        self.specialPoints = math.min(self.specialPoints + 5, 100)
-        self.enemy.specialPoints = math.min(self.enemy.specialPoints + 10, 100)
-        self.enemy.lifebar:updateDimensionsAndColors()
-        self.lifebar:updateDimensionsAndColors()
+    if (self:enemyAt(x, y) or range^2 > dx^2 + dy^2) and self.enemy.state ~= 'hurt' then
 
+        -- If that's a finish hit, then the player state is set to 'winning'
+        if self.enemy.state == 'waiting' then
 
-        return true
+            self.enemy.state = 'dying'
+            self.finished = true
 
+        elseif self.health <= 0 then
+            self.state = 'waiting'
+
+        else
+
+            -- Calculates the health based on armor and damage status
+            self.enemy.health = self.enemy.health - (damage - damage * self.enemy.armor / 100)
+
+            -- Pushes the enemy and trigger the hurt animation
+            self.enemy.x = math.min(self.map.mapWidth - self.width - 10, math.max(0,    math.floor(self.enemy.x - self.direction * range / 4)))
+            self.enemy.state = 'hurt'
+
+            -- Sets the special points for both you and the enemy
+            self.specialPoints = math.min(self.specialPoints + 5, 100)
+            self.enemy.specialPoints = math.min(self.enemy.specialPoints + 10, 100)
+
+            -- Updates the lifebars dimensions and colors
+            self.enemy.lifebar:updateDimensionsAndColors()
+            self.lifebar:updateDimensionsAndColors()
+
+            return true
+
+        end
     end
+
 end
 
 
 function Player:position(dt)
+
+    -- Redefines the width and height
     self.width = self.currentFrame:getWidth()
     self.height = self.currentFrame:getHeight()
+
+    -- Limits the player movement by the map height
     self.x = math.floor(math.max(self.map.camX, math.min(self.map.camX + VIRTUAL_WIDTH - self.width, self.x)))
+
+    -- Changes the y position of the player based on it's height
     if not self.inAir then
         self.y = self.map.floor - self.height
     end
-    -- Offsets
+
+    -- Updates the x and y offsets based on the new width and height
     self.xOffset = self.currentFrame:getWidth() / 2
     self.yOffset = self.currentFrame:getHeight() / 2
 end
 
 
 function Player:land()
+    -- Landing the player when he is jumping
     if self.y < self.map.floor - self.height then
         self.state = 'jumping'
     else
@@ -547,7 +602,7 @@ end
 
 
 function Player:updateAllProjectiles(dt)
-    -- Projectiles
+    -- Update all the players' projectiles (even those who are exploded)
     if self.numberOfProjectiles > 0 then
         for i=1, self.numberOfProjectiles do
             self.projectiles[i]:update(dt)
@@ -557,7 +612,7 @@ end
 
 
 function Player:renderAllProjectiles(dt)
-    -- Projectiles
+    -- Renders the projectiles
     if self.numberOfProjectiles > 0 then
         for i=1, self.numberOfProjectiles do
             self.projectiles[i]:render()
@@ -569,6 +624,8 @@ end
 
 
 function Player:playSounds()
+
+    -- Plays the sound of the player state only once
     if self.animation.currentFrame == 1 then
         if not self.soundPlayed[self.state] then
             if self.sounds[self.state] then
@@ -577,6 +634,9 @@ function Player:playSounds()
             self.soundPlayed[self.state] = true
         end
     end
+
+
+    -- Resets the state of all the other sounds to "not played"
     for k, v in pairs(self.behaviors) do
         if k ~= self.state then
             self.soundPlayed[k] = false
