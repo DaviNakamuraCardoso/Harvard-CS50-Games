@@ -326,6 +326,9 @@ function Player:init(map, name, side)
                 if self.health <= 0 then
                     self.state = 'dying'
                     self.enemy.state = 'winning'
+                    self.map.rounds[self.map.round] = self.enemy
+                    self.map.round = self.map.round + 1
+
                 else
                     self:land()
                 end
