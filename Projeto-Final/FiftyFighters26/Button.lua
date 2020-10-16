@@ -52,6 +52,16 @@ function Button:init(params)
         size = self.size
     }
 
+    --//____________________________ Sounds ________________________________\\--
+
+    self.sounds = {
+        ['hover'] = love.audio.newSource('sounds/buttons/hover.wav', 'static'),
+        ['select'] = love.audio.newSource('sounds/buttons/select.wav', 'static'),
+        ['inactive'] = love.audio.newSource('sounds/buttons/inactive.wav', 'static')
+    }
+
+
+
 
 end
 
@@ -64,10 +74,17 @@ function Button:update(mouseX, mouseY)
             self.color = self.inactiveColor
         else
             self.color = self.hover
+            self.sounds['hover']:play()
         end
 
-        if mouse['clicked'] and self.active then
-            self.action()
+        if mouse['clicked'] then
+            if self.active then
+                self.action()
+                self.sounds['select']:play()
+
+            else
+                self.sounds['inactive']:play()
+            end 
         end
     else
         if self.active then
