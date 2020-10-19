@@ -76,13 +76,13 @@ function Lifebar:update(dt)
     self.x = self.player.map.camX + self.relativeX
     self.y = self.player.map.camY + self.relativeY
 
-    self.messageHP:update()
+    self.messageHP:update(dt)
 
     -- Special bar
 
     -- Character portrait
     self.imageX = self.x + self.width / 2 + self.side * self.width / 2 - self.player.sideParameter * self.imageWidth + (self.imageWidth * self.player.side)
-    self.messageName:update()
+    self.messageName:update(dt)
 
 
 

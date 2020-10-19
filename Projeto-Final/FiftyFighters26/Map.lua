@@ -155,6 +155,15 @@ function Map:init(name)
         relativeY = 30
     }
 
+    self.fight = Message{
+        map = self,
+        text = 'Fight!',
+        size = 40,
+        font = 'fighter.ttf',
+        relativeY = 30,
+        show = 'twinkle'
+    }
+
     --\\____________________________________________________________________//--
 
     self.loadingBarWidth = 0
@@ -170,7 +179,7 @@ function Map:init(name)
         ['menu'] = function(dt)
             local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
             local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
-            self.title:update()
+            self.title:update(dt)
             self:updateCam()
             self.buttonPlay:update(mouseX, mouseY)
         end,
@@ -178,14 +187,14 @@ function Map:init(name)
             local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
             local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self:updateCharacterButtons(mouseX, mouseY)
-            self.h2:update()
+            self.h2:update(dt)
             self.next:update(mouseX, mouseY)
         end,
         ['player2_select'] = function(dt)
             local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
             local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self:updateCharacterButtons(mouseX, mouseY)
-            self.h2:update()
+            self.h2:update(dt)
             self.h2.text = 'Player 2 Select'
             self.next:update(mouseX, mouseY)
         end,
@@ -205,28 +214,30 @@ function Map:init(name)
 
                 self.loaded = true
                 self.h2.text = 'Loading...'
-                self.h2:update()
+                self.h2:update(dt)
                 love.audio.setVolume(0.01)
             end
 
             self:updateLoad(dt)
         end,
         ['prepare'] = function(dt)
+            self.h2.text = '3'
+            love.audio.setVolume(0.15)
             self.sounds['round' .. tostring(self.round)]:play()
             self:wait(2, function() self.state = 'countdown' end, dt)
-            self.behaviors['play'](dt)
+            self:play(dt)
         end,
         ['countdown'] = function(dt)
             self.sounds['countdown']:play()
-            self:wait(4, function() self.state = 'play' end, dt)
-            self.behaviors['play'](dt)
+            self.h2:update(dt)
+            self:wait(5, function() self.state = 'play' end, dt)
+            self:play(dt)
+
 
         end,
         ['play'] = function(dt)
-            love.audio.setVolume(0.15)
-            self:updateCam()
-            self.player1:update(dt)
-            self.player2:update(dt)
+            self:play(dt)
+            self.fight:update(dt)
         end,
         ['pause'] = function(dt)
             self.pauseButton:update()
@@ -242,13 +253,8 @@ function Map:init(name)
             self.title:render()
         end,
         ['play'] = function()
-            love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
-            self.player1.lifebar:render()
-            self.player2.lifebar:render()
-            self.player1:render()
-            self.player2:render()
-            self.player1:renderAllProjectiles()
-            self.player2:renderAllProjectiles()
+            self:playRender()
+            self.fight:render()
         end,
         ['player1_select'] = function()
             love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
@@ -280,10 +286,11 @@ function Map:init(name)
             self:cover()
         end,
         ['countdown'] = function()
-            self.renders['play']()
+            self:playRender()
+            self.h2:render()
         end,
         ['prepare'] = function()
-            self.renders['play']()
+            self:playRender()
         end
     }
 
@@ -336,6 +343,8 @@ function Map:updateLoad(dt)
         self.state = 'prepare'
         self.player1.state = 'start'
         self.player2.state = 'start'
+        self.h2.show = 'count'
+
 
     else
         self.loading = self.loading + dt
@@ -427,6 +436,33 @@ function Map:wait(time, action, dt)
     else
         self.waitTimer = self.waitTimer + dt
     end
+
+end
+
+
+function Map:play(dt)
+    self:updateCam()
+    self.player1:update(dt)
+    self.player2:update(dt)
+end
+
+
+function Map:playRender()
+
+    -- Draws then background current frame
+    love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
+
+    -- Renders the players' lifebars
+    self.player1.lifebar:render()
+    self.player2.lifebar:render()
+
+    -- Renders the players
+    self.player1:render()
+    self.player2:render()
+
+    -- Renders the projectiles
+    self.player1:renderAllProjectiles()
+    self.player2:renderAllProjectiles()
 
 end
 --============================================================================--

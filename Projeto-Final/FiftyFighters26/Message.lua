@@ -21,13 +21,44 @@ function Message:init(params)
     self.color = params.color or {1, 1, 1, 1}
     self.borderColor = params.borderColor or {0, 0, 0, 0}
 
-    --
+    self.interval = params.interval or 3
+    self.timer = self.interval
+    self.shows = {
+        ['none'] = function(dt)
+
+        end,
+        ['count'] = function(dt)
+            if self.timer <= 0 then
+                self.timer = self.interval
+                self.size = 2
+
+            else
+                self.text = tostring(math.ceil(self.timer))
+                self.timer = self.timer - dt
+                self.size = math.max(2, 200 * (self.timer / math.ceil(self.timer) - math.floor(self.timer) / math.ceil(self.timer)))
+            end
+
+        end,
+        ['twinkle'] = function(dt)
+            if math.floor(self.timer) % 2 == 0 then
+                self.color[4] = 0
+            else
+                self.color[4] = 1
+            end
+            self.timer = self.timer + dt
+        end
+
+
+
+    }
+    self.show = params.show or 'none'
 end
 
 
-function Message:update()
+function Message:update(dt)
     self.x = self.relativeX + self.map.camX
     self.y = self.relativeY + self.map.camY
+    self.shows[self.show](dt)
 
 end
 
@@ -42,6 +73,8 @@ function Message:render()
     love.graphics.setColor(1, 1, 1, 1)
 
 end
+
+
 
 
 
