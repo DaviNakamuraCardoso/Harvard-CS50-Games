@@ -129,6 +129,9 @@ function Map:init(name)
         self.sounds['round' .. tostring(i)] = love.audio.newSource('sounds/map/round' .. tostring(i) .. '.wav', 'static')
     end
 
+    self.sounds['finish_male'] = love.audio.newSource('sounds/map/finishmale.wav', 'static')
+    self.sounds['finish_female'] = love.audio.newSource('sounds/map/finishfemale.wav', 'static')
+
     for _, sound in pairs(self.sounds) do
         sound.setVolume(sound, 10)
     end

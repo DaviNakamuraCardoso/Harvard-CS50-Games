@@ -297,6 +297,7 @@ function Player:init(map, name, side)
 
                 elseif not self.enemy.finished then
                     self.state = 'waiting'
+                    self.map.sounds['finish_' .. self.sex]:play()
                 else
                     self.enemy.state = 'winning'
                     self.state = 'death'
@@ -356,7 +357,7 @@ function Player:init(map, name, side)
             self.special_2(dt, self)
         end,
         ['death'] = function(dt)
-            self.y = self.map.floor - self.height + 10 
+            self.y = self.map.floor - self.height + 10
         end
     }
     self.passiveUpdated = false
