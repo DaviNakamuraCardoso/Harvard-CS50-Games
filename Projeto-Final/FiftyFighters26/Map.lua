@@ -16,7 +16,7 @@ function Map:init(name)
     end
 
     self.name = name
-
+    self.winners = {}
 
     self:updateReferences()
 
@@ -131,6 +131,9 @@ function Map:init(name)
 
     self.sounds['finish_male'] = love.audio.newSource('sounds/map/finishmale.wav', 'static')
     self.sounds['finish_female'] = love.audio.newSource('sounds/map/finishfemale.wav', 'static')
+    self.sounds['win'] = love.audio.newSource('sounds/map/win.wav', 'static')
+    self.sounds['player1'] = love.audio.newSource('sounds/map/player1.wav', 'static')
+    self.sounds['player2'] = love.audio.newSource('sounds/map/player2.wav', 'static')
 
     for _, sound in pairs(self.sounds) do
         sound.setVolume(sound, 10)
@@ -222,10 +225,12 @@ function Map:init(name)
         end,
         ['prepare'] = function(dt)
             self.h2.text = '3'
-            love.audio.setVolume(0.15)
+            love.audio.setVolume(0.05)
             self.sounds['round' .. tostring(self.round)]:play()
             self:wait(2, function() self.state = 'countdown' end, dt)
             self:play(dt)
+            self.player1:reset()
+            self.player2:reset()
         end,
         ['countdown'] = function(dt)
             self.sounds['countdown']:play()
@@ -240,7 +245,14 @@ function Map:init(name)
         end,
         ['pause'] = function(dt)
             self.pauseButton:update()
+        end,
+        ['post-match'] = function(dt)
+            self:play(dt)
+            self.sounds['win']:play()
+            self:wait(10, function() self.sounds['player'.. tostring(self.winners[self.round])]:play() end, dt)
+            self:wait(16, function() self.state = 'prepare' end, dt)
         end
+
 
 
 
@@ -288,6 +300,9 @@ function Map:init(name)
             self.h2:render()
         end,
         ['prepare'] = function()
+            self:playRender()
+        end,
+        ['post-match'] = function()
             self:playRender()
         end
     }
@@ -402,6 +417,7 @@ function Map:updateReferences()
     self.floor = self.mapHeight - 10
     self.gravity = 800
 
+
     --\\____________________________________________________________________//--
 
     --//____________________________ Animation ____________________________\\--
@@ -416,7 +432,7 @@ function Map:updateReferences()
     --\\____________________________________________________________________//--
 
     --//________________________ Sound and Music ___________________________\\--
-    love.audio.setVolume(0.15)
+    love.audio.setVolume(0)
 
     -- Effects
     self.sound = love.audio.newSource('music/' .. self.name .. '.wav', 'static')
