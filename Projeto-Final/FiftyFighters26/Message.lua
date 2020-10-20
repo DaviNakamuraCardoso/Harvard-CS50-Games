@@ -30,12 +30,13 @@ function Message:init(params)
         ['count'] = function(dt)
             if self.timer <= 0 then
                 self.timer = self.interval
-                self.size = 2
+                self.size = 10
 
             else
                 self.text = tostring(math.ceil(self.timer))
                 self.timer = self.timer - dt
-                self.size = math.max(2, 200 * (self.timer / math.ceil(self.timer) - math.floor(self.timer) / math.ceil(self.timer)))
+                local proportionalSize = 200 * (self.timer / math.ceil(self.timer) - math.floor(self.timer) / math.ceil(self.timer))
+                self.size = math.max(10, proportionalSize)
             end
 
         end,
@@ -62,9 +63,11 @@ function Message:update(dt)
 
 end
 
+
 function Message:render()
+    self.size = math.max(5, self.size)
     love.graphics.setColor(self.borderColor[1], self.borderColor[2], self.borderColor[3], self.borderColor[4])
-    love.graphics.setFont(love.graphics.newFont('fonts/' .. self.font, self.size + 2))
+    love.graphics.setFont(love.graphics.newFont('fonts/' .. self.font, self.size))
     love.graphics.printf(self.text, self.x-1, self.y-1, self.parameter, self.align)
 
     love.graphics.setColor(self.color[1], self.color[2], self.color[3], self.color[4])
