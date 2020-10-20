@@ -398,13 +398,27 @@ function Player:init(map, name, side)
 
     -- Sounds
     self.sounds = {}
+    self.uniqueSounds = {
+        ['shoot'] = true,
+        ['dancing'] = true,
+        ['special_1'] = true,
+        ['special_2'] = true,
+        ['start'] = true,
+        ['death'] = true
+
+    }
 
     -- Keeps track if the sound was already played
     self.soundPlayed = {}
 
+
     -- Loads the sounds for the character
     for k, v in pairs(self.behaviors) do
-        self.sounds[k] = love.audio.newSource(self.soundDir .. k .. '.wav', 'static')
+        if self.uniqueSounds[k] then
+
+        else
+            self.sounds[k] = love.audio.newSource(self.soundDir .. k .. tostring(math.random(4)) .. '.wav', 'static')
+        end
     end
     self.shuffle = true
 

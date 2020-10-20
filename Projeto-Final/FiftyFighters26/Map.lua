@@ -237,7 +237,6 @@ function Map:init(name)
         end,
         ['play'] = function(dt)
             self:play(dt)
-            self.fight:update(dt)
         end,
         ['pause'] = function(dt)
             self.pauseButton:update()
@@ -254,7 +253,6 @@ function Map:init(name)
         end,
         ['play'] = function()
             self:playRender()
-            self.fight:render()
         end,
         ['player1_select'] = function()
             love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
