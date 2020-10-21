@@ -35,7 +35,7 @@ function Message:init(params)
             else
                 self.text = tostring(math.ceil(self.timer))
                 self.timer = self.timer - dt
-                local proportionalSize = 200 * (self.timer / math.ceil(self.timer) - math.floor(self.timer) / math.ceil(self.timer))
+                local proportionalSize = 300 * (self.timer / math.ceil(self.timer) - math.floor(self.timer) / math.ceil(self.timer))
                 self.size = math.max(10, proportionalSize)
             end
 

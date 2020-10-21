@@ -99,7 +99,7 @@ function Player:init(map, name, side)
             ['backward'] = 'j',
             ['jump'] = 'i',
             ['run'] = 'p',
-            ['duck'] = 'k', 
+            ['duck'] = 'k',
             ['punch'] = 'h',
             ['kick'] = 'm',
             ['shoot'] = 'o',
@@ -485,7 +485,7 @@ function Player:reset()
 
     -- State
     self.state = 'start'
-    self.x = self.map.camX + VIRTUAL_WIDTH / 2 + (VIRTUAL_WIDTH / 2 * self.side)
+    self.x = self.map.camX + VIRTUAL_WIDTH / 2 + ((VIRTUAL_WIDTH / 2 - self.width) * self.side)
 
 end
 

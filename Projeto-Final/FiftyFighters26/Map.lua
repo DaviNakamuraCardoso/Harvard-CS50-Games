@@ -52,18 +52,21 @@ function Map:init(name)
     self.standards['restart'] = Button{
         map = self,
         label = 'Restart',
+        relativeY = VIRTUAL_HEIGHT / 2 + 30,
         action = function()
-            self.state = 'prepare',
+            self.state = 'prepare'
             self.round = 1
+            self.player1.points = 0
+            self.player2.points = 0
         end
     }
     self.standards['menu'] = Button{
         map = self,
         label = 'Menu',
         action = function()
-            self.state = 'menu',
+            self.state = 'menu'
             self.round = 1
-        end 
+        end
     }
     --//                        Characters                            \\--
 
@@ -179,6 +182,14 @@ function Map:init(name)
         font = 'strikefighter.ttf',
         relativeY = 30
     }
+    self.count = Message{
+        map = self,
+        text = '3',
+        size = 300,
+        font = 'strikefighter.ttf',
+        relativeY = 30,
+        show = 'count'
+    }
 
     self.fight = Message{
         map = self,
@@ -262,14 +273,14 @@ function Map:init(name)
             end
             self:wait(2, function() self.state = 'countdown' end, dt)
             self:play(dt)
-            self.h2:reset()
             self.player1:reset()
             self.player2:reset()
+            self.count:reset()
 
         end,
         ['countdown'] = function(dt)
             self.sounds['countdown']:play()
-            self.h2:update(dt)
+            self.count:update(dt)
             self:wait(4, function() self.state = 'play' end, dt)
             self:play(dt)
 
@@ -291,6 +302,7 @@ function Map:init(name)
             self.victory:update(dt)
             self.sounds['gameover']:play()
             self:updateStandardButtons()
+            self.loaded = false
 
         end
 
@@ -337,7 +349,7 @@ function Map:init(name)
         end,
         ['countdown'] = function()
             self:playRender()
-            self.h2:render()
+            self.count:render()
         end,
         ['prepare'] = function()
             self:playRender()
@@ -349,6 +361,7 @@ function Map:init(name)
             self:playRender()
             self.victory:render()
             self:renderStandardButtons()
+            self.loading = 0
 
 
         end
@@ -403,7 +416,6 @@ function Map:updateLoad(dt)
         self.state = 'prepare'
         self.player1.state = 'start'
         self.player2.state = 'start'
-        self.h2.show = 'count'
 
 
     else
@@ -525,6 +537,22 @@ function Map:playRender()
     -- Renders the projectiles
     self.player1:renderAllProjectiles()
     self.player2:renderAllProjectiles()
+
+end
+
+function Map:updateStandardButtons()
+   local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
+    local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
+    for k, v in pairs(self.standards) do
+        v:update(mouseX, mouseY)
+    end
+end
+
+
+function Map:renderStandardButtons()
+    for k, v in pairs(self.standards) do
+        v:render()
+    end
 
 end
 --============================================================================--
