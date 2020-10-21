@@ -225,19 +225,19 @@ function Map:init(name)
         end,
         ['prepare'] = function(dt)
             self.h2.text = '3'
-            love.audio.setVolume(0.05)
+            self.h2.show = 'count'
+            love.audio.setVolume(0.15)
             self.sounds['round' .. tostring(self.round)]:play()
             self:wait(2, function() self.state = 'countdown' end, dt)
             self:play(dt)
-            self.player1:reset()
-            self.player2:reset()
         end,
         ['countdown'] = function(dt)
             self.sounds['countdown']:play()
             self.h2:update(dt)
             self:wait(5, function() self.state = 'play' end, dt)
             self:play(dt)
-
+            self.player1:reset()
+            self.player2:reset()
 
         end,
         ['play'] = function(dt)
@@ -248,9 +248,9 @@ function Map:init(name)
         end,
         ['post-match'] = function(dt)
             self:play(dt)
-            self.sounds['win']:play()
-            self:wait(10, function() self.sounds['player'.. tostring(self.winners[self.round])]:play() end, dt)
-            self:wait(16, function() self.state = 'prepare' end, dt)
+            self.sounds['player' .. tostring(self.winners[self.round-1])]:play()
+            self:wait(10, function() self.state = 'prepare' end, dt)
+
         end
 
 
@@ -447,6 +447,7 @@ end
 function Map:wait(time, action, dt)
     if self.waitTimer >= time then
         action()
+        self.waitTimer = 0
     else
         self.waitTimer = self.waitTimer + dt
     end
