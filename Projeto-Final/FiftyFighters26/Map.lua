@@ -17,6 +17,8 @@ function Map:init(name)
 
     self.name = name
     self.winners = {}
+    self.maxRounds = 3
+
 
     self:updateReferences()
 
@@ -45,7 +47,25 @@ function Map:init(name)
         end
     }
 
-    --//                       Characters                            \\--
+    --//                     Standard Buttons                         \\--
+    self.standards = {}
+    self.standards['restart'] = Button{
+        map = self,
+        label = 'Restart',
+        action = function()
+            self.state = 'prepare',
+            self.round = 1
+        end
+    }
+    self.standards['menu'] = Button{
+        map = self,
+        label = 'Menu',
+        action = function()
+            self.state = 'menu',
+            self.round = 1
+        end 
+    }
+    --//                        Characters                            \\--
 
     self.charactersButtons = {}
     self.charactersImages = {
@@ -134,6 +154,8 @@ function Map:init(name)
     self.sounds['win'] = love.audio.newSource('sounds/map/win.wav', 'static')
     self.sounds['player1'] = love.audio.newSource('sounds/map/player1.wav', 'static')
     self.sounds['player2'] = love.audio.newSource('sounds/map/player2.wav', 'static')
+    self.sounds['roundfinal'] = love.audio.newSource('sounds/map/roundfinal.wav', 'static')
+    self.sounds['gameover'] = love.audio.newSource('sounds/map/gameover.wav', 'static')
 
     for _, sound in pairs(self.sounds) do
         sound.setVolume(sound, 10)
@@ -161,6 +183,14 @@ function Map:init(name)
     self.fight = Message{
         map = self,
         text = 'Fight!',
+        size = 40,
+        font = 'fighter.ttf',
+        relativeY = 30,
+        show = 'twinkle'
+    }
+    self.victory = Message{
+        map = self,
+        text = 'Game Over',
         size = 40,
         font = 'fighter.ttf',
         relativeY = 30,
@@ -224,20 +254,24 @@ function Map:init(name)
             self:updateLoad(dt)
         end,
         ['prepare'] = function(dt)
-            self.h2.text = '3'
-            self.h2.show = 'count'
             love.audio.setVolume(0.15)
-            self.sounds['round' .. tostring(self.round)]:play()
+            if self.round == self.maxRounds then
+                self.sounds['roundfinal']:play()
+            else
+                self.sounds['round' .. tostring(self.round)]:play()
+            end
             self:wait(2, function() self.state = 'countdown' end, dt)
             self:play(dt)
+            self.h2:reset()
+            self.player1:reset()
+            self.player2:reset()
+
         end,
         ['countdown'] = function(dt)
             self.sounds['countdown']:play()
             self.h2:update(dt)
-            self:wait(5, function() self.state = 'play' end, dt)
+            self:wait(4, function() self.state = 'play' end, dt)
             self:play(dt)
-            self.player1:reset()
-            self.player2:reset()
 
         end,
         ['play'] = function(dt)
@@ -249,10 +283,16 @@ function Map:init(name)
         ['post-match'] = function(dt)
             self:play(dt)
             self.sounds['player' .. tostring(self.winners[self.round-1])]:play()
-            self:wait(10, function() self.state = 'prepare' end, dt)
+            self:wait(4, function() self.state = 'prepare' end, dt)
+
+        end,
+        ['victory'] = function(dt)
+            self:play(dt)
+            self.victory:update(dt)
+            self.sounds['gameover']:play()
+            self:updateStandardButtons()
 
         end
-
 
 
 
@@ -304,6 +344,13 @@ function Map:init(name)
         end,
         ['post-match'] = function()
             self:playRender()
+        end,
+        ['victory'] = function()
+            self:playRender()
+            self.victory:render()
+            self:renderStandardButtons()
+
+
         end
     }
 

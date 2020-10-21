@@ -695,7 +695,7 @@ Characters = {
 
             ['idle'] = {{0, 10}},
             ['dancing'] = {{361, 366}},
-            ['start'] = {{467, 479}},
+            ['start'] = {{367, 379}},
 
         --//__________________________ Movement ____________________________\\--
 
@@ -1323,7 +1323,10 @@ Characters = {
             ['projectile_3_destroyed'] = {{999, 1000}}
         },
         ['passive'] = function(dt, self)
-            self.armor = math.floor(self.armor + 20 * dt)
+            if not self.passiveUpdated then
+                self.armor = self.armor + self.enemy.armor / 4
+                self.passiveUpdated = true
+            end 
         end,
         ['shoot'] = function(self)
             Projectile{

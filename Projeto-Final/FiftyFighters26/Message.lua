@@ -29,8 +29,8 @@ function Message:init(params)
         end,
         ['count'] = function(dt)
             if self.timer <= 0 then
-                self.timer = self.interval
-                self.size = 10
+                self.size = 5
+                self.color[4] = 0
 
             else
                 self.text = tostring(math.ceil(self.timer))
@@ -78,7 +78,10 @@ function Message:render()
 end
 
 
-
+function Message:reset()
+    self.timer = self.interval
+    self.color[4] = 1
+end
 
 
 --============================================================================--

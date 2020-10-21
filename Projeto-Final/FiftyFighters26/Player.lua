@@ -76,6 +76,7 @@ function Player:init(map, name, side)
 
     -- Enemy
     self.enemy = nil
+    self.points = 0
 
     -- Controls
     local keyRelations = {
@@ -98,7 +99,7 @@ function Player:init(map, name, side)
             ['backward'] = 'j',
             ['jump'] = 'i',
             ['run'] = 'p',
-            ['duck'] = 'k',
+            ['duck'] = 'k', 
             ['punch'] = 'h',
             ['kick'] = 'm',
             ['shoot'] = 'o',
@@ -303,7 +304,13 @@ function Player:init(map, name, side)
                     self.state = 'death'
                     self.map.winners[self.map.round] = self.enemy.sideParameter + 1
                     self.map.round = self.map.round + 1
-                    self.map.state = 'post-match'
+                    self.enemy.points = self.enemy.points + 1
+                    if self.enemy.points > self.map.maxRounds / 2 then
+
+                        self.map.state = 'victory'
+                    else
+                        self.map.state = 'post-match'
+                    end
                 end
             else
                 self.direction = - self.enemy.direction
@@ -466,15 +473,19 @@ function Player:reset()
 
     -- Life and specials
     self.health = 100
+    self.lifebar:updateDimensionsAndColors()
     self.specialPoints = 0
 
     -- Booleans
     self.finished = false
-    self.passiveUpdated = false
 
     -- Projectiles
     self.projectiles = {}
     self.numberOfProjectiles = 0
+
+    -- State
+    self.state = 'start'
+    self.x = self.map.camX + VIRTUAL_WIDTH / 2 + (VIRTUAL_WIDTH / 2 * self.side)
 
 end
 
