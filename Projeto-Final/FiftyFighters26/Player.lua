@@ -206,7 +206,7 @@ function Player:init(map, name, side)
 
         end,
         ['punch'] = function(dt)
-            self:detectDamage('front')
+            self:detectDamage()
             if self.animations['punch'].ending then
                 self.animation.currentFrame = 0
                 self.state = 'idle'
@@ -226,21 +226,21 @@ function Player:init(map, name, side)
             end
         end,
         ['kick'] = function(dt)
-            self:detectDamage('front', self.kick_range)
+            self:detectDamage(self.kick_range)
             if self.animations['kick'].ending then
                 self.state = 'idle'
             end
 
         end,
         ['duck_kick'] = function(dt)
-            self:detectDamage('around', self.kick_range)
+            self:detectDamage( self.kick_range)
             if self.animations['duck_kick'].ending then
                 self.state = 'duck'
             end
         end,
 
         ['air_kick'] = function(dt)
-            self:detectDamage('down', self.kick_range)
+            self:detectDamage(self.kick_range)
             if self.animations['air_kick'].ending then
                 self.state = 'jumping'
             end
@@ -278,13 +278,13 @@ function Player:init(map, name, side)
         end,
         ['duck_punch'] = function(dt)
             self.y = self.map.mapHeight - 100
-            self:detectDamage('around')
+            self:detectDamage()
             if self.animations['duck_punch'].ending then
                 self.state = 'duck'
             end
         end,
         ['air_punch'] = function(dt)
-            self:detectDamage('down')
+            self:detectDamage()
             self.inAir = true
             if self.animations['air_punch'].ending then
                 self.state = 'jumping'
@@ -511,53 +511,18 @@ end
 
 
 --//__________________________ Damage detection ____________________________\\--
-function Player:detectDamage(position, range)
-
+function Player:detectDamage(range)
     local range = range or self.punch_range
-    local positions = {
-        ['front'] = {
-            ['start'] = 90,
-            ['end'] = 270,
-            ['direction'] = 1
-        },
-        ['back'] = {
-            ['start'] = -90,
-            ['end'] = 270,
-            ['direction'] = -1
-        },
-        ['up'] = {
-            ['start'] = 0,
-            ['end'] = 180,
-            ['direction'] = 1
-        },
-        ['down'] = {
-            ['start'] = 0,
-            ['end'] = 180,
-            ['direction'] = -1
-        },
-        ['around'] = {
-            ['start'] = 0,
-            ['end'] = 360,
-            ['direction'] = 1
-        }
-    }
-    local distance = (self.x - self.enemy.x)^2 + (self.y - self.enemy.y)^2
+    self:hit(self.x, self.y, range)
 
-    if self.animation.changing then
 
-        for i=positions[position]['start'], positions[position]['end'] do
-            local x = self.x + self.width / 2 + (math.cos(math.rad(i)) * range * positions[position]['direction'] * self.direction)
-            local y = self.y + self.height / 2 + (math.sin(math.rad(i)) * range * positions[position]['direction'] * self.direction)
-            self:hit(x, y, range)
-        end
-    end
+
 end
 
-function Player:hit(x, y, range, damage, isProjectile)
+function Player:hit(x, y, range, damage)
 
-    local projectile = isProjectile or false
-    local dx = not projectile and self.x - self.enemy.x or self.projectiles[projectile].x - self.enemy.x
-    local dy = not projectile and self.y - self.enemy.y or self.projectiles[projectile].y - self.enemy.y
+    local dx = (self.x + self.width / 2) - (self.enemy.x + self.enemy.width / 2)
+    local dy = (self.y + self.height / 2) - (self.enemy.y + self.enemy.height / 2)
     local damage = damage or self.damage
     if (self:enemyAt(x, y) or range^2 > dx^2 + dy^2) and self.enemy.state ~= 'hurt' then
 
