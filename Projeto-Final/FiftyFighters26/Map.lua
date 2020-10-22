@@ -298,7 +298,7 @@ function Map:init(name)
 
         end,
         ['victory'] = function(dt)
-            self:play(dt)
+            self.victory.text = 'Player' .. tostring(self.winner[self.round]) .. 'wins!'
             self.victory:update(dt)
             self.sounds['gameover']:play()
             self:updateStandardButtons()
@@ -359,6 +359,7 @@ function Map:init(name)
         end,
         ['victory'] = function()
             self:playRender()
+            self:cover()
             self.victory:render()
             self:renderStandardButtons()
             self.loading = 0

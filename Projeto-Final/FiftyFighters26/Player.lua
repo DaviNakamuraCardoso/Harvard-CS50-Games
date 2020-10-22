@@ -306,7 +306,7 @@ function Player:init(map, name, side)
                     self.map.round = self.map.round + 1
                     self.enemy.points = self.enemy.points + 1
                     if self.enemy.points > self.map.maxRounds / 2 then
-
+                        self.map.sounds['player' .. tostring(self.enemy.sideParameter + 1)]:play()
                         self.map.state = 'victory'
                     else
                         self.map.state = 'post-match'

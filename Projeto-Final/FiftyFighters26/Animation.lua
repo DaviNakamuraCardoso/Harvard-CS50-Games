@@ -43,6 +43,7 @@ function Animation:update(dt)
         self.changing = false
         self.timer = self.timer + dt
     end
+    
 end
 
 function Animation:getCurrentFrame()
