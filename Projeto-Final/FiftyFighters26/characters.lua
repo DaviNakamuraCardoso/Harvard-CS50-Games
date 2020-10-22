@@ -103,7 +103,7 @@ Characters = {
                     end
                 end
             elseif self.animation.currentFrame > 47 and self.animation.currentFrame < 60 then
-                self:detectDamage('front')
+                self:detectDamage()
                 self.x = math.floor(self.x + 2 * self.speed * dt * -self.direction)
                 self.y = math.floor(self.y + 1 * self.speed * dt)
             else
@@ -318,7 +318,7 @@ Characters = {
                     range = (self.animation.currentFrame - 7) * 30,
                     damage = 10
                 }
-                self:detectDamage('front')
+                self:detectDamage()
             elseif self.animation.ending then
                 self.animation.currentFrame = 0
                 self.state = 'idle'
@@ -740,21 +740,21 @@ Characters = {
         },
         ['passive'] = function(dt, self)
 	   		if self.state == 'duck' then
-				self:detectDamage('front')
+				self:detectDamage()
             elseif self.state == 'winning' then
                 self.direction = -1
 
             end
 		end,
         ['shoot'] = function(self)
-		    self:detectDamage('around')
+		    self:detectDamage()
         end,
 
         ['special_1'] = function(dt, self)
 		    dash(dt, self, {self.speed, 7, 10})
         end,
         ['special_2']  = function(dt, self)
-            self:detectDamage('back')
+            self:detectDamage()
             if self.animation.ending then
                 self.state = 'idle'
             end
@@ -1008,7 +1008,7 @@ Characters = {
 
                 }
             elseif self.animation.currentFrame > 5 and self.animation.changing then
-                self:detectDamage('front')
+                self:detectDamage()
             end
         end,
 
@@ -1121,12 +1121,12 @@ Characters = {
                 self.x = math.floor(self.x - 1/2 * self.direction * self.speed * dt)
             elseif self.animation.currentFrame <= 17 then
                 self.inAir = true
-                self:detectDamage('front')
+                self:detectDamage()
                 self.x = math.floor(self.x - self.direction * self.speed * dt)
                 self.y = math.floor(self.y + 1.5 * self.speed * dt)
             elseif self.animation.currentFrame > 17 then
                 self.inAir = true
-                self:detectDamage('around')
+                self:detectDamage()
             end
 
 
@@ -1326,7 +1326,7 @@ Characters = {
             if not self.passiveUpdated then
                 self.armor = self.armor + self.enemy.armor / 4
                 self.passiveUpdated = true
-            end 
+            end
         end,
         ['shoot'] = function(self)
             Projectile{
@@ -2070,7 +2070,7 @@ Characters = {
                     range = 70
                 }
             end
-            self:detectDamage('around')
+            self:detectDamage()
 
         end,
 
@@ -2308,7 +2308,7 @@ Characters = {
                 startAnimation = 6,
                 finalAnimation = 18
             })
-            self:detectDamage('front')
+            self:detectDamage()
             if self.animation.ending then
                 self.state = 'idle'
             end
@@ -2426,7 +2426,7 @@ Characters = {
             end
         end,
         ['special_2']  = function(dt, self)
-            self:detectDamage('around', 70)
+            self:detectDamage(70)
             dash(dt, self, {
                 startAnimation = 51,
                 finalAnimation = 54,
@@ -3091,7 +3091,7 @@ Characters = {
         end,
 
         ['special_1'] = function(dt, self)
-            self:detectDamage('front', 150)
+            self:detectDamage(150)
             dash(dt, self, {
                 startAnimation = 12,
                 finalAnimation = 14,
@@ -3482,7 +3482,7 @@ Characters = {
         end,
         ['special_2']  = function(dt, self)
             self.damage = 20
-            self:detectDamage('around')
+            self:detectDamage()
             if self.animation.ending then
                 self.state = 'idle'
             end
@@ -3626,7 +3626,7 @@ Characters = {
                 velocity = 50,
                 incline = 90
             })
-            self:detectDamage('front')
+            self:detectDamage()
             if self.animation.ending then
                 self.state = 'jumping'
                 self.specialPoints = 20
@@ -3943,12 +3943,12 @@ Characters = {
         },
         ['passive'] = function(dt, self)
             if self.state == 'jumping' then
-                self:detectDamage('around')
+                self:detectDamage()
             end
         end,
         ['shoot'] = function(self)
             self.damage = 20
-            self:detectDamage('front')
+            self:detectDamage()
         end,
 
         ['special_1'] = function(dt, self)
@@ -4056,7 +4056,7 @@ Characters = {
         end,
 
         ['special_1'] = function(dt, self)
-            self:detectDamage('front', 30)
+            self:detectDamage(30)
             if self.animation.ending then
                 self.state = 'idle'
             end
@@ -4065,7 +4065,7 @@ Characters = {
             if self.animation.ending then
                 self.state = 'idle'
             elseif self.animation.currentFrame > 6 then
-                self:detectDamage('around', 200)
+                self:detectDamage(200)
             end
         end,
 
@@ -4280,7 +4280,7 @@ Characters = {
                 finalAnimation = 39
 
             })
-            self:detectDamage('around', 70)
+            self:detectDamage(70)
             if self.animation.ending then
                 self.state = 'jumping'
             end
@@ -4306,7 +4306,7 @@ Characters = {
             elseif self.animation.currentFrame == 49 then
                 self.inAir = false
             end
-            self:detectDamage('around', 100)
+            self:detectDamage(100)
         end,
 
 
@@ -4639,7 +4639,7 @@ Characters = {
                 startAnimation = 2,
                 finalAnimation = 5
             })
-            self:detectDamage('around', 40)
+            self:detectDamage(40)
         end,
         ['special_2']  = function(dt, self)
             if self.animation.ending then
@@ -4649,7 +4649,7 @@ Characters = {
                 startAnimation = 4,
                 finalAnimation = 6
             })
-            self:detectDamage('around', 50)
+            self:detectDamage(50)
         end,
 
 
@@ -4776,7 +4776,7 @@ Characters = {
                 self.state = 'idle'
             end
             self.x = self.x + math.floor(dt * 50)
-            self:detectDamage('around', 200)
+            self:detectDamage(200)
         end,
 
 
@@ -5013,11 +5013,11 @@ Characters = {
                 finalAnimation = 21,
                 incline = 270
             })
-            self:detectDamage('down')
+            self:detectDamage()
         end,
         ['special_2']  = function(dt, self)
             self.damage = 30
-            self:detectDamage('front')
+            self:detectDamage()
             if self.animation.ending then
                 self.state = 'idle'
             end
@@ -5140,6 +5140,6 @@ function dash(dt, self, params)
         self.state = 'jumping'
     end
     if self.animation.changing then
-        self:detectDamage('around', damage)
+        self:detectDamage(damage)
     end
 end
