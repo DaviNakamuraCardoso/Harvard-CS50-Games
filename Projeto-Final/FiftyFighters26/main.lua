@@ -87,7 +87,12 @@ function love.keypressed(key)
     -- body...
     if key == 'escape' then
         love.event.quit()
-
+    elseif key == 'enter' or key == 'return' then
+        if map.state == 'play' then
+            map.state = 'pause'
+        else
+            map.state = 'play'
+        end
     end
     love.keyboard.wasPressed[key] = true
 end
