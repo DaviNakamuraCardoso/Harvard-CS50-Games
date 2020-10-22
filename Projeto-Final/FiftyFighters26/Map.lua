@@ -90,15 +90,12 @@ function Map:init(name)
             imageSource = 'graphics/' .. k .. '/portrait.png',
             map = self,
             action = function()
-                self.charactersButtons[k].active = false
                 if self.state == 'player1_select' then
                     self.player1 = Player(self, k, -1)
                     self.state = 'player2_select'
-                    self.active = false
                 elseif self.state == 'player2_select' then
                     self.player2 = Player(self, k, 1)
                     self.state = 'next'
-                    self.active = false
                 end
             end,
             relativeX = counter % 9 * 40 + 55,
@@ -130,11 +127,19 @@ function Map:init(name)
     self.next.active = false
     self.next.color = self.next.inactiveColor
     --//                            Pause                              \\--
---    self.pause = Button{
---        map = self,
---        label = 'pause',
---        im
---    }
+    self.pause = Button{
+        map = self,
+        label = 'Pause',
+        relativeY = 10,
+        action = function()
+            if self.state == 'play' then
+                self.state = 'pause'
+            else
+                self.state = 'play'
+            end
+
+        end
+    }
     --\\____________________________________________________________________//--
 
     --//_________________________ Music and Sounds _________________________\\--
@@ -146,23 +151,21 @@ function Map:init(name)
 
     -- Sounds
     self.sounds = {
-        ['countdown'] = love.audio.newSource('sounds/map/321fight.wav', 'static')
+        ['countdown'] = love.audio.newSource('sounds/map/321fight.wav', 'static'),
+        ['gameover'] = love.audio.newSource('sounds/map/gameover.wav', 'static'),
+        ['finish_male'] = love.audio.newSource('sounds/map/finishmale.wav', 'static'),
+        ['finish_female'] = love.audio.newSource('sounds/map/finishfemale.wav', 'static'),
+        ['win'] = love.audio.newSource('sounds/map/win.wav', 'static'),
+        ['player1'] = love.audio.newSource('sounds/map/player1.wav', 'static'),
+        ['player2'] = love.audio.newSource('sounds/map/player2.wav', 'static'),
+        ['roundfinal'] = love.audio.newSource('sounds/map/roundfinal.wav', 'static')
+
     }
     for i=1, 5 do
         self.sounds['round' .. tostring(i)] = love.audio.newSource('sounds/map/round' .. tostring(i) .. '.wav', 'static')
     end
 
-    self.sounds['finish_male'] = love.audio.newSource('sounds/map/finishmale.wav', 'static')
-    self.sounds['finish_female'] = love.audio.newSource('sounds/map/finishfemale.wav', 'static')
-    self.sounds['win'] = love.audio.newSource('sounds/map/win.wav', 'static')
-    self.sounds['player1'] = love.audio.newSource('sounds/map/player1.wav', 'static')
-    self.sounds['player2'] = love.audio.newSource('sounds/map/player2.wav', 'static')
-    self.sounds['roundfinal'] = love.audio.newSource('sounds/map/roundfinal.wav', 'static')
-    self.sounds['gameover'] = love.audio.newSource('sounds/map/gameover.wav', 'static')
 
-    for _, sound in pairs(self.sounds) do
-        sound.setVolume(sound, 10)
-    end
 
     --\\____________________________________________________________________//--
 
@@ -228,6 +231,7 @@ function Map:init(name)
             self.buttonPlay:update(mouseX, mouseY)
         end,
         ['player1_select'] = function(dt)
+            self:updateAnimation(dt)
             local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
             local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self:updateCharacterButtons(mouseX, mouseY)
@@ -235,6 +239,7 @@ function Map:init(name)
             self.next:update(mouseX, mouseY)
         end,
         ['player2_select'] = function(dt)
+            self:updateAnimation(dt)
             local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
             local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self:updateCharacterButtons(mouseX, mouseY)
@@ -245,6 +250,7 @@ function Map:init(name)
         ['next'] = function(dt)
             local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
             local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
+            self:updateAnimation(dt)
             self.next.active = true
             self.next:update(mouseX, mouseY)
             self.player1.enemy = self.player2
@@ -265,6 +271,7 @@ function Map:init(name)
             self:updateLoad(dt)
         end,
         ['prepare'] = function(dt)
+            self:updateAnimation(dt)
             love.audio.setVolume(0.15)
             if self.round == self.maxRounds then
                 self.sounds['roundfinal']:play()
@@ -279,6 +286,7 @@ function Map:init(name)
 
         end,
         ['countdown'] = function(dt)
+            self:updateAnimation(dt)
             self.sounds['countdown']:play()
             self.count:update(dt)
             self:wait(4, function() self.state = 'play' end, dt)
@@ -286,21 +294,26 @@ function Map:init(name)
 
         end,
         ['play'] = function(dt)
+            self.fight:update(dt)
+            self:updateAnimation(dt)
             self:play(dt)
         end,
         ['pause'] = function(dt)
-            self.pauseButton:update()
+            local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
+            local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
+            self.pause:update(mouseX, mouseY)
+            self:updateStandardButtons(mouseX, mouseY)
         end,
         ['post-match'] = function(dt)
+            self:updateAnimation(dt)
             self:play(dt)
             self.sounds['player' .. tostring(self.winners[self.round-1])]:play()
             self:wait(4, function() self.state = 'prepare' end, dt)
 
         end,
         ['victory'] = function(dt)
-            self.victory.text = 'Player' .. tostring(self.winner[self.round]) .. 'wins!'
+            self.victory.text = 'Player ' .. tostring(self.winners[self.round-1]) .. ' wins!'
             self.victory:update(dt)
-            self.sounds['gameover']:play()
             self:updateStandardButtons()
             self.loaded = false
 
@@ -317,6 +330,7 @@ function Map:init(name)
         end,
         ['play'] = function()
             self:playRender()
+            self.fight:render()
         end,
         ['player1_select'] = function()
             love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
@@ -334,6 +348,8 @@ function Map:init(name)
             love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
             self:renderCharacterButtons()
             self.next:render()
+            self.loading = 0
+            self.loaded = false
 
         end,
         ['loading'] = function()
@@ -343,9 +359,9 @@ function Map:init(name)
             self.h2:render()
         end,
         ['pause'] = function()
-            self.player1:render()
-            self.player2:render()
+            self:playRender()
             self:cover()
+            self:renderStandardButtons()
         end,
         ['countdown'] = function()
             self:playRender()
@@ -362,7 +378,6 @@ function Map:init(name)
             self:cover()
             self.victory:render()
             self:renderStandardButtons()
-            self.loading = 0
 
 
         end
@@ -381,7 +396,6 @@ end
 
 function Map:update(dt)
     self.behaviors[self.state](dt)
-    self:updateAnimation(dt)
 end
 
 
@@ -413,16 +427,16 @@ end
 
 
 function Map:updateLoad(dt)
-    if self.loading >= 20 then
+    if self.loading >= 1500 then
         self.state = 'prepare'
         self.player1.state = 'start'
         self.player2.state = 'start'
 
 
     else
-        self.loading = self.loading + dt
+        self.loading = self.loading + 1
     end
-    self.loadingBarWidth = self.loading * 200 / 20
+    self.loadingBarWidth = self.loading * 200 / 1500
 end
 
 
@@ -492,12 +506,11 @@ function Map:updateReferences()
     --\\____________________________________________________________________//--
 
     --//________________________ Sound and Music ___________________________\\--
-    love.audio.setVolume(0)
+    love.audio.setVolume(0.15)
 
     -- Effects
     self.sound = love.audio.newSource('music/' .. self.name .. '.wav', 'static')
     self.sound:play()
-    self.sound:setLooping(true)
 
 
     self.waitTimer = 0
@@ -519,6 +532,7 @@ function Map:play(dt)
     self:updateCam()
     self.player1:update(dt)
     self.player2:update(dt)
+
 end
 
 
@@ -538,6 +552,7 @@ function Map:playRender()
     -- Renders the projectiles
     self.player1:renderAllProjectiles()
     self.player2:renderAllProjectiles()
+
 
 end
 
