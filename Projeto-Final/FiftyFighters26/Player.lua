@@ -513,7 +513,10 @@ end
 --//__________________________ Damage detection ____________________________\\--
 function Player:detectDamage(range)
     local range = range or self.punch_range
-    self:hit(self.x, self.y, range)
+    if self.animation.changing then
+        self:hit(self.x, self.y, range)
+    end 
+
 
 
 

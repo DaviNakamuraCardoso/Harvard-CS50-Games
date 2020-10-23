@@ -192,7 +192,9 @@ function Map:init(name)
     for i=1, 5 do
         self.sounds['round' .. tostring(i)] = love.audio.newSource('sounds/map/round' .. tostring(i) .. '.wav', 'static')
     end
-
+    self.music = love.audio.newSource('music/' .. tostring(math.random(3)) .. '.wav', 'stream')
+    self.music:play()
+    self.music:setLooping(true)
 
 
     --\\____________________________________________________________________//--
@@ -202,7 +204,6 @@ function Map:init(name)
         map = self,
         text = 'Fifty Fighters',
         size = 50,
-        font = 'strikefighter.ttf',
         relativeY = 0
     }
 
@@ -210,14 +211,12 @@ function Map:init(name)
         map = self,
         text = 'Player 1 Select',
         size = 40,
-        font = 'strikefighter.ttf',
         relativeY = 30
     }
     self.count = Message{
         map = self,
         text = '3',
         size = 300,
-        font = 'strikefighter.ttf',
         relativeY = 30,
         show = 'count'
     }
@@ -227,8 +226,7 @@ function Map:init(name)
         text = 'Game Over',
         size = 40,
         font = 'fighter.ttf',
-        relativeY = 30,
-        show = 'twinkle'
+        relativeY = 30
     }
 
     self.options = Message{
@@ -263,12 +261,14 @@ function Map:init(name)
             self:updateCam()
             self.buttonPlay:update(mouseX, mouseY)
             self.optionsButton:update(mouseX, mouseY)
+            self.next.active = false
         end,
         ['player1_select'] = function(dt)
             self:updateAnimation(dt)
             local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
             local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self:updateCharacterButtons(mouseX, mouseY)
+            self.h2.text = 'Player 1 Select'
             self.h2:update(dt)
             self.next:update(mouseX, mouseY)
         end,
