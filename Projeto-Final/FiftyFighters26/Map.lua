@@ -68,6 +68,18 @@ function Map:init(name)
             self.round = 1
         end
     }
+    self.optionsButton = Button{
+        map = self,
+        label = 'Options',
+        action = function()
+            self.state = 'options'
+            self.round = 1
+
+
+        end,
+        relativeY = VIRTUAL_HEIGHT / 2 + 30
+
+    }
     --//                        Characters                            \\--
 
     self.charactersButtons = {}
@@ -114,6 +126,8 @@ function Map:init(name)
     -- Swaping the ? with the 21th (center) button
     self.charactersButtons['Whip'].relativeX = 21 % 9 * 40 + 55
     self.charactersButtons['???'].relativeX = 22 % 9 * 40 + 55
+
+    -- Next button
     self.next = Button{
         label = 'Next',
         action = function()
@@ -126,6 +140,7 @@ function Map:init(name)
     }
     self.next.active = false
     self.next.color = self.next.inactiveColor
+
     --//                            Pause                              \\--
     self.pause = Button{
         map = self,
@@ -139,15 +154,28 @@ function Map:init(name)
             end
 
         end
+
     }
+
+
+    -- Round Buttons
+    self.roundButtons = {}
+    for i=1, 5, 2 do
+        self.roundButtons[i] = Button{
+            map = self,
+            relativeX = VIRTUAL_WIDTH / 2 - math.cos(math.rad(i * 30)) * 100,
+            width = 40,
+            label = tostring(i),
+            action = function()
+                self.maxRounds = i
+                self.state = 'menu'
+            end
+        }
+    end
     --\\____________________________________________________________________//--
 
     --//_________________________ Music and Sounds _________________________\\--
 
-    -- Music
-    self.music = love.audio.newSource('music/' .. tostring(math.random(3)) .. '.wav', 'static')
-    self.music:play()
-    self.music:setLooping(true)
 
     -- Sounds
     self.sounds = {
@@ -194,14 +222,6 @@ function Map:init(name)
         show = 'count'
     }
 
-    self.fight = Message{
-        map = self,
-        text = 'Fight!',
-        size = 40,
-        font = 'fighter.ttf',
-        relativeY = 30,
-        show = 'twinkle'
-    }
     self.victory = Message{
         map = self,
         text = 'Game Over',
@@ -211,6 +231,19 @@ function Map:init(name)
         show = 'twinkle'
     }
 
+    self.options = Message{
+        map = self,
+        text = 'Options',
+        show = 'twinkle',
+        size = 40,
+        relativeY = 20
+    }
+
+    self.optionsMsg = Message{
+        map = self,
+        text = 'Number of Rounds:',
+        size = 15
+    }
     --\\____________________________________________________________________//--
 
     self.loadingBarWidth = 0
@@ -229,6 +262,7 @@ function Map:init(name)
             self.title:update(dt)
             self:updateCam()
             self.buttonPlay:update(mouseX, mouseY)
+            self.optionsButton:update(mouseX, mouseY)
         end,
         ['player1_select'] = function(dt)
             self:updateAnimation(dt)
@@ -294,7 +328,6 @@ function Map:init(name)
 
         end,
         ['play'] = function(dt)
-            self.fight:update(dt)
             self:updateAnimation(dt)
             self:play(dt)
         end,
@@ -317,6 +350,11 @@ function Map:init(name)
             self:updateStandardButtons()
             self.loaded = false
 
+        end,
+        ['options'] = function(dt)
+            self.options:update(dt)
+            self.optionsMsg:update(dt)
+            self:updateRoundButtons()
         end
 
 
@@ -326,11 +364,11 @@ function Map:init(name)
     self.renders = {
         ['menu'] = function()
             self.buttonPlay:render()
+            self.optionsButton:render()
             self.title:render()
         end,
         ['play'] = function()
             self:playRender()
-            self.fight:render()
         end,
         ['player1_select'] = function()
             love.graphics.draw(self.backgroundImage, self.backgroundQuads[self.currentFrame], 0, 0)
@@ -380,6 +418,11 @@ function Map:init(name)
             self:renderStandardButtons()
 
 
+        end,
+        ['options'] = function()
+            self.options:render()
+            self.optionsMsg:render()
+            self:renderRoundButtons()
         end
     }
 
@@ -508,9 +551,6 @@ function Map:updateReferences()
     --//________________________ Sound and Music ___________________________\\--
     love.audio.setVolume(0.15)
 
-    -- Effects
-    self.sound = love.audio.newSource('music/' .. self.name .. '.wav', 'static')
-    self.sound:play()
 
 
     self.waitTimer = 0
@@ -557,7 +597,7 @@ function Map:playRender()
 end
 
 function Map:updateStandardButtons()
-   local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
+    local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
     local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
     for k, v in pairs(self.standards) do
         v:update(mouseX, mouseY)
@@ -570,5 +610,20 @@ function Map:renderStandardButtons()
         v:render()
     end
 
+end
+
+function Map:updateRoundButtons()
+    local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
+    local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
+    for k, v in pairs(self.roundButtons) do
+        v:update(mouseX, mouseY)
+    end
+end
+
+
+function Map:renderRoundButtons()
+    for k, v in pairs(self.roundButtons) do
+        v:render()
+    end
 end
 --============================================================================--
