@@ -99,7 +99,7 @@ function love.load()
     levelsButtons = LevelButtons(initialScreen, 10, VIRTUAL_HEIGHT / 3, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, colors['yellow'])
 end
 
--- called whenever window is resized
+-- called whenever the window is resized
 function love.resize(w, h)
     push:resize(w, h)
 end

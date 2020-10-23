@@ -204,16 +204,14 @@ function Map:init(name)
         map = self,
         text = 'Fifty Fighters',
         size = 50,
-        relativeY = 0,
-        borderColor = {0, 0, 0, 1}
+        relativeY = 0
     }
 
     self.h2 = Message{
         map = self,
         text = 'Player 1 Select',
         size = 40,
-        relativeY = 30,
-        borderColor = {0, 0, 0, 1}
+        relativeY = 30
     }
     self.count = Message{
         map = self,
@@ -257,10 +255,9 @@ function Map:init(name)
     self.enemiesUpdated = false
     self.behaviors = {
         ['menu'] = function(dt)
-
-            local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / love.graphics.getWidth()
-            local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / love.graphics.getHeight()
             self:updateAnimation(dt)
+            local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
+            local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self.title:update(dt)
             self:updateCam()
             self.buttonPlay:update(mouseX, mouseY)
@@ -269,8 +266,8 @@ function Map:init(name)
         end,
         ['player1_select'] = function(dt)
             self:updateAnimation(dt)
-            local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / love.graphics.getWidth()
-            local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / love.graphics.getHeight()
+            local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
+            local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self:updateCharacterButtons(mouseX, mouseY)
             self.h2.text = 'Player 1 Select'
             self.h2:update(dt)
@@ -278,16 +275,16 @@ function Map:init(name)
         end,
         ['player2_select'] = function(dt)
             self:updateAnimation(dt)
-            local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / love.graphics.getWidth()
-            local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / love.graphics.getHeight()
+            local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
+            local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self:updateCharacterButtons(mouseX, mouseY)
             self.h2:update(dt)
             self.h2.text = 'Player 2 Select'
             self.next:update(mouseX, mouseY)
         end,
         ['next'] = function(dt)
-            local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / love.graphics.getWidth()
-            local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / love.graphics.getHeight()
+            local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
+            local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
             self:updateAnimation(dt)
             self.next.active = true
             self.next:update(mouseX, mouseY)
@@ -371,6 +368,7 @@ function Map:init(name)
             self.buttonPlay:render()
             self.optionsButton:render()
             self.title:render()
+            self:updateCam()
         end,
         ['play'] = function()
             self:playRender()
@@ -602,8 +600,8 @@ function Map:playRender()
 end
 
 function Map:updateStandardButtons()
-    local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / love.graphics.getWidth()
-    local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / love.graphics.getHeight()
+    local mouseX = love.mouse.getX() * VIRTUAL_WIDTH / WINDOW_WIDTH
+    local mouseY = love.mouse.getY() * VIRTUAL_HEIGHT / WINDOW_HEIGHT
     for k, v in pairs(self.standards) do
         v:update(mouseX, mouseY)
     end

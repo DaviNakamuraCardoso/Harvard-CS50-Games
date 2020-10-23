@@ -45,7 +45,7 @@ function love.load()
     {
         resizable = true,                    -- Disables the resizing
         fullscreen = false,                     -- Displays in fullscreen
-	    vsync = true
+	vsync = true
     })
 
 
@@ -70,11 +70,6 @@ function love.update(dt)
 end
 
 
-function love.resize(w, h)
-    push:resize(w, h)
-end
-
-
 function love.draw()
 
     push:apply('start')
@@ -87,6 +82,11 @@ function love.draw()
 
 
 
+end
+
+
+function love.resize(w, h)
+    push:resize(w, h)
 end
 
 function love.keypressed(key)

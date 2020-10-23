@@ -375,7 +375,7 @@ function Player:init(map, name, side)
     Characters[self.name]['animations']['death'] = {{}}
     local dying = Characters[self.name]['animations']['dying'][1]
     for i=1, 3 do
-        Characters[self.name]['animations']['death'][1][i] = dying[#dying]
+        Characters[self.name]['animations']['death'][1][i] = dying[1]
     end
 
     self.animations = {}
@@ -474,6 +474,7 @@ function Player:reset()
     -- Life and specials
     self.health = 100
     self.lifebar:updateDimensionsAndColors()
+    self.specialPoints = 0
 
     -- Booleans
     self.finished = false
@@ -485,7 +486,6 @@ function Player:reset()
     -- State
     self.state = 'start'
     self.x = self.map.camX + VIRTUAL_WIDTH / 2 + ((VIRTUAL_WIDTH / 2 - self.width) * self.side)
-    self.direction = self.side
 
 end
 
@@ -586,7 +586,7 @@ end
 function Player:land()
     -- Landing the player when he is jumping
     if self.y < self.map.floor - self.height then
-        self.state = 'jumping'
+        self.state = 'fall'
     else
         self.y = self.map.floor - self.height
         self.dy = 0
