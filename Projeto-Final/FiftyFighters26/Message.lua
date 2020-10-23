@@ -16,7 +16,7 @@ function Message:init(params)
     self.align = params.align or 'center'
 
     -- Font, size and color
-    self.font = params.font or 'four.ttf'
+    self.font = params.font or 'strikefighter.ttf'
     self.size = params.size or 14
     self.color = params.color or {1, 1, 1, 1}
     self.borderColor = params.borderColor or {0, 0, 0, 0}
