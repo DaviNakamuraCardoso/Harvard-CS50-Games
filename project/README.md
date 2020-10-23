@@ -6,7 +6,7 @@
 
 ## Introduction 
 
-My name is Davi Nakamura and I've been studying Computer Science for my own since this year May. In July I started taking CS50x classes with David J. Malan, Brian Yu, Doug Lloyd and, later, with Colton Ogden in the game track. In these three months I've learned a lot about the computational thinking, how computers work, memory and  data structures. 
+Hi, my name is Davi Nakamura, I'm from Brazil and I've been studying Computer Science for my own since this year May. In July I started taking CS50x classes with David J. Malan, Brian Yu, Doug Lloyd and, later, with Colton Ogden in the game track. In these three months I've learned a lot about the computational thinking, how computers work, memory and  data structures. 
 
 In the begging of September, I've finished the game track classes and started this project - Fifty Fighters. Fighting games were always one of my favorite type of games, so I've decided to create my own version. With some open source sprites, backgrounds and sounds from the internet  (check the credits section below), I've developed this game. 
 
@@ -69,7 +69,7 @@ Also, the animations, for example, of punch while you are ducking is different o
 
 I've written, in order, all the 104 updates, since the creation of a black screen to the last bug fixes.  Some of them may be in the incorrect order/date since I did it some time after they occurred .
 
-
+[toc]
 
 ### Fifty Fighters 0
 
