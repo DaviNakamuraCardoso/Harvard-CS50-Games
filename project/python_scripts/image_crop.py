@@ -32,7 +32,7 @@ def delete_crops():
 
 
 def resize(image, new_name):
-    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/Projeto-Final/FiftyFighters26/graphics/' + image)
+    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/project/graphics' + image)
     image_reader = Image.open('0.png')
     width, height = image_reader.size
     new_image = image_reader.resize((int(width*1.5), int(height*1.5)))
@@ -43,21 +43,21 @@ def resize(image, new_name):
 
 def little_resize(character):
 
-    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/Projeto-Final/FiftyFighters26/graphics/' + character)
+    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/project/graphics' + image)
     if 'portrait.png' in os.listdir():
         resize('portrait.png', 20, 15, 'new_portrait.png')
     return
 
 
 def big_resize(character):
-    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/Projeto-Final/FiftyFighters26/graphics/' + character)
+    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/project/graphics' + image)
     if '0.png' in os.listdir():
         resize('0.png', 200, 170, 'body.png')
     return
 
 
 def crop_tall(character, xcrop, ycrop):
-    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/Projeto-Final/FiftyFighters26/graphics/' + character)
+    os.chdir('/home/davi/Documents/Code/Harvard-CS50-Games/project/graphics' + image)
     image_re = re.compile(r'\d+.png')
     for filename in os.listdir():
         if image := image_re.search(filename): # WALRUS! WALRUS! WALRUS!

@@ -2,7 +2,7 @@ import os, zipfile, shutil, send2trash, sys
 
 
 def main():
-    os.chdir('./graphics')
+    os.chdir('../graphics')
     path = os.getcwd()
     #move_zip(os.getcwd())
     #delete_zip(path)

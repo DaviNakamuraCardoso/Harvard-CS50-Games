@@ -12,7 +12,7 @@ def main():
         character = sys.argv[1]
         start = int(sys.argv[2])
         end = int(sys.argv[3])
-        os.chdir('graphics/' + character)
+        os.chdir('../graphics/' + character)
         fusion(start, end)
     return
 
