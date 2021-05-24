@@ -6,7 +6,7 @@
 
 ## Introduction 
 
-Hi, my name is Davi Nakamura, I'm from Brazil and I've been studying Computer Science for my own since this year May. In July I started taking CS50x classes with David J. Malan, Brian Yu, Doug Lloyd and, later, with Colton Ogden in the game track. In these three months I've learned a lot about the computational thinking, how computers work, memory and  data structures. 
+Hi, my name is Davi Nakamura, I'm from Brazil and I've been studying Computer Science on my own since this year's May. In July I started taking CS50x classes with David J. Malan, Brian Yu, Doug Lloyd and, later, with Colton Ogden in the game track. In these three months I've learned a lot about the computational thinking, how computers work, memory and  data structures. 
 
 In the begging of September, I've finished the game track classes and started this project - Fifty Fighters. Fighting games were always one of my favorite type of games, so I've decided to create my own version. With some open source sprites, backgrounds and sounds from the internet  (check the credits section below), I've developed this game. 
 
